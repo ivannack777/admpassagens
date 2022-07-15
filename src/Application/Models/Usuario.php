@@ -1,0 +1,98 @@
+<?php namespace App\Application\Models;
+
+use \Illuminate\Database\Capsule\Manager as DB;
+
+class Usuario extends \Illuminate\Database\Eloquent\Model
+{
+    public $timestamps = false;
+    public $table = 'usuario';
+    protected $fillable = ['id','pessoa_id','usuario','token','email','celular'];
+    
+
+    /**
+     * localiza e retorna um usuario pelo campo passado em $params
+     * @param array $params
+     * @return Usuarios
+     */
+    static public function list(Array $params=[])
+    {
+        // DB::enableQueryLog();
+        $usuarios = DB::table('usuario');
+        $usuarios->select('id','pessoa_id','usuario','token','email','celular');
+        if(isset($params['id'])){
+            $usuarios->where('id', $params['id']);
+        }
+        if(isset($params['usuario'])){
+            $usuarios->where('usuario', '=', $params['usuario']);
+        }
+        if(isset($params['email'])){
+            $usuarios->where('email', '=', $params['email']);
+        }
+
+        $result = $usuarios->get();
+        // var_dump( DB::getQueryLog(), $params);exit;
+        return $result;
+    }
+
+   
+    /**
+     * localiza e retorna um usuario pelo campo token
+     * @param string $usuario
+     * @param string $senha
+     * @return Usuarios
+     */
+    static public function auth(array $params, string $senha)
+    {
+        // DB::enableQueryLog();
+        if(!empty($params) && !empty($senha)){
+            $usuarios = DB::table('usuario');
+            $usuarios->select('id','pessoa_id', 'usuario','token','email','celular');
+
+            foreach($params as $campo => $param){
+                $usuarios->where($campo, '=', $param);
+            }
+            $usuarios->where('senha', '=', $senha);
+            $result = $usuarios->get();
+            // var_dump(DB::getQueryLog());exit;
+            return $result;
+        }
+        return false;
+    }
+
+    /**
+     * localiza e retorna um usuario pelo campo token.
+     * Usado em CheckTokenMiddleware
+     * @param string $token
+     * @return Usuarios
+     */
+    static public function getUserByToken(string $token)
+    {
+        $usuarios = DB::table('usuario');
+        if(!empty($token)){
+            $usuarios->where('token', '=', $token);
+            $result = $usuarios->get();
+            return $result;
+        }
+        
+        return false;
+    }
+
+
+    /**
+     * Salva login na tabela usuario_login 
+     * @param string $usuario
+     * @param string $senha
+     * @return Usuarios
+     */
+    static public function login(array $dados)
+    {
+        // DB::enableQueryLog();
+        if(!empty($dados)){
+            $usuariosLogin = DB::table('usuario_login')->insert($dados);
+            
+            return $usuariosLogin;
+        }
+        return false;
+    }
+
+}
