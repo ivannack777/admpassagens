@@ -48,6 +48,7 @@ $routeContext = RouteContext::fromRequest($request);
                         'email'     => $usuarios[0]->email,
                         'celular'   => $usuarios[0]->celular,
                         'token'     => $usuarios[0]->token,
+                        'nivel'     => $usuarios[0]->nivel,
                     ]
                 ];
                 $body = preg_replace('/\s+/','',$request->getBody()??null);

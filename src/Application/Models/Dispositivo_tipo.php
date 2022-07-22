@@ -4,6 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Dispositivo_tipo extends \Illuminate\Database\Eloquent\Model
 {
+    protected $fillable = ['nome','descricao','excluido','excluido_por','data_excluido'];
     public $timestamps = false;
     public $table = 'dispositivo_tipo';
     
@@ -15,15 +16,15 @@ class Dispositivo_tipo extends \Illuminate\Database\Eloquent\Model
      */
     static public function list(Array $params=[])
     {
-        // DB::enableQueryLog();
+        DB::enableQueryLog();
         $dispositivo_tipos = DB::table('dispositivo_tipo');
         $dispositivo_tipos->select('*');
         foreach($params as $campo => $param){
-            $dispositivo_tipos->where($campo, '=', $param);
+            $dispositivo_tipos->where($campo, 'like', "%{$param}%");
         }
 
         $result = $dispositivo_tipos->get();
-        // var_dump( DB::getQueryLog(), $params);exit;
+        var_dump( DB::getQueryLog(), $params);
         return $result;
     }
 

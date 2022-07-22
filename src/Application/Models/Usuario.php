@@ -4,9 +4,9 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Usuario extends \Illuminate\Database\Eloquent\Model
 {
+    protected $fillable = ['id','pessoa_id','usuario','token','email','celular','excluido','excluido_por','data_excluido'];
     public $timestamps = false;
     public $table = 'usuario';
-    protected $fillable = ['id','pessoa_id','usuario','token','email','celular'];
     
 
     /**
@@ -27,6 +27,9 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
         }
         if(isset($params['email'])){
             $usuarios->where('email', '=', $params['email']);
+        }
+        if(isset($params['celular'])){
+            $usuarios->where('celular', '=', $params['celular']);
         }
 
         $result = $usuarios->get();

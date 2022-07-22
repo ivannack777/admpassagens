@@ -17,6 +17,7 @@ class Sanitize
 	*	@var $regex string um regex customizado
 	*/
 	private $input;
+
 	public function __construct(){
 		// $this->input = $str;
 	}
@@ -34,31 +35,53 @@ class Sanitize
 		return (string)$this->input;
 	}
 
+	public function tolow(){
+		$this->input = strtolower($this->input);
+		return $this;
+	}
+	public function toup(){
+		$this->input = strtoupper($this->input);
+		return $this;
+	}
+	public function firstUp(){
+		$this->input = ucfirst($this->input);
+		return $this;
+	}
+	
+	public function string($str){
+		$this->set($str)->outer()->doubles();
+		return $this;
+	}
+
 
 	/**
-	 * Limpa espaços tab no inicio e final
+	 * Limpa espaços tab e quebra de linhas
 	 * */
 	public function outer(){
 		$this->input = trim($this->input);
 		return $this;
 	}
+
 	/**
 	 * Limpa espaços tab e quebra de linhas
 	 * */
-	public function inner(){
+	public function trimInner(){
 		$this->input = preg_replace('/[\s\t\r\n]+/', '', $this->input);
+		return $this;
 	}
 	/**
 	 * Limpa espaços tab e quebra de linhas duplicados
 	 * */
 	public function doubles(){
 		$this->input = preg_replace('/[\s\t\r\n]+/', ' ', $this->input);
+		return $this;
 	}
 	/**
 	 * Limpa tudo que não for letras ou números
 	 * */
 	public function clear(){
 		$this->input = preg_replace('/[^\d\w]+/', '', $this->input);
+		return $this;
 	}
 
 	/**
@@ -66,6 +89,7 @@ class Sanitize
 	 * */
 	public function regex($regex, $replace=''){
 		$this->input = preg_replace($regex, $replace, $this->input);
+		return $this;
 	}
 
 	/**
@@ -90,18 +114,22 @@ class Sanitize
 
 
 	/**
-	 * transforma caracteres 
+	 * Limpara e transforma um nome
+	 * @param string $str String para ser transformada
+	 * @param string $modo ucword|ucfirst
 	 * */
-	public function name($modo='ucwords'){
+	public function name($str, $modo='ucwords'){
+		$this->set($str)->outer()->doubles();
 		if(!empty($this->input)){
 			$this->input = preg_replace('/[\s\t\r\n]+/', ' ', $this->input);
 			$this->input = mb_convert_case($this->input,  MB_CASE_TITLE); //para resolver problemas com caracteres acentuados
 			switch ($modo) {
-				case 'ucfirst':
+				case 'ucfirst': //primeito caracter em maíusculo
 					$this->input = strtolower($this->input);
 					$this->input = ucfirst($this->input);
 					break;
-				case 'ucwords':
+				case 'ucwords': //todos os primeiro caracteres de cada palavra em maíusculo
+					$this->input = strtolower($this->input);
 					$this->input = ucwords($this->input);
 					$this->input = str_replace(' E ', ' e ', $this->input);
 					$this->input = str_replace(' Da ', ' da ', $this->input);
@@ -121,38 +149,45 @@ class Sanitize
 		return $this;
 	}
 
-
-
-	public function tolow(){
-		$this->input = strtolower($this->input);
-		return $this;
-	}
-	public function toup(){
-		return $this;
-	}
-	
-
-	public function string():string{
-		return $this;
-	}
-
-
-	public function date(){
+	/**
+	 * Limpa, verifica e converte data/hora
+	 * @param string $str para ser tratada
+	 * @param string $formatIn formato de entrada
+	 * @param string $formatOut formato de saida
+	 */
+	public function date($str, $formatIn=null, $formatOut=null){
+		$this->set($str)->outer()->doubles();
 		if(!empty($this->input)){
-			$this->input = preg_replace('/[^\d]+/', '-', $this->input);
+			if($formatIn && $formatOut){
+				$date = \DateTime::createFromFormat($formatIn, $this->input);
+				if($date){
+					$this->set($date->format($formatOut));
+				}
+
+			} 
+			else{
+				$this->input = preg_replace('/[^\d]+/', '-', $this->input);
+			}
 			// $this->input = str_replace(['/','.',' '], '-', $this->input);
 		}
 		return $this;
 	}
 
-	public function email(){
+
+	/**
+	 * Limpa e verifica e-mail
+	 */
+	public function email($str){
+		$this->set($str)->outer()->trimInner();
+		$pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
 		if(!empty($this->input)){
 			$this->input = preg_replace('/\s+/', '', $this->input);
 		}
 		return $this;
 	}
 
-	public function password(){
+	public function password($str){
+		$this->set($str)->outer();
 		if(!empty($this->input)){
 			$this->input = preg_replace('/\s+/', '', $this->input);
 		}
@@ -162,21 +197,30 @@ class Sanitize
 	/**
 	 * Limpa tudo que não for letras ou .
 	 * */
-	public function username(){
+	public function username($str){
+		$this->set($str)->outer()->trimInner();
 		if(!empty($this->input)){
 			$this->input = preg_replace('/[^\w.]+/', '', $this->input);
 		}
 		return $this;
 	}
 
-	public function phone(){
+	public function phone($str){
+		$this->set($str)->outer()->trimInner();
 		if(!empty($this->input)){
 			$this->input = preg_replace('/[^0-9+]+/', '', $this->input);
 		}
 		return $this;
 	}
 
-	public function integer(){
+
+	/**
+	 * Limpara e transforma um nome
+	 * @param string $str String para ser transformada
+	 * @param string $modo ucword|ucfirst
+	 * */
+	public function integer($str){
+		$this->set($str)->outer()->trimInner();
 		$this->input = preg_replace('/[^0-9]+/', '', $this->input);
 		if(!empty($this->input)){
 			return intval($this->input);
@@ -184,7 +228,14 @@ class Sanitize
 		return $this;
 	}
 
-	public function number($modo=null, $regex=null){
+
+	/**
+	 * Limpara e transforma um nome
+	 * @param string $str String para ser transformada
+	 * @param string $modo inner|outer|clear|regex
+	 * */
+	public function number($str, $modo=null, $regex=null){
+		$this->set($str)->outer()->trimInner();
 		if(!empty($this->input)){
 			switch ($modo) {
 				case 'inner':
@@ -196,6 +247,7 @@ class Sanitize
 					break;
 				case 'clear':
 					$this->input = preg_replace('/[^\d\w]+/', '', $this->input);
+					
 					break;
 				case 'regex':
 					if($regex) $this->input = preg_replace($regex, '', $this->input);
@@ -209,7 +261,8 @@ class Sanitize
 		return $this;
 	}
 
-	public function decimal($round=false, $toString=false){
+	public function decimal($str, $round=false, $toString=false){
+		$this->set($str)->outer()->trimInner();
 		if(!empty($this->input)){
 			$this->input = str_replace(',', '.', $this->input);
 			$this->input = preg_replace('/[^0-9.]+/', '', $this->input);

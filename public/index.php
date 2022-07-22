@@ -9,6 +9,7 @@ use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
+use Valitron\Validator;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -47,8 +48,8 @@ $middleware($app);
 $routes = require __DIR__ . '/../app/routes.php';
 $routes($app);
 
-
-
+# definindo linguagem do validador
+Validator::lang('pt-br');
 
 /** @var SettingsInterface $settings */
 $settings = $container->get(SettingsInterface::class);
