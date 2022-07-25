@@ -109,7 +109,7 @@ class Login
             return  $response->withJson([$usuario,$login], true, 'Usuário autenticado');
         } else {
             $log->info($caminho.'Usuário não encontrado');
-            return   $response->withJson($usuario, true, 'Usuário não encontrado');
+            return   $response->withJson([], true, 'Usuário não encontrado');
         }
     
     }

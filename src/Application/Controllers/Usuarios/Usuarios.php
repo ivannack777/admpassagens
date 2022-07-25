@@ -40,6 +40,13 @@ class Usuarios extends BaseController
         $usuario = $requests['usuario']??null;
         $email = $requests['email']??null;
         $celular = $requests['celular']??null;
+        $usuarios = [];
+
+        //se o nivel do usuario for 1: cliente, sempre faz filtro pelo id
+        $userSession = $_SESSION['user'];
+        if ($userSession['nivel'] == '1') {
+            $params['id'] = $userSession['id'];
+        } 
 
         if (!empty($usuario))  {
             $params['usuario'] = $usuario;
@@ -77,12 +84,13 @@ class Usuarios extends BaseController
         if(empty($requests)){
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }
-        $usuario = $requests['usuario']??null;
-        $email = $requests['email']??null;
-        $celular = $requests['celular']??null;
-        $senha = $requests['senha']??null;
-        $token = $requests['token']??null;
-        $pessoa_id = $requests['pessoa_id']??null;
+        $usuario = $sanitize->username($requests['usuario']??null)->get();
+        $email = $sanitize->email($requests['email']??null)->get();
+        $celular = $sanitize->number($requests['celular']??null, 'clear')->get();
+        $senha = $sanitize->password($requests['senha']??null)->get();
+        $pessoa_id = $sanitize->integer($requests['pessoa_id']??null)->get();
+        $nivel = $sanitize->integer($requests['nivel']??null)->get();
+        $token = hash('sha256', $usuario. time());
 
      
 
@@ -93,7 +101,9 @@ class Usuarios extends BaseController
             'senha' => $senha,
             'token' => $token,
             'pessoa_id' => $pessoa_id,
+            'nivel' => $nivel,
         ];
+
 
         if (!empty($pessoa_id)) {
             $pessoas = PessoaModel::list(['id'=>$pessoa_id]);
@@ -112,23 +122,38 @@ class Usuarios extends BaseController
                 return $response->withJson($requests, false, 'Usuario não foi localizado');
             }
         } else {
+
+            # definindo linguagem do validador
+            Validator::lang('pt-br');
             $v = new Validator($dados);
 
-            $v->rules([
-                'requiredWithout' => [
-                    ['usuario', ['email', 'celular'], true] //se não existir email ou celular, usuario será obrigatorio
-                ],
-                'requiredWith' => [
-                    ['password', ['usuario']] //se existir usuario, então senha será obrigatorio
-                ],
-                'email' => [
-                    ['email']
-                ],
-                'optional' => [
-                    ['email','celular'] // email ou celular são opcionais, (porem será obrigatorio no parametro requiredWithout se usuário não existir)
-                ]
-            ]);
+            // $v->rules([
+            //     'requiredWithout' => [
+            //         ['usuario', ['email', 'celular'], true, 'msg'] //se não existir email ou celular, usuario será obrigatorio
+            //     ],
+            //     'requiredWith' => [
+            //         ['password', ['usuario']] //se existir usuario, então senha será obrigatorio
+            //     ],
+            //     'email' => [
+            //         ['email']
+            //     ],
+            //     'optional' => [
+            //         ['email','celular'] // email ou celular são opcionais, (porem será obrigatorio no parametro requiredWithout se usuário não existir)
+            //     ]
+            // ]);
             
+            //se não existir email ou celular, usuario será obrigatorio
+            $v->rule('requiredWithout' , 'usuario', ['email', 'celular'])->message('Se não existir email ou celular, usuario será obrigatorio');
+            
+            //se existir usuario, então senha será obrigatorio
+            $v->rule('requiredWith' , 'senha' ,['usuario'] )->message('senha é obrigatório junto com usuario');
+            
+            //aplicar validação de e-mail para o campo ['email']
+            $v->rule('email' , ['email']);
+            
+            // email ou celular são opcionais, (porem será obrigatorio no parametro requiredWithout se usuário não existir)
+            $v->rule('optional' , ['email','celular'] );            
+
 
             if ($v->validate()) {
 

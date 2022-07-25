@@ -4,7 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Endereco extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['cep','logradouro','numero','complemento','uf','cidade','pais','excluido','excluido_por','data_excluido'];
+    protected $fillable = ['cep','logradouro','numero','complemento','uf','cidade','pais'];
     public $timestamps = false;
     public $table = 'endereco';
 

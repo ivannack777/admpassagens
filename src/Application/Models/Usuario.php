@@ -4,7 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Usuario extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['id','pessoa_id','usuario','token','email','celular','excluido','excluido_por','data_excluido'];
+    protected $fillable = ['id','pessoa_id','usuario','token','email','celular','nivel','excluido','excluido_por','data_excluido'];
     public $timestamps = false;
     public $table = 'usuario';
     
@@ -49,7 +49,7 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
         // DB::enableQueryLog();
         if(!empty($params) && !empty($senha)){
             $usuarios = DB::table('usuario');
-            $usuarios->select('id','pessoa_id', 'usuario','token','email','celular');
+            $usuarios->select('id','pessoa_id', 'usuario','token','email','celular','nivel');
 
             foreach($params as $campo => $param){
                 $usuarios->where($campo, '=', $param);

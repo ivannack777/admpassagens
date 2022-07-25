@@ -223,7 +223,7 @@ class Sanitize
 		$this->set($str)->outer()->trimInner();
 		$this->input = preg_replace('/[^0-9]+/', '', $this->input);
 		if(!empty($this->input)){
-			return intval($this->input);
+			$this->input = intval($this->input);
 		}
 		return $this;
 	}
