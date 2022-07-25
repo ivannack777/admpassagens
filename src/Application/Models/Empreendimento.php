@@ -4,7 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Empreendimento extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['usuario_id','endereco_id','nome','excluido','excluido_por','data_excluido'];
+    protected $fillable = ['usuario_id','endereco_id','nome'];
     public $timestamps = false;
     public $table = 'empreendimento';
 
@@ -17,9 +17,13 @@ class Empreendimento extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $empreendimentos = DB::table('empreendimento');
-        $empreendimentos->select('*');
+        $empreendimentos->select('id','usuario_id','endereco_id','nome');
         foreach($params as $campo => $param){
-            $empreendimentos->where($campo, '=', $param);
+            if($campo == 'nome'){
+                $empreendimentos->where($campo, 'like', "%{$param}%");
+            } else{
+                $empreendimentos->where($campo, '=', $param);
+            }
         }
         $result = $empreendimentos->get();
         // var_dump( DB::getQueryLog(), $params);exit;

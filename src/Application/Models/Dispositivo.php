@@ -4,7 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Dispositivo extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['dispositivo_tipo_id','usuario_id','nome','marca','modelo','excluido','excluido_por','data_excluido'];
+    protected $fillable = ['id','dispositivo_tipo_id','usuario_id','nome','marca','modelo'];
     public $timestamps = false;
     public $table = 'dispositivo';
 
@@ -17,34 +17,17 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $dispositivos = DB::table('dispositivo');
-        $dispositivos->select('*');
+        $dispositivos->select('id','dispositivo_tipo_id','usuario_id','nome','marca','modelo');
         foreach($params as $campo => $param){
-            $dispositivos->where($campo, '=', $param);
+            if($campo == 'nome'){
+                $dispositivos->where($campo, 'like', "%{$param}%");
+            } else{
+                $dispositivos->where($campo, '=', $param);
+            }
         }
         $result = $dispositivos->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;
-    }
-
-
- /**
-     * localiza e retorna um dispositivo pelo campo passado em $params
-     * @param array $params
-     * @return Dispositivos
-     */
-    static public function tipo_list(Array $params=[])
-    {
-        // DB::enableQueryLog();
-        $dispositivos = DB::table('dispositivo_tipo');
-        $dispositivos->select('*');
-        foreach($params as $campo => $param){
-            $dispositivos->where($campo, '=', $param);
-        }
-        $result = $dispositivos->get();
-        // var_dump( DB::getQueryLog(), $params);exit;
-        return $result;
-    }
-
-   
+    }   
 
 }

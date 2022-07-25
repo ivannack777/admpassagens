@@ -587,11 +587,9 @@ Parâmetros usados na requisição
 
 ```
 {
-	"usuario": "nome.usuario",
-  "senha": "senhaSecreta",
-  "email":"email@exemplo.com",
-  "celular":"99 99999-9999",
-  "nivel":"1"
+  "usuario_id": "1",
+  "endereco_id": "1",
+  "nome": " casa de teste "
 }
 ```
 ### Response
@@ -599,15 +597,244 @@ Parâmetros usados na requisição
 ```
 {
   "status": true,
-  "msg": "Usuario foi adicionado",
+  "msg": "Empreendimento foi adicionado",
   "data": [
     {
-      "id": 18,
-      "pessoa_id": null,
-      "usuario": "nome.usuario",
-      "token": "cca7bda0ec635948f870577b5ab056d6e4062c164df4812c6cf7981d51101d64",
-      "email": "email@exemplo.com",
-      "celular": 99999999999
+      "usuario_id": 1,
+      "endereco_id": 1,
+      "nome": "Casa de teste"
+    }
+  ]
+}
+``` 
+
+Ou
+
+```
+
+```
+
+Ou
+
+```
+{
+  "status": false,
+  "msg": "Parâmetros incorretos.",
+  "data": null
+}
+```
+
+
+## usuarios/pessoa/listar
+<a name="usuarios_pessoa_listar"></a>
+
+Busca um usuário pelo nome de usuário, e-mail ou celular
+Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
+Porem se o Bearer token for de um usuário nivel 1, filtrará só os dados do proprio usuário.
+
+### Bearer token
+ Sim
+
+### Parametros
+Parâmetros usados na requisição
+
+| Parâmetro |Tipo     | Descrição     |
+| --------- | ------ | ----------- | --------------|
+| [usuario] | string  | Username de um usuário |
+| [email]   | string  | E-mail de autenticação de um usuário |
+| [celular] | string  | Celular de autenticação de um usuário |
+
+
+### Request
+
+**[GET|POST]{{ url }}/usuarios/pessoa/lista**
+
+```
+{
+	"nome":"exemplo"
+}
+
+```
+
+### Response
+
+``` 
+{
+  "status": true,
+  "msg": "2 empreendimento(s) encontrado(s)",
+  "data": [
+    {
+      "id": 1,
+      "usuario_id": 1,
+      "endereco_id": 1,
+      "nome": "Casa de teste"
+    },
+    {
+      "id": 2,
+      "usuario_id": 1,
+      "endereco_id": 1,
+      "nome": "Casa exemplo"
+    }
+  ]
+}
+```
+
+Ou
+
+``` 
+{
+  "status": true,
+  "msg": "1 empreendimento(s) encontrado(s)",
+  "data": [
+    {
+      "id": 2,
+      "usuario_id": 1,
+      "endereco_id": 1,
+      "nome": "Casa exemplo"
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "0 empreendimento(s) encontrado(s)",
+  "data": []
+}
+```
+
+
+
+## empreendimentos/salvar
+<a name="empreendimentos_salvar"></a>
+
+### Adicionar ou editar um novo usuário
+
+### Bearer token
+ Sim
+
+### Parametros
+Parâmetros usados na requisição
+
+| Parâmetro     | Tipo    | Descrição     |
+| ------------- | ------- | ----------- | --------------|
+| [usuario_id]  | string  | ID de um usuário |
+| [endereco_id] | string  | ID de um endereço |
+| [nome]        | string  | Nome do empreendimento |
+
+
+### Request
+
+**[POST]{{ url }}/empreendimentos/salvar[/{id}]**
+
+```
+
+{
+  "usuario_id": "1",
+  "endereco_id": "1",
+  "nome": " casa exemplo "
+
+}
+```
+### Response
+
+```
+{{
+  "status": true,
+  "msg": "Empreendimentos foi salvo",
+  "data": [
+    {
+      "id": 2,
+      "usuario_id": 1,
+      "endereco_id": 1,
+      "nome": "Casa exemplo"
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
+  "status": false,
+  "msg": "Parâmetros incorretos.",
+  "data": null
+}
+```
+
+
+
+
+## empreendimentos/listar
+<a name="usuarios_pessoa_listar"></a>
+
+Busca um usuário pelo nome de usuário, e-mail ou celular
+Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
+Porem se o Bearer token for de um usuário nivel 1, filtrará só os dados do proprio usuário.
+
+### Bearer token
+ Sim
+
+### Parametros
+Parâmetros usados na requisição
+
+| Parâmetro |Tipo     | Descrição     |
+| --------- | ------ | ----------- | --------------|
+| [usuario] | string  | Username de um usuário |
+| [email]   | string  | E-mail de autenticação de um usuário |
+| [celular] | string  | Celular de autenticação de um usuário |
+
+
+### Request
+
+**[GET|POST]{{ url }}/usuarios/pessoa/lista**
+
+```
+{
+	"nome":"exemplo"
+}
+
+```
+
+### Response
+
+``` 
+{
+  "status": true,
+  "msg": "2 empreendimento(s) encontrado(s)",
+  "data": [
+    {
+      "id": 1,
+      "usuario_id": 1,
+      "endereco_id": 1,
+      "nome": "Casa de teste"
+    },
+    {
+      "id": 2,
+      "usuario_id": 1,
+      "endereco_id": 1,
+      "nome": "Casa exemplo"
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "1 empreendimento(s) encontrado(s)",
+  "data": [
+    {
+      "id": 2,
+      "usuario_id": 1,
+      "endereco_id": 1,
+      "nome": "Casa exemplo"
     }
   ]
 }
@@ -617,16 +844,238 @@ Ou
 
 ```
 {
+  "status": true,
+  "msg": "0 empreendimento(s) encontrado(s)",
+  "data": []
+}
+```
+
+
+
+
+## dispositivos/salvar
+<a name="dispositivos_salvar"></a>
+
+### Adicionar ou editar um novo usuário
+
+### Bearer token
+ Sim
+
+### Parametros
+Parâmetros usados na requisição
+
+| Parâmetro     | Tipo    | Descrição     |
+| ------------- | ------- | ----------- | --------------|
+| [usuario_id]  | string  | ID de um usuário |
+| [endereco_id] | string  | ID de um endereço |
+| [nome]        | string  | Nome do empreendimento |
+
+
+### Request
+
+**[POST]{{ url }}/dispositivos/salvar[/{id}]**
+
+```
+{
+	"usuario_id": "1",
+	"dispositivo_tipo_id": 2,
+	"emrpeendimento_id": 2,
+	"nome":" Iluminação da     sala ",
+	"marca": "philipps",
+	"modelo": "PH-2596"
+}
+```
+### Response
+
+```
+{
+  "status": true,
+  "msg": "Dispositivo foi adicionada",
+  "data": [
+    {
+      "id": 8,
+      "dispositivo_tipo_id": 2,
+      "usuario_id": 1,
+      "nome": "Iluminação da sala",
+      "marca": "Philipps",
+      "modelo": "PH-2596",
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-18 15:45:05",
+      "data_update": null
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
   "status": false,
-  "msg": "Já existe um usuário com esta identificação",
-  "data": {
-    "usuario": "nome.usuario",
-    "email": "email@exemplo.com",
-    "celular": "99999999999",
-    "senha": "senhaSecreta",
-    "token": "d577b0181bb73f3f139dee901dc6320459b99c69333a866933e1b744a8842f0a",
-    "nivel": "1"
-  }
+  "msg": "Parâmetros incorretos.",
+  "data": null
+}
+```
+
+
+
+
+## dispositivos/listar
+<a name="dispositivos_listar"></a>
+
+Busca um usuário pelo nome de usuário, e-mail ou celular
+Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
+Porem se o Bearer token for de um usuário nivel 1, filtrará só os dados do proprio usuário.
+
+### Bearer token
+ Sim
+
+### Parametros
+Parâmetros usados na requisição
+
+| Parâmetro             |Tipo     | Descrição                |
+| --------------------- | ------  | -------------------------|
+| [dispositivo_tipo_id] | string  | ID do tipo de dispositivo |
+| [usuario_id]          | string  | ID de um usuário |
+| [nome]                | string  | Nome de um dispositivo |
+| [marca]               | string  | Marca de um dispositivo |
+| [modelo]              | string  | Modelo de um dispositivo |
+
+
+### Request
+
+**[GET|POST]{{ url }}/dispositivos/lista**
+
+```
+{
+	"nome":"exemplo"
+}
+
+```
+
+### Response
+
+``` 
+{
+  "status": true,
+  "msg": "4 dispositivo(s) encontrado(s)",
+  "data": [
+    {
+      "id": 2,
+      "dispositivo_tipo_id": 1,
+      "usuario_id": 2,
+      "nome": "Ar da cozinha",
+      "marca": "LG",
+      "modelo": "AR1-1996",
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-15 16:45:52",
+      "data_update": "2022-07-22 11:08:44"
+    },
+    {
+      "id": 3,
+      "dispositivo_tipo_id": 1,
+      "usuario_id": 2,
+      "nome": "Ar do quarto",
+      "marca": "Ar",
+      "modelo": "BZ-CL18",
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-15 16:46:42",
+      "data_update": "2022-07-22 11:08:46"
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "1 dispositivo(s) encontrado(s)",
+  "data": [
+    {
+      "id": 2,
+      "dispositivo_tipo_id": 1,
+      "usuario_id": 2,
+      "nome": "Ar da cozinha",
+      "marca": "LG",
+      "modelo": "AR1-1996",
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-15 16:45:52",
+      "data_update": "2022-07-22 11:08:44"
+    }
+  ]
+}
+``` 
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "0 empreendimento(s) encontrado(s)",
+  "data": []
+}
+```
+
+
+
+## dispositivos/tipo/salvar
+<a name="dispositivos_tipo_salvar"></a>
+
+### Adicionar ou editar um novo usuário
+
+### Bearer token
+ Sim
+
+### Parametros
+Parâmetros usados na requisição
+
+| Parâmetro     | Tipo    | Descrição     |
+| ------------- | ------- | -------------------------|
+| [nome]        | string  | Nome do dispositivo |
+| [descricao]   | string  | Descrição de um tipo de dispositivo |
+
+
+### Request
+
+**[POST]{{ url }}/dispositivos/tipo/salvar[/{id}]**
+
+```
+{
+	"nome": "Exemplo",
+	"descricao": "Descrição do exemplo"
+}
+```
+### Response
+
+```
+{
+  "status": true,
+  "msg": "Dispositivo foi adicionada",
+  "data": [
+    {
+      "id": 8,
+      "dispositivo_tipo_id": 2,
+      "usuario_id": 1,
+      "nome": "Iluminação da sala",
+      "marca": "Philipps",
+      "modelo": "PH-2596",
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-18 15:45:05",
+      "data_update": null
+    }
+  ]
 }
 ```
 
