@@ -98,12 +98,11 @@ class Usuarios extends BaseController
             'usuario' => $usuario,
             'email' => $email,
             'celular' => $celular,
-            'senha' => $senha,
+            'senha' => !empty($senha)?hash('sha256', $senha):null,
             'token' => $token,
             'pessoa_id' => $pessoa_id,
             'nivel' => $nivel,
         ];
-
 
         if (!empty($pessoa_id)) {
             $pessoas = PessoaModel::list(['id'=>$pessoa_id]);
