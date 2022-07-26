@@ -18,6 +18,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
+use App\Parsedown;
 
 
 
@@ -29,49 +30,54 @@ return function (App $app) {
 
 
     $app->get('/', function (Request $request, Response $response) {
-        
         $response->getBody()->write('Olá, bem bindo a API Automação!');
+        
+        $readme = file_get_contents(__DIR__.'/../doc/usage.md');
+        // $Parsedown = new Parsedown();
+        // echo $Parsedown->text('Hello _Parsedown_!'); # prints: <p>Hello <em>Parsedown</em>!</p>
+
+        $response->getBody()->write($readme);
         return $response;
     });
 
     $app->post('/usuarios/login/auth', [Login::class , 'auth']);
 
     $app->group('/usuarios', function (Group $group) {
-        $group->get('/listar', [Usuarios::class, 'list']);
+        $group->map(['GET','POST'], '/listar', [Usuarios::class, 'list']);
         $group->post('/salvar[/{id}]', [Usuarios::class, 'save']);
-        $group->get('/pessoa/listar', [Pessoas::class, 'list']);
+        $group->map(['GET','POST'], '/pessoa/listar', [Pessoas::class, 'list']);
         $group->post('/pessoa/salvar[/{id}]', [Pessoas::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/dispositivos', function (Group $group) {
-        $group->get('/listar', [Dispositivos::class, 'list']);
-        $group->get('/tipo/listar', [Dispositivos::class, 'tipo_list']);
+        $group->map(['GET','POST'], '/listar', [Dispositivos::class, 'list']);
+        $group->map(['GET','POST'], '/tipo/listar', [Dispositivos::class, 'tipo_list']);
         $group->post('/salvar[/{id}]', [Dispositivos::class, 'save']);
         $group->post('/tipo/salvar[/{id}]', [Dispositivos::class, 'tipo_save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/cenas', function (Group $group) {
-        $group->get('/listar', [Cenas::class, 'list']);
+        $group->map(['GET','POST'], '/listar', [Cenas::class, 'list']);
         $group->post('/salvar[/{id}]', [Cenas::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class,$app);
 
     $app->group('/rotinas', function (Group $group) {
-        $group->get('/listar', [Rotinas::class, 'list']);
+        $group->map(['GET','POST'], '/listar', [Rotinas::class, 'list']);
         $group->post('/salvar[/{id}]', [Rotinas::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/enderecos', function (Group $group) {
-        $group->get('/listar', [Enderecos::class, 'list']);
+        $group->map(['GET','POST'], '/listar', [Enderecos::class, 'list']);
         $group->post('/salvar[/{id}]', [Enderecos::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/empreendimentos', function (Group $group) {
-        $group->get('/listar', [Empreendimentos::class, 'list']);
+        $group->map(['GET','POST'], '/listar', [Empreendimentos::class, 'list']);
         $group->post('/salvar[/{id}]', [Empreendimentos::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude'])->add(function (Request $request, RequestHandler $handler) {
             // passando dados extras para o controller
