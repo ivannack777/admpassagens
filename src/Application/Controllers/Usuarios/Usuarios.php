@@ -37,6 +37,7 @@ class Usuarios extends BaseController
     {
 
         $requests = $request->getParsedBody();
+        $id = $requests['id']??null;
         $usuario = $requests['usuario']??null;
         $email = $requests['email']??null;
         $celular = $requests['celular']??null;
@@ -48,6 +49,9 @@ class Usuarios extends BaseController
             $params['id'] = $userSession['id'];
         } 
 
+        if (!empty($id))  {
+            $params['id'] = $id;
+        }
         if (!empty($usuario))  {
             $params['usuario'] = $usuario;
         }
