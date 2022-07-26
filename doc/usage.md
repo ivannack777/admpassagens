@@ -1,43 +1,71 @@
-# Uso da API iGo Pass
-- [login/auth](#login_auth) 
-- [usuarios/listar](#usuarios_listar) 
-- [usuarios/salvar](#usuarios_salvar) 
-- [usuarios/pessoas/listar](#usuarios_pessoas_listar) 
-- [usuarios/pessoas/salvar](#usuarios_pessoas_salvar) 
-- [enderecos/listar](#enderecos_listar) 
-- [enderecos/salvar](#enderecos_salvar) 
-- [empreendimentos/listar](#empreendimetos_listar) 
-- [empreendimentos/salvar](#empreendimetos_salvar) 
-- [dispositivos/listar](#dispositivos_listar) 
-- [dispositivos/salvar](#dispositivos_salvar) 
-- [cenas/listar](#cenas_listar) 
-- [cenas/salvar](#cenas_salvar) 
-- [rotinas/listar](#rotinas_listar) 
-- [rotinas/salvar](#rotinas_salvar) 
+<style>
+  table {
+      border-collapse:collapse;
+  }
+  table, td, th {
+    border: 1px solid silver;
+    padding: 4px;
+  }
+  p code{
+    border-radius: 6px;
+    background: #d7d7d7;
+    padding: 8px;
+  }
+
+  pre{
+    border-radius: 6px;
+    background: #d7d7d7;
+    padding: 8px;
+  }
+</style>
+# API Automação <a name="topo"></a>
+- [Autenticação](#login_auth) 
+- [Adicionar ou editar usuários](#usuarios_salvar) 
+- [Listar ou pesquisar usuários](#usuarios_listar) 
+- [Excluir um usuários](#usuarios_listar) 
+- [Adicionar ou editar pessoas](#usuarios_pessoa_salvar) 
+- [Listar ou pesquisar pessoas](#usuarios_pessoa_listar) 
+- [Excluir uma pessoa](#usuarios_pessoa_excluir) 
+- [Adicionar ou editar endereços](#enderecos_salvar) 
+- [Listar ou pesquisar endereços](#enderecos_listar) 
+- [Excluir um endereço](#enderecos_excluir) 
+- [Adicionar ou editar empreendimentos](#empreendimentos_salvar) 
+- [Listar ou pesquisar empreendimentos](#empreendimentos_listar) 
+- [Excluir um empreendimentos](#empreendimentos_excluir) 
+- [Adicionar ou editar dispositivos](#dispositivos_salvar) 
+- [Listar ou pesquisar dispositivos](#dispositivos_listar) 
+- [Excluir ou pesquisar dispositivos](#dispositivos_excluir) 
+- [Adicionar ou editar cenas](#cenas_salvar) 
+- [Listar ou pesquisar cenas](#cenas_listar) 
+- [Exluir uma cenas](#cenas_excluir) 
+- [Adicionar ou editar rotinas](#rotinas_salvar) 
+- [Listar ou pesquisar rotinas](#rotinas_listar) 
+- [Excluir uma rotinas](#rotinas_listar) 
 
 
 
-## login/auth
-<a name="login_auth"></a>
-Faz autenticação de um usuário atravez de usuario e senha e retorna os dados do usuário
+## Autenticação <a name="login_auth"></a>
+[^ Topo](#topo) 
+
+Faz autenticação de um usuário atravéz de usuario e senha e retorna os dados do usuário
 
 ### Bearer token
  Não
 
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
 | Parâmetro |Tipo     | Descrição        |
-| --------- | ------ | ----------- | ---------------- |
+| --------- | ------- | ----------- | ---------------- |
 | [usuario] | string  | Username |
-| [senha]   | string | Obrigatório com usuario | Senha do usuário |
+| [senha]   | string  | Senha do usuário (Obrigatório com usuario e não necessária para email e celular  |
 | [email]   | string  | E-mail de autenticação do usuário |
-| [celular] | string  | celular de autenticação do usuário |
+| [celular] | string  | Celular de autenticação do usuário |
 
 
 ### Request
 
-**[POST]{{ url }}/users/login/auth**
+`POST: {host}/users/login/auth`
 
 ```
 {
@@ -72,138 +100,47 @@ Parâmetros usados na requisição
   ]
 }
 ```
-
-## usuarios/listar
-<a name="usuarios_listar"></a>
-Busca um usuário pelo nome de usuário, e-mail ou celular
-Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
-Porem se o Bearer token for de um usuário nivel 1, filtrará só os dados do proprio usuário.
-
-### Bearer token
- Sim
-
-### Parametros
-Parâmetros usados na requisição
-
-| Parâmetro |Tipo     | Descrição     |
-| --------- | ------ | ----------- | --------------|
-| [usuario] | string  | Username de um usuário |
-| [email]   | string  | E-mail de autenticação de um usuário |
-| [celular] | string  | Celular de autenticação de um usuário |
-
-
-
-### Request
-
-**[GET|POST]{{ url }}/usuarios/listar**
-
-```
-{
-	"usuario": "nome.usuario"
-}
-```
-
-### Response
-
-```
-{
-  "status": true,
-  "msg": "0 usuário(s) encontrado(s)",
-  "data": []
-} 
-```
-
 Ou
 
 ```
 {
-  "status": true,
-  "msg": "1 usuário(s) encontrado(s)",
-  "data": [
-    {
-      "usuario": 1
-      "pessoa_id": 1,
-      "token": "VHJkUW84b05mVW55dD",
-      "email": "emial@exemplo.com",
-      "celular": "449900000000",
-      "nivel": 1,
-    }
-  ]
+  "status": false,
+  "msg": "Parâmetros incorretos. Usuario ou e-mail ou celar é obrigatório",
+  "data": []
 }
 ```
 
 
-## token/save
-<a name="token_save"></a>
-Busca um usuário pelo Bearer token e salva o push token deste usuário
 
-### Bearer token
-Sim
+## Adicionar ou editar usuários <a name="usuarios_salvar"></a>
+[^ Topo](#topo) 
 
-### Parametros
-Parâmetros usados na requisição
+Adiciona ou edita um usuário.
+Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
+Se ID não for passado na URL, faz a adição de um novo registro.
 
-| Parâmetro |Tipo     | Descrição             |
-| --------- | ------ | ----------- | --------------------- |
-| [token]   | string | Obrigatório | Push token do usuário |
-
-
-### Request
-
-**[POST]{{ url }}/users/token/save**
-
-```
-{
-	"token": "e04398300558cb210194f954bb44b6ef"
-}
-```
-### Response
-```
-{
-  "status": true,
-  "msg": " push tokens foi adicionado",
-  "data": {
-    "id": 5
-  }
-}
-```
-
-ou
-
-```
-{
-  "status": true,
-  "msg": " push token foi atualizado",
-  "data": {
-    "id": 4
-  }
-}
-```
-
-
-## usuarios/salvar
-<a name="usuarios_salvar"></a>
-
-### Adicionar ou editar um novo usuário
 
 ### Bearer token
  Sim
 
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
 | Parâmetro   | Tipo    | Descrição     |
 | ----------- | ------ | ----------- | --------------|
 | [usuario]   | string  | Username de um usuário |
+| [senha]     | string  | Senha de um usuário. Senha será criptografada utilizando algoritmo sha256 |
 | [email]     | string  | E-mail de autenticação de um usuário |
 | [celular]   | string  | Celular de autenticação de um usuário |
 | [pessoa_id] | string  | Id do cadastro da pessoa |
 | [nivel]     | string  | Nivel do usuário: 1: Cliente; 2: Admim basico; 3: Admim super |
 
+Obs: No retorno do usuário cadastrado trará o token de identificação deste usuário.
+
 
 ### Request
 
-**[POST]{{ url }}/usuarios/salvar[/{id}]**
+`POST: {host}/usuarios/salvar[/{id}]`
 
 ```
 {
@@ -211,6 +148,7 @@ Parâmetros usados na requisição
   "senha": "senhaSecreta",
   "email":"email@exemplo.com",
   "celular":"99 99999-9999",
+  "pessoa_id":"1",
   "nivel":"1"
 }
 ```
@@ -260,19 +198,17 @@ Ou
 }
 ```
 
+## Listar ou pesquisar usuários <a name="usuarios_listar"></a>
+[^ Topo](#topo) 
 
-
-## usuarios/pessoa/listar
-<a name="usuarios_pessoa_listar"></a>
-
-Busca um usuário pelo nome de usuário, e-mail ou celular
+Busca um usuário por usuario, email ou celular.
 Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
-Porem se o Bearer token for de um usuário nivel 1, filtrará só os dados do proprio usuário.
+porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
 
 ### Bearer token
  Sim
 
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
 | Parâmetro |Tipo     | Descrição     |
@@ -282,9 +218,147 @@ Parâmetros usados na requisição
 | [celular] | string  | Celular de autenticação de um usuário |
 
 
+
 ### Request
 
-**[GET|POST]{{ url }}/usuarios/pessoa/lista**
+`GET|POST: {host}/usuarios/listar`
+
+```
+{
+	"usuario": "nome.usuario"
+}
+```
+
+### Response
+
+```
+{
+  "status": true,
+  "msg": "0 usuário(s) encontrado(s)",
+  "data": []
+} 
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "1 usuário(s) encontrado(s)",
+  "data": [
+    {
+      "usuario": 1
+      "pessoa_id": 1,
+      "token": "VHJkUW84b05mVW55dD",
+      "email": "emial@exemplo.com",
+      "celular": "449900000000",
+      "nivel": 1,
+    }
+  ]
+}
+```
+
+
+## Adicionar ou editar pessoas <a name="usuarios_pessoa_salvar"></a>
+[^ Topo](#topo) 
+
+Adiciona ou edita uma pessoa.
+Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
+Se ID não for passado na URL, faz a adição de um novo registro.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+Parâmetros usados na requisição
+
+| Parâmetro       | Tipo   | Descrição |
+| --------------- | ------ | -------------------------|
+| [endereco_id]   | string | ID de um endereço cadastrado |
+| nome          | string | Nome da pessoa |
+| [cpf_cnpj]      | string | CPF ou CNPJ da pessoa  |
+| [documento]     | string | Documento de identificação ou Inscrição estadual |
+| [orgao_emissor] | string | Órgão emissor do documento de indentificação |
+
+
+### Request
+
+`POST: {host}/usuarios/pessoa/salvar`
+
+```
+    {
+      "endereco_id": 1,
+      "nome": "Nome da Pessoa",
+      "cpf_cnpj": "12345678911",
+      "natureza": "F",
+      "documento": "1234567",
+      "orgao_emissor": "SESP/PR"
+    }
+```
+
+### Response
+
+```
+{
+  "status": false,
+  "msg": "Já existe um usuário com este CPF\/CNPJ",
+  "data": {
+    "endereco_id": 1,
+    "nome": "Nome da Pessoa",
+    "cpf_cnpj": "12345678910",
+    "natureza": "F",
+    "documento": "1234567",
+    "orgao_emissor": "SESP\/PR"
+  }
+}
+``` 
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "Pessoa foi adicionado",
+  "data": [
+    {
+      "id": 1,
+      "endereco_id": 1,
+      "nome": "Nome da Pessoa",
+      "cpf_cnpj": "12345678910",
+      "natureza": "F",
+      "documento": "1234567",
+      "orgao_emissor": "SESP\/PR"
+    }
+  ]
+}
+```
+
+
+
+## Listar ou pesquisar pessoas <a name="usuarios_pessoa_listar"></a>
+[^ Topo](#topo) 
+
+Busca uma pessoa pelo nome, cpf_cnpj ou documento de indentificação.
+Se não for enviado nenhum dos parâmetros no request, será retornado todos as pessoas cadastradas,
+porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+Parâmetros usados na requisição
+
+| Parâmetro   |Tipo     | Descrição     |
+| ----------- | ------- | ----------- | --------------|
+| [nome]      | string  | Nome de uma pessoa |
+| [cpf_cnpj]  | string  | CPF/CNPJ de uma pessoa |
+| [documento] | string  | Documento de identificação de uma pessoa |
+
+
+### Request
+
+`GET|POST: {host}/usuarios/pessoa/lista`
+
 
 ```
 {
@@ -353,103 +427,35 @@ Ou
 ```
 
 
-## usuarios/pessoa/salvar
-<a name="usuarios__pessoa_salvar"></a>
 
-### Adicionar um novo usuário
+## Endereço/salvar <a name="enderecos_salvar"></a>
+[^ Topo](#topo) 
 
-### Bearer token
- Sim
-
-### Parametros
-Parâmetros usados na requisição
-
-| Parâmetro       | Tipo   | Descrição |
-| --------------- | ------ | -------------------------|
-| [endereco_id]   | string | ID de um endereço cadastrado |
-| [nome]          | string | Nome da pessoa |
-| [cpf_cnpj]      | string | CPF ou CNPJ da pessoa  |
-| [documento]     | string | Documento de identificação ou Inscrição estadual |
-| [orgao_emissor] | string | Órgão emissor do documento de indentificação |
-
-
-### Request
-
-**[POST]{{ url }}/usuarios/pessoa/salvar**
-
-```
-    {
-      "endereco_id": 1,
-      "nome": "Nome da Pessoa",
-      "cpf_cnpj": "12345678911",
-      "natureza": "F",
-      "documento": "1234567",
-      "orgao_emissor": "SESP/PR"
-    }
-```
-
-### Response
-
-```
-{
-  "status": false,
-  "msg": "Já existe um usuário com este CPF\/CNPJ",
-  "data": {
-    "endereco_id": 1,
-    "nome": "Nome da Pessoa",
-    "cpf_cnpj": "12345678910",
-    "natureza": "F",
-    "documento": "1234567",
-    "orgao_emissor": "SESP\/PR"
-  }
-}
-``` 
-
-Ou
-
-{
-  {
-  "status": true,
-  "msg": "Pessoa foi adicionado",
-  "data": [
-    {
-      "id": 1,
-      "endereco_id": 1,
-      "nome": "Nome da Pessoa",
-      "cpf_cnpj": "12345678910",
-      "natureza": "F",
-      "documento": "1234567",
-      "orgao_emissor": "SESP\/PR"
-    }
-  ]
-}
-}
-
-
-
-## endereço/salvar
-<a name="endereco_salvar"></a>
-
-### Adicionar ou editar um endereço
+Adiciona ou edita um endereço.
+Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
+Se ID não for passado na URL, faz a adição de um novo registro.
+Usuário nível 1 não tem acesso a esta área.
 
 ### Bearer token
  Sim
 
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
 | Parâmetro       | Tipo   | Descrição |
 | --------------- | ------ | -------------------------|
-| [endereco_id]   | string | ID de um endereço cadastrado |
-| [nome]          | string | Nome da pessoa |
-| [cpf_cnpj]      | string | CPF ou CNPJ da pessoa  |
-| [documento]     | string | Documento de identificação ou Inscrição estadual |
-| [orgao_emissor] | string | Órgão emissor do documento de indentificação |
+| cep   | string | ID de um endereço cadastrado |
+| logradouro          | string | Nome da pessoa |
+| [numero]      | string | CPF ou CNPJ da pessoa  |
+| [complemento]     | string | Documento de identificação ou Inscrição estadual |
+| cidade | string | Órgão emissor do documento de indentificação |
+| [uf] | string | Órgão emissor do documento de indentificação |
+| [pais] | string | Órgão emissor do documento de indentificação |
 
 
 ### Request
 
-**[POST]{{ url }}/usuarios/pessoa/salvar[/{id}]**
+`POST: {host}/usuarios/pessoa/salvar[/{id}]`
 
 ```
 {
@@ -498,29 +504,30 @@ Ou
 
 
 
-## edereços/listar
-<a name="usuarios_listar"></a>
-Busca um usuário pelo nome de usuário, e-mail ou celular
-Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
-Porem se o Bearer token for de um usuário nivel 1, filtrará só os dados do proprio usuário.
+## Listar ou pesquisar endereços <a name="enderecos_listar"></a>
+[^ Topo](#topo) 
+
+Busca um endreço pelo cep, logradouro ou cidade
+Se não for enviado nenhum dos parâmetros no request, será retornado todos os endereços cadastrados.
+Usuário nível 1 não tem acesso a esta área.
 
 ### Bearer token
  Sim
 
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
 | Parâmetro |Tipo     | Descrição     |
 | --------- | ------ | ----------- | --------------|
-| [usuario] | string  | Username de um usuário |
-| [email]   | string  | E-mail de autenticação de um usuário |
-| [celular] | string  | Celular de autenticação de um usuário |
+| [cep] | string  | Username de um usuário |
+| [logradouro]   | string  | E-mail de autenticação de um usuário |
+| [cidade] | string  | Celular de autenticação de um usuário |
 
 
 
 ### Request
 
-**[GET|POST]{{ url }}/enderecos/listar**
+`GET|POST: {host}/enderecos/listar`
 
 ```
 {
@@ -530,7 +537,7 @@ Parâmetros usados na requisição
 
 ### Response
 
-
+```
 {
   "status": true,
   "msg": "2 endereco(s) encontrado(s)",
@@ -557,170 +564,25 @@ Parâmetros usados na requisição
     }
   ]
 }
+```
 
 
+## Adicionar ou editar empreendimentos <a name="empreendimentos_salvar"></a>
+[^ Topo](#topo) 
 
-
-## empreendimentos/salvar
-<a name="usuarios_salvar"></a>
-
-### Adicionar ou editar um novo usuário
+Adiciona ou edita um empreendimento.
+Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
+Usuário nível 1 não tem acesso a esta área.
 
 ### Bearer token
  Sim
 
-### Parametros
-Parâmetros usados na requisição
-
-| Parâmetro   | Tipo    | Descrição     |
-| ----------- | ------ | ----------- | --------------|
-| [usuario]   | string  | Username de um usuário |
-| [email]     | string  | E-mail de autenticação de um usuário |
-| [celular]   | string  | Celular de autenticação de um usuário |
-| [pessoa_id] | string  | Id do cadastro da pessoa |
-| [nivel]     | string  | Nivel do usuário: 1: Cliente; 2: Admim basico; 3: Admim super |
-
-
-### Request
-
-**[POST]{{ url }}/usuarios/salvar[/{id}]**
-
-```
-{
-  "usuario_id": "1",
-  "endereco_id": "1",
-  "nome": " casa de teste "
-}
-```
-### Response
-
-```
-{
-  "status": true,
-  "msg": "Empreendimento foi adicionado",
-  "data": [
-    {
-      "usuario_id": 1,
-      "endereco_id": 1,
-      "nome": "Casa de teste"
-    }
-  ]
-}
-``` 
-
-Ou
-
-```
-
-```
-
-Ou
-
-```
-{
-  "status": false,
-  "msg": "Parâmetros incorretos.",
-  "data": null
-}
-```
-
-
-## usuarios/pessoa/listar
-<a name="usuarios_pessoa_listar"></a>
-
-Busca um usuário pelo nome de usuário, e-mail ou celular
-Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
-Porem se o Bearer token for de um usuário nivel 1, filtrará só os dados do proprio usuário.
-
-### Bearer token
- Sim
-
-### Parametros
-Parâmetros usados na requisição
-
-| Parâmetro |Tipo     | Descrição     |
-| --------- | ------ | ----------- | --------------|
-| [usuario] | string  | Username de um usuário |
-| [email]   | string  | E-mail de autenticação de um usuário |
-| [celular] | string  | Celular de autenticação de um usuário |
-
-
-### Request
-
-**[GET|POST]{{ url }}/usuarios/pessoa/lista**
-
-```
-{
-	"nome":"exemplo"
-}
-
-```
-
-### Response
-
-``` 
-{
-  "status": true,
-  "msg": "2 empreendimento(s) encontrado(s)",
-  "data": [
-    {
-      "id": 1,
-      "usuario_id": 1,
-      "endereco_id": 1,
-      "nome": "Casa de teste"
-    },
-    {
-      "id": 2,
-      "usuario_id": 1,
-      "endereco_id": 1,
-      "nome": "Casa exemplo"
-    }
-  ]
-}
-```
-
-Ou
-
-``` 
-{
-  "status": true,
-  "msg": "1 empreendimento(s) encontrado(s)",
-  "data": [
-    {
-      "id": 2,
-      "usuario_id": 1,
-      "endereco_id": 1,
-      "nome": "Casa exemplo"
-    }
-  ]
-}
-```
-
-Ou
-
-```
-{
-  "status": true,
-  "msg": "0 empreendimento(s) encontrado(s)",
-  "data": []
-}
-```
-
-
-
-## empreendimentos/salvar
-<a name="empreendimentos_salvar"></a>
-
-### Adicionar ou editar um novo usuário
-
-### Bearer token
- Sim
-
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
 | Parâmetro     | Tipo    | Descrição     |
 | ------------- | ------- | ----------- | --------------|
+| [id]  | string  | ID de um empreendimento |
 | [usuario_id]  | string  | ID de um usuário |
 | [endereco_id] | string  | ID de um endereço |
 | [nome]        | string  | Nome do empreendimento |
@@ -728,7 +590,7 @@ Parâmetros usados na requisição
 
 ### Request
 
-**[POST]{{ url }}/empreendimentos/salvar[/{id}]**
+`POST: {host}/empreendimentos/salvar[/{id}]`
 
 ```
 
@@ -769,29 +631,29 @@ Ou
 
 
 
-## empreendimentos/listar
-<a name="usuarios_pessoa_listar"></a>
+## Listar ou pesquisar empreendimentos <a name="empreendimentos_listar"></a>
+[^ Topo](#topo) 
 
-Busca um usuário pelo nome de usuário, e-mail ou celular
-Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
-Porem se o Bearer token for de um usuário nivel 1, filtrará só os dados do proprio usuário.
+Busca um empreendimento pelo nome, usupario_id ou endereco_id
+Se não for enviado nenhum dos parâmetros no request, será retornado todos os empreendimentos cadastrados,
+Usuário nível 1 não tem acesso a esta área.
 
 ### Bearer token
  Sim
 
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
-| Parâmetro |Tipo     | Descrição     |
-| --------- | ------ | ----------- | --------------|
-| [usuario] | string  | Username de um usuário |
-| [email]   | string  | E-mail de autenticação de um usuário |
-| [celular] | string  | Celular de autenticação de um usuário |
+| Parâmetro     | Tipo    | Descrição |
+| ------------- | ------- | -------------------------|
+| [nome]        | string  | Username de um usuário |
+| [usupario_id] | string  | E-mail de autenticação de um usuário |
+| [endereco_id] | string  | Celular de autenticação de um usuário |
 
 
 ### Request
 
-**[GET|POST]{{ url }}/usuarios/pessoa/lista**
+`GET|POST: {host}/usuarios/pessoa/lista`
 
 ```
 {
@@ -825,7 +687,7 @@ Parâmetros usados na requisição
 
 Ou
 
-```
+``` 
 {
   "status": true,
   "msg": "1 empreendimento(s) encontrado(s)",
@@ -838,7 +700,7 @@ Ou
     }
   ]
 }
-``` 
+```
 
 Ou
 
@@ -853,15 +715,18 @@ Ou
 
 
 
-## dispositivos/salvar
-<a name="dispositivos_salvar"></a>
 
-### Adicionar ou editar um novo usuário
+## Adicionar ou editar dispositivos <a name="dispositivos_salvar"></a>
+[^ Topo](#topo) 
+
+Adiciona ou edita um dispositivo.
+Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
+Usuário nível 1 não tem acesso a esta área.
 
 ### Bearer token
  Sim
 
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
 | Parâmetro     | Tipo    | Descrição     |
@@ -873,16 +738,16 @@ Parâmetros usados na requisição
 
 ### Request
 
-**[POST]{{ url }}/dispositivos/salvar[/{id}]**
+`POST: {host}/dispositivos/salvar[/{id}]`
 
 ```
 {
 	"usuario_id": "1",
 	"dispositivo_tipo_id": 2,
 	"emrpeendimento_id": 2,
-	"nome":" Iluminação da     sala ",
-	"marca": "philipps",
-	"modelo": "PH-2596"
+	"nome":" exemplo  de     dispositivo ",
+	"marca": "Marca",
+	"modelo": "M-1234"
 }
 ```
 ### Response
@@ -893,17 +758,12 @@ Parâmetros usados na requisição
   "msg": "Dispositivo foi adicionada",
   "data": [
     {
-      "id": 8,
+      "id": 4,
       "dispositivo_tipo_id": 2,
       "usuario_id": 1,
-      "nome": "Iluminação da sala",
-      "marca": "Philipps",
-      "modelo": "PH-2596",
-      "excluido": "N",
-      "excluido_por": null,
-      "data_excluido": null,
-      "data_insert": "2022-07-18 15:45:05",
-      "data_update": null
+      "nome": "Exemplo de dispositivo",
+      "marca": "Marca",
+      "modelo": "M-1234"
     }
   ]
 }
@@ -922,17 +782,17 @@ Ou
 
 
 
-## dispositivos/listar
-<a name="dispositivos_listar"></a>
+## Listar ou pesquisar dispositivos<a name="dispositivos_listar"></a>
+[^ Topo](#topo) 
 
-Busca um usuário pelo nome de usuário, e-mail ou celular
-Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
-Porem se o Bearer token for de um usuário nivel 1, filtrará só os dados do proprio usuário.
+Busca um dispositivo pelo nome, dispositivo_tipo_id, usuario_id, marca ou modelo
+Se não for enviado nenhum dos parâmetros no request, será retornado todos os dispositivos cadastrados,
+Porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
 
 ### Bearer token
  Sim
 
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
 | Parâmetro             |Tipo     | Descrição                |
@@ -946,7 +806,7 @@ Parâmetros usados na requisição
 
 ### Request
 
-**[GET|POST]{{ url }}/dispositivos/lista**
+`GET|POST: {host}/dispositivos/lista`
 
 ```
 {
@@ -960,33 +820,23 @@ Parâmetros usados na requisição
 ``` 
 {
   "status": true,
-  "msg": "4 dispositivo(s) encontrado(s)",
+  "msg": "2 dispositivo(s) encontrado(s)",
   "data": [
     {
-      "id": 2,
-      "dispositivo_tipo_id": 1,
-      "usuario_id": 2,
-      "nome": "Ar da cozinha",
-      "marca": "LG",
-      "modelo": "AR1-1996",
-      "excluido": "N",
-      "excluido_por": null,
-      "data_excluido": null,
-      "data_insert": "2022-07-15 16:45:52",
-      "data_update": "2022-07-22 11:08:44"
+      "id": 1,
+      "dispositivo_tipo_id": 2,
+      "usuario_id": 1,
+      "nome": "Exemplo de dispositivo",
+      "marca": "Marca",
+      "modelo": "M-1234"
     },
     {
-      "id": 3,
-      "dispositivo_tipo_id": 1,
-      "usuario_id": 2,
-      "nome": "Ar do quarto",
-      "marca": "Ar",
-      "modelo": "BZ-CL18",
-      "excluido": "N",
-      "excluido_por": null,
-      "data_excluido": null,
-      "data_insert": "2022-07-15 16:46:42",
-      "data_update": "2022-07-22 11:08:46"
+      "id": 2,
+      "dispositivo_tipo_id": 2,
+      "usuario_id": 1,
+      "nome": "Nome de outro dispositivo",
+      "marca": "Marca",
+      "modelo": "M-1234"
     }
   ]
 }
@@ -1000,17 +850,12 @@ Ou
   "msg": "1 dispositivo(s) encontrado(s)",
   "data": [
     {
-      "id": 2,
-      "dispositivo_tipo_id": 1,
-      "usuario_id": 2,
-      "nome": "Ar da cozinha",
-      "marca": "LG",
-      "modelo": "AR1-1996",
-      "excluido": "N",
-      "excluido_por": null,
-      "data_excluido": null,
-      "data_insert": "2022-07-15 16:45:52",
-      "data_update": "2022-07-22 11:08:44"
+      "id": 4,
+      "dispositivo_tipo_id": 2,
+      "usuario_id": 1,
+      "nome": "Exemplo de dispositivo",
+      "marca": "Marca",
+      "modelo": "M-1234"
     }
   ]
 }
@@ -1028,15 +873,18 @@ Ou
 
 
 
-## dispositivos/tipo/salvar
-<a name="dispositivos_tipo_salvar"></a>
+## Dispositivos/tipo/salvar<a name="dispositivos_tipo_salvar"></a>
+[^ Topo](#topo) 
 
-### Adicionar ou editar um novo usuário
+Adiciona ou edita um tipo de dispositivo.
+Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
+Se ID não for passado na URL, faz a adição de um novo registro.
+
 
 ### Bearer token
  Sim
 
-### Parametros
+### Parâmetros
 Parâmetros usados na requisição
 
 | Parâmetro     | Tipo    | Descrição     |
@@ -1047,7 +895,7 @@ Parâmetros usados na requisição
 
 ### Request
 
-**[POST]{{ url }}/dispositivos/tipo/salvar[/{id}]**
+`POST: {host}/dispositivos/tipo/salvar[/{id}]`
 
 ```
 {
@@ -1089,3 +937,437 @@ Ou
 }
 ```
 
+
+
+## Dispositivos/tipo/listar<a name="dispositivos_tipo_listar"></a>
+[^ Topo](#topo) 
+
+Busca um tipo de dispositivo, nome ou descricao
+Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
+Porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+Parâmetros usados na requisição
+
+| Parâmetro             |Tipo     | Descrição                |
+| --------------------- | ------  | -------------------------|
+| [nome]                | string  | Nome de um tipo de dispositivo |
+| [descricao]          | string  | Descrição de um tipo de dispositivo |
+
+
+### Request
+
+`GET|POST: {host}/dispositivos/tipo/lista`
+
+```
+{
+	"nome":"exemplo"
+}
+
+```
+
+### Response
+
+``` 
+{
+  "status": true,
+  "msg": "2 tipo(s) de dispositivo(s) encontrado(s)",
+  "data": [
+    {
+      "id": 12,
+      "nome": "Exemplode Tipo",
+      "descricao": "Descrição do exemplo"
+    },
+    {
+      "id": 13,
+      "nome": "Nome do Tipo",
+      "descricao": "Descrição do tipo"
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "1 tipo(s) de dispositivo(s) encontrado(s)",
+  "data": [
+    {
+      "id": 12,
+      "nome": "Exemplode Tipo",
+      "descricao": "Descrição do exemplo"
+    }
+  ]
+}
+``` 
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "0 tipo(s) de dispositivo(s) encontrado(s)",
+  "data": []
+}
+```
+
+
+## Adicionar ou editar cenas<a name="cenas_salvar"></a>
+[^ Topo](#topo) 
+
+Adiciona ou edita uma cena.
+Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
+Se ID não for passado na URL, faz a adição de um novo registro.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+Parâmetros usados na requisição
+
+| Parâmetro       | Tipo    | Descrição     |
+| --------------- | ------- | ----------- | --------------|
+| [usuario_id]    | string  | ID de um usuário |
+| [nome]          | string  | ID de um endereço |
+| [configuracoes] | string  | Json com as configurações de uma cena |
+
+
+### Request
+
+`POST: {host}/cenas/salvar[/{id}]`
+
+```
+{
+	"usuario_id": "1",
+	"nome":"Sala de star",
+	"configuracoes": [
+		{
+			"dispositivo_id": 1,
+			"state": 1,
+			"bright": 80
+		},
+		{
+		"dispositivo_id": 2,
+			"state": 1,
+			"bright": 50
+		},
+		{
+			"dispositivo_id": 3,
+			"state": 0
+		},
+		{
+		  "dispositivo_id": 4,
+			"stare": 1,
+			"teperatura": 23,
+			"speed": 4
+		}
+	]
+
+}
+```
+### Response
+
+```
+{
+  "status": true,
+  "msg": "Cenas foi salva",
+  "data": [
+    {
+      "id": 2,
+      "usuario_id": 1,
+      "nome": "Exemplo de cena",
+      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"dispositivo_id\": 1}, {\"state\": 1, \"bright\": 50, \"dispositivo_id\": 2}, {\"state\": 0, \"dispositivo_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"dispositivo_id\": 4}]",
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-18 09:29:45",
+      "data_update": "2022-07-25 17:08:01"
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
+  "status": false,
+  "msg": "Parâmetros incorretos.",
+  "data": null
+}
+```
+
+
+## Listar ou pesquisar cenas<a name="cenas_listar"></a>
+[^ Topo](#topo) 
+
+Busca uma cena pelo nome ou usuario_id.
+Se não for enviado nenhum dos parâmetros no request, será retornado todos as cenas cadastrados,
+Porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+Parâmetros usados na requisição
+
+| Parâmetro             |Tipo     | Descrição                |
+| --------------------- | ------  | -------------------------|
+| [usuario_id]          | string  | ID de um usuário |
+| [nome]                | string  | Nome de um dispositivo |
+
+
+### Request
+
+`GET|POST: {host}/cenas/lista`
+
+```
+{
+	"nome":"exemplo"
+}
+
+```
+
+### Response
+
+``` 
+{
+  "status": true,
+  "msg": "2 cenas(s) encontrado(s)",
+  "data": [
+    {
+      "id": 1,
+      "usuario_id": 1,
+      "nome": "Exemplo de cena",
+      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"dispositivo_id\": 1}, {\"state\": 1, \"bright\": 50, \"dispositivo_id\": 2}, {\"state\": 0, \"dispositivo_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"dispositivo_id\": 4}]",
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-18 09:29:45",
+      "data_update": "2022-07-25 17:09:27"
+    },
+    {
+      "id": 2,
+      "usuario_id": 1,
+      "nome": "Teste de cena",
+      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"dispositivo_id\": 1}, {\"state\": 1, \"bright\": 50, \"dispositivo_id\": 2}, {\"state\": 0, \"dispositivo_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"dispositivo_id\": 4}]",
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-25 17:09:13",
+      "data_update": "2022-07-25 17:09:28"
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "1 cenas(s) encontrado(s)",
+  "data": [
+    {
+      "id": 1,
+      "usuario_id": 1,
+      "nome": "Exemplo de cena",
+      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"dispositivo_id\": 1}, {\"state\": 1, \"bright\": 50, \"dispositivo_id\": 2}, {\"state\": 0, \"dispositivo_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"dispositivo_id\": 4}]",
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-18 09:29:45",
+      "data_update": "2022-07-25 17:09:27"
+    }
+  ]
+}
+``` 
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "0 empreendimento(s) encontrado(s)",
+  "data": []
+}
+```
+
+
+## Adicionar ou editar rotinas<a name="rotinas_salvar"></a>
+[^ Topo](#topo) 
+
+Adiciona ou edita uma rotina de uma cena previamente cadastrada.
+Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
+Se ID não for passado na URL, faz a adição de um novo registro.
+
+
+### Bearer token
+ Sim
+
+### Parâmetros
+Parâmetros usados na requisição
+
+| Parâmetro     | Tipo    | Descrição     |
+| ------------- | ------- | ----------- | --------------|
+| [usuario_id]  | string  | ID de um usuário |
+| [cena_id]     | string  | ID de um endereço |
+| [nome]        | string  | Nome da rotina |
+| [horarios]    | string  | Horarios da rotina |
+| [datas]       | string  | Datas da rotina |
+| [repeticao]   | string  | Repetições da rotina |
+
+
+### Request
+
+`POST: {host}/rotina/salvar[/{id}]`
+
+```
+{
+  "usuario_id":"1",
+	"cena_id":"1",
+  "nome":"Nome da rotina editada2",
+  "horarios":"10:00,11:00",
+  "datas":"01/05/2022,01/06/2022",
+  "repeticao":null	
+}
+```
+### Response
+
+```
+{
+  "status": true,
+  "msg": "Dispositivo foi adicionada",
+  "data": [
+    {
+      "id": 4,
+      "dispositivo_tipo_id": 2,
+      "usuario_id": 1,
+      "nome": "Exemplo de dispositivo",
+      "marca": "Marca",
+      "modelo": "M-1234"
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
+  "status": false,
+  "msg": "Parâmetros incorretos.",
+  "data": null
+}
+```
+
+
+## Listar ou pesquisar rotinas<a name="rotinas_listar"></a>
+[^ Topo](#topo) 
+
+Busca uma rotina  nome de usuário, usuario_id ou cena_id
+Se não for enviado nenhum dos parâmetros no request, será retornado todos as rotinas cadastrados,
+Porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+Parâmetros usados na requisição
+
+| Parâmetro             |Tipo     | Descrição                |
+| --------------------- | ------  | -------------------------|
+| [nome]          | string  | ID de um usuário |
+| [usuario_id] | string  | ID do tipo de dispositivo |
+| [cena_id]          | string  | ID de um usuário |
+
+
+### Request
+
+`GET|POST: {host}/dispositivos/lista`
+
+```
+{
+	"nome":"exemplo"
+}
+
+```
+
+### Response
+
+``` 
+{
+  "status": true,
+  "msg": "2 rotinas(s) encontrado(s)",
+  "data": [
+    {
+      "id": 13,
+      "usuario_id": 1,
+      "nome": "Exemplo de rotina",
+      "horarios": "11:00,11:00",
+      "datas": "2022-06-01,2022-06-01",
+      "repeticao": null,
+      "ativo": null,
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-25 17:25:32",
+      "data_update": null
+    },
+    {
+      "id": 14,
+      "usuario_id": 1,
+      "nome": "Testes de rotina",
+      "horarios": "11:00,11:00",
+      "datas": "2022-06-01,2022-06-01",
+      "repeticao": null,
+      "ativo": null,
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-25 17:25:41",
+      "data_update": null
+    }
+  ]
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "1 rotinas(s) encontrado(s)",
+  "data": [
+    {
+      "id": 13,
+      "usuario_id": 1,
+      "nome": "Exemplo de rotina",
+      "horarios": "11:00,11:00",
+      "datas": "2022-06-01,2022-06-01",
+      "repeticao": null,
+      "ativo": null,
+      "excluido": "N",
+      "excluido_por": null,
+      "data_excluido": null,
+      "data_insert": "2022-07-25 17:25:32",
+      "data_update": null
+    }
+  ]
+}
+``` 
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "0 rotinas(s) encontrado(s)",
+  "data": []
+}
+```

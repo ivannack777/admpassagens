@@ -17,7 +17,7 @@ class Endereco extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $enderecos = DB::table('endereco');
-        $enderecos->select('*');
+        $enderecos->select('id', 'cep', 'logradouro', 'numero', 'complemento', 'uf', 'cidade', 'pais');
         foreach($params as $campo => $param){
             $enderecos->where($campo, '=', $param);
         }

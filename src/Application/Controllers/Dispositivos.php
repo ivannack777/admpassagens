@@ -171,6 +171,11 @@ class Dispositivos extends BaseController
      */
     public function tipo_save(Request $request, Response $response)
     {
+        $nivel = $_SESSION['user']['nivel'];
+        if($nivel == '1'){
+            return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
+        }
+        
         $sanitize = new Sanitize();
         $requests = $request->getParsedBody();
         if (empty($requests)) {
@@ -181,8 +186,8 @@ class Dispositivos extends BaseController
         $descricao = $requests['descricao'] ?? null;
 
         $dados = [
-            'nome' => $sanitize->name($nome,'ucfirst'),
-            'descricao' => $sanitize->string($descricao)->toup(),
+            'nome' => $sanitize->name($nome)->get(),
+            'descricao' => $sanitize->string($descricao)->firstUp(),
         ];
         // var_dump($dados);exit;
         if (!empty($id)) {

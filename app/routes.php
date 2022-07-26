@@ -18,11 +18,33 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
-use App\Parsedown;
+use Monolog\Logger;
+use Monolog\Handler\RotatingFileHandler;
 
 
+return function (App $app, Request $request) {
 
-return function (App $app) {
+    //salvar log da rota
+    $caminho = '';
+    $uri =   $request->getUri();
+    $body = preg_replace('/\s+/', '', $request->getBody()->__toString() ?? null);
+    $headers = $request->getHeaders();
+    foreach ($headers as $name => $values) {
+        $caminho .= $name . ": " . implode(", ", $values) . "; ";
+    }
+    $log = new Logger( $body );
+    $log->pushHandler(new RotatingFileHandler($_ENV['ACCESS_LOG'], 5, Logger::DEBUG));
+    $log->info(
+        $caminho,
+        [
+            'path' => $uri->getPath(),
+            'query' => $uri->getQuery(),
+            'fragment' => $uri->getFragment()
+        ]
+    );
+    
+
+
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
         // CORS Pre-Flight OPTIONS Request Handler
         return $response;
@@ -30,13 +52,13 @@ return function (App $app) {
 
 
     $app->get('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Olá, bem bindo a API Automação!');
+        // $response->getBody()->write('Olá, bem bindo a API Automação!');
         
         $readme = file_get_contents(__DIR__.'/../doc/usage.md');
-        // $Parsedown = new Parsedown();
-        // echo $Parsedown->text('Hello _Parsedown_!'); # prints: <p>Hello <em>Parsedown</em>!</p>
+        $Parsedown = new Parsedown();
+        $md = $Parsedown->text($readme); # prints: <p>Hello <em>Parsedown</em>!</p>
 
-        $response->getBody()->write($readme);
+        $response->getBody()->write($md);
         return $response;
     });
 

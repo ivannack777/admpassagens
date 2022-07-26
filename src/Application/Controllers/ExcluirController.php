@@ -27,6 +27,11 @@ class ExcluirController
      */
     public function exclude(Request $request, Response $response, array $args)
     {
+        $nivel = $_SESSION['user']['nivel'];
+        if($nivel == '1'){
+            return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
+        }
+        
         $id = $args['id'] ?? null;
         $tabela = null;
         $uriPath = $request->getUri()->getPath();

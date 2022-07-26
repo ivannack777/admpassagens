@@ -19,8 +19,13 @@ class Cena extends \Illuminate\Database\Eloquent\Model
         $cenas = DB::table('cena');
         $cenas->select('*');
         foreach($params as $campo => $param){
-            $cenas->where($campo, '=', $param);
+            if($campo == 'nome'){
+                $cenas->where($campo, 'like', "%{$param}%");
+            } else{
+                $cenas->where($campo, '=', $param);
+            }
         }
+        $cenas->where('excluido', 'N');
         $result = $cenas->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;

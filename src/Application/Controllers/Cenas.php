@@ -34,7 +34,7 @@ class Cenas extends BaseController
 
         $requests = $request->getParsedBody();
         $usuario_id = $requests['usuario_id']??null;
-        $configuracaoes = $requests['configuracaoes']??null;
+        $nome = $requests['nome']??null;
 
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
         $userSession = $_SESSION['user'];
@@ -45,8 +45,8 @@ class Cenas extends BaseController
                 $params['usuario_id'] = $usuario_id;
             }
         }
-        if (!empty($configuracaoes)) {
-            $params['configuracaoes'] = $configuracaoes;
+        if (!empty($nome)) {
+            $params['nome'] = $nome;
         }
         
         if (!empty($params)) {
