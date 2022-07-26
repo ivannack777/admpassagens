@@ -18,20 +18,31 @@ class Usuario extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $usuarios = DB::table('usuario');
-        $usuarios->select('id','pessoa_id','usuario','token','email','celular');
+        $usuarios->select(
+            'usuario.id',
+            'usuario.pessoa_id',
+            'usuario.usuario',
+            'usuario.token',
+            'usuario.email',
+            'usuario.celular',
+            'pessoa.nome',
+            'pessoa.cpf_cnpj',
+            'pessoa.documento',
+        );
         if(isset($params['id'])){
-            $usuarios->where('id', $params['id']);
+            $usuarios->where('usuario.id', $params['id']);
         }
         if(isset($params['usuario'])){
-            $usuarios->where('usuario', '=', $params['usuario']);
+            $usuarios->where('usuario.usuario', '=', $params['usuario']);
         }
         if(isset($params['email'])){
-            $usuarios->where('email', '=', $params['email']);
+            $usuarios->where('usuario.email', '=', $params['email']);
         }
         if(isset($params['celular'])){
-            $usuarios->where('celular', '=', $params['celular']);
+            $usuarios->where('usuario.celular', '=', $params['celular']);
         }
 
+        $usuarios->join('pessoa', 'usuario.pessoa_id','=', 'pessoa.id','left');
         $result = $usuarios->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;

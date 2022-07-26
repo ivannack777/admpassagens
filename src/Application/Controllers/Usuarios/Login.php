@@ -102,11 +102,11 @@ class Login
             //Registra login na tabela usuarios_login 
             $dados['usuario_id'] = $usuario->id;
             $dados['caminho'] = $caminho;
-            $login = Usuario::login($dados);
+            $login = Usuario::list(['id' => $usuario->id]);
 
             $log->info($caminho.'Usuário autenticado');
     
-            return  $response->withJson([$usuario,$login], true, 'Usuário autenticado');
+            return  $response->withJson([$login], true, 'Usuário autenticado');
         } else {
             $log->info($caminho.'Usuário não encontrado');
             return   $response->withJson([], true, 'Usuário não encontrado');
