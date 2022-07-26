@@ -31,6 +31,10 @@ class Empreendimentos extends BaseController
      */
     public function list(Request $request, Response $response)
     {
+        $nivel = $_SESSION['user']['nivel'];
+        if($nivel == '1'){
+            return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
+        }
 
         $requests = $request->getParsedBody();
         $usuario_id = $requests['usuario_id'] ?? null;
@@ -72,6 +76,11 @@ class Empreendimentos extends BaseController
      */
     public function save(Request $request, Response $response, array $args)
     {
+        $nivel = $_SESSION['user']['nivel'];
+        if($nivel == '1'){
+            return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
+        }
+        
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
         $requests = $request->getParsedBody();

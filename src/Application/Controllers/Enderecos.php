@@ -21,6 +21,7 @@ class Enderecos extends BaseController
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+
     }
 
     /**
@@ -31,27 +32,28 @@ class Enderecos extends BaseController
      */
     public function list(Request $request, Response $response)
     {
+        $nivel = $_SESSION['user']['nivel'];
+        if($nivel == '1'){
+            return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
+        }
 
         $requests = $request->getParsedBody();
-        $usuario_id = $requests['usuario_id'] ?? null;
-        $endereco_id = $requests['endereco_id'] ?? null;
-        $nome = $requests['nome'] ?? null;
+        $id = $requests['id'] ?? null;
+        $cep = $requests['cep'] ?? null;
+        $logradouro = $requests['logradouro'] ?? null;
+        $cidade = $requests['usuario_id'] ?? null;
 
-        //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
-        $userSession = $_SESSION['user'];
-        if ($userSession['nivel'] == '1') {
-            $params['usuario_id'] = $userSession['id'];
-        } else{
-            if (!empty($usuario_id)) {
-                $params['usuario_id'] = $usuario_id;
-            }
+        if (!empty($id)) {
+            $params['id'] = $id;
         }
-
-        if (!empty($endereco_id)) {
-            $params['endereco_id'] = $endereco_id;
+        if (!empty($cep)) {
+            $params['cep'] = $cep;
         }
-        if (!empty($nome)) {
-            $params['nome'] = $nome;
+        if (!empty($logradourome)) {
+            $params['logradouro'] = $logradouro;
+        }
+        if (!empty($cidade)) {
+            $params['cidade'] = $cidade;
         }
 
         if (!empty($params)) {
@@ -72,6 +74,11 @@ class Enderecos extends BaseController
      */
     public function save(Request $request, Response $response, array $args)
     {
+        $nivel = $_SESSION['user']['nivel'];
+        if($nivel == '1'){
+            return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
+        }
+        
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
         $requests = $request->getParsedBody();

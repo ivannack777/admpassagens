@@ -22,6 +22,7 @@ class Dispositivo_tipo extends \Illuminate\Database\Eloquent\Model
         foreach($params as $campo => $param){
             $dispositivo_tipos->where($campo, 'like', "%{$param}%");
         }
+        $dispositivo_tipos->where('excluido', 'N');
 
         $result = $dispositivo_tipos->get();
         var_dump( DB::getQueryLog(), $params);

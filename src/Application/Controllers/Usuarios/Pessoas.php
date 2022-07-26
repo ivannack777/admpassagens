@@ -86,15 +86,15 @@ class Pessoas extends BaseController
         $natureza = $requests['natureza'] ?? null;
         $documento = $requests['documento'] ?? null;
         $orgao_emissor = $requests['orgao_emissor'] ?? null;
-
+        
         $dados = [
             'endereco_id' => $endereco_id,
             'nome' => $nome,
             'cpf_cnpj' => $sanitize->number($cpf_cnpj,'clear')->get(),
-            'natureza' => $natureza,
             'documento' => $documento,
             'orgao_emissor' => $orgao_emissor,
         ];
+
 
         if (!empty($id)) {
             $pessoas = PessoaModel::list(['id' => $id]);
