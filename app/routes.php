@@ -70,6 +70,7 @@ return function (App $app, Request $request) {
         $group->map(['GET','POST'], '/pessoa/listar', [Pessoas::class, 'list']);
         $group->post('/pessoa/salvar[/{id}]', [Pessoas::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
+        $group->post('/pessoa/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/dispositivos', function (Group $group) {
@@ -78,6 +79,7 @@ return function (App $app, Request $request) {
         $group->post('/salvar[/{id}]', [Dispositivos::class, 'save']);
         $group->post('/tipo/salvar[/{id}]', [Dispositivos::class, 'tipo_save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
+        $group->post('/tipo/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/cenas', function (Group $group) {

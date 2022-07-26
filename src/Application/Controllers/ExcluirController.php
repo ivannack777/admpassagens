@@ -37,11 +37,17 @@ class ExcluirController
         $uriPath = $request->getUri()->getPath();
         $segments = explode('/', $uriPath);
         switch ($segments[1]) {
-            case 'users':
+            case 'usuarios':
                 $tabela = "usuario";
+                if($segments[2]=='pessoa'){
+                    $tabela = "pessoa";
+                }
                 break;
             case 'dispositivos':
                 $tabela = "dispositivo";
+                if($segments[2]=='tipo'){
+                    $tabela = "dispositivo_tipo";
+                }
                 break;
             case 'cenas':
                 $tabela = "cena";
@@ -60,10 +66,10 @@ class ExcluirController
                 break;
         }
         if (empty($tabela)) {
-            return $response->withJson($result, false, 'Tabela não identificada pela rota');
+            return $response->withJson($segments, false, 'Tabela não identificada pela rota');
         }
         if (empty($id)) {
-            return $response->withJson($result, false, 'ID inválido');
+            return $response->withJson($id, false, 'ID inválido');
         }
 
 
@@ -73,11 +79,10 @@ class ExcluirController
         $tabela->where('id', '=', $id);
         $result = $tabela->get();
         // var_dump( DB::getQueryLog());
-        // var_dump($result, $_SESSION['user']['id']);
+        // var_dump($result, $_SESSION['user']['id']);exit;
 
-
-        if (empty($result)) {
-            return $response->withJson($result, false, 'não foi localizado');
+        if ($result->count()===0) {
+            return $response->withJson($result, false, 'Não foi localizado');
         } else {
             $dados = [
                 "excluido" => "S",
@@ -86,7 +91,9 @@ class ExcluirController
 
             ];
             $tabela->where('id', '=', $id)->update($dados);
-            return $response->withJson($result, true, 'Empreendimentos foi salvo');
+            $result = $tabela->select('id','excluido','excluido_por','data_excluido')->where('id', '=', $id)->get();
+
+            return $response->withJson($result, true, 'Foi excluído');
         }
     }
 }

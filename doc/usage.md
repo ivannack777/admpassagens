@@ -22,7 +22,7 @@
 - [Autenticação](#login_auth) 
 - [Adicionar ou editar usuários](#usuarios_salvar) 
 - [Listar ou pesquisar usuários](#usuarios_listar) 
-- [Excluir um usuários](#usuarios_listar) 
+- [Excluir um usuários](#usuarios_excluir) 
 - [Adicionar ou editar pessoas](#usuarios_pessoa_salvar) 
 - [Listar ou pesquisar pessoas](#usuarios_pessoa_listar) 
 - [Excluir uma pessoa](#usuarios_pessoa_excluir) 
@@ -40,7 +40,7 @@
 - [Exluir uma cenas](#cenas_excluir) 
 - [Adicionar ou editar rotinas](#rotinas_salvar) 
 - [Listar ou pesquisar rotinas](#rotinas_listar) 
-- [Excluir uma rotinas](#rotinas_listar) 
+- [Excluir uma rotinas](#rotinas_excluir) 
 
 
 
@@ -259,6 +259,54 @@ Ou
 ```
 
 
+
+## Excluir um usuário <a name="usuarios_excluir"></a>
+[^ Topo](#topo) 
+
+Busca um usuário pelo ID passado na URL e seta como excluído.
+Usuários nível 1 não tem permissão para esta rota.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+
+Nenhum parâmetro é enviado 
+
+
+### Request
+
+`GET|POST: {host}/usuarios/excluir/{id}`
+
+
+### Response
+
+```
+{
+  "status": false,
+  "msg": "Não foi localizado",
+  "data": []
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "Foi excluído",
+  "data": [
+    {
+      "id": 2,
+      "excluido": "S",
+      "excluido_por": 1,
+      "data_excluido": "2022-07-26 17:01:55"
+    }
+  ]
+}
+```
+
+
 ## Adicionar ou editar pessoas <a name="usuarios_pessoa_salvar"></a>
 [^ Topo](#topo) 
 
@@ -427,6 +475,53 @@ Ou
 ```
 
 
+## Excluir uma pessoa <a name="usuarios_pessoa_excluir"></a>
+[^ Topo](#topo) 
+
+Busca uma pessoa pelo ID passado na URL e seta como excluído.
+Usuários nível 1 não tem permissão para esta rota.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+
+Nenhum parâmetro é enviado 
+
+
+### Request
+
+`GET|POST: {host}/usuarios/pessoa/excluir/{id}`
+
+
+### Response
+
+```
+{
+  "status": false,
+  "msg": "Não foi localizado",
+  "data": []
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "Foi excluído",
+  "data": [
+    {
+      "id": 2,
+      "excluido": "S",
+      "excluido_por": 1,
+      "data_excluido": "2022-07-26 17:01:55"
+    }
+  ]
+}
+```
+
+
 
 ## Endereço/salvar <a name="enderecos_salvar"></a>
 [^ Topo](#topo) 
@@ -567,6 +662,55 @@ Parâmetros usados na requisição
 ```
 
 
+
+
+
+## Excluir um endereco <a name="enderecos_excluir"></a>
+[^ Topo](#topo) 
+
+Busca um endereço pelo ID passado na URL e seta como excluído.
+Usuários nível 1 não tem permissão para esta rota.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+
+Nenhum parâmetro é enviado 
+
+
+### Request
+
+`GET|POST: {host}/enderecos/excluir/{id}`
+
+
+### Response
+
+```
+{
+  "status": false,
+  "msg": "Não foi localizado",
+  "data": []
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "Foi excluído",
+  "data": [
+    {
+      "id": 2,
+      "excluido": "S",
+      "excluido_por": 1,
+      "data_excluido": "2022-07-26 17:01:55"
+    }
+  ]
+}
+```
+
 ## Adicionar ou editar empreendimentos <a name="empreendimentos_salvar"></a>
 [^ Topo](#topo) 
 
@@ -653,7 +797,7 @@ Parâmetros usados na requisição
 
 ### Request
 
-`GET|POST: {host}/usuarios/pessoa/lista`
+`GET|POST: {host}/empreendimentos/lista`
 
 ```
 {
@@ -713,8 +857,51 @@ Ou
 ```
 
 
+## Excluir um empreendimento <a name="empreendimentos_excluir"></a>
+[^ Topo](#topo) 
+
+Busca um empreendimento pelo ID passado na URL e seta como excluído.
+Usuários nível 1 não tem permissão para esta rota.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+
+Nenhum parâmetro é enviado 
 
 
+### Request
+
+`POST: {host}/empreendimentos/excluir/{id}`
+
+
+### Response
+
+```
+{
+  "status": false,
+  "msg": "Não foi localizado",
+  "data": []
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "Foi excluído",
+  "data": [
+    {
+      "id": 2,
+      "excluido": "S",
+      "excluido_por": 1,
+      "data_excluido": "2022-07-26 17:01:55"
+    }
+  ]
+}
+```
 
 ## Adicionar ou editar dispositivos <a name="dispositivos_salvar"></a>
 [^ Topo](#topo) 
@@ -866,11 +1053,56 @@ Ou
 ```
 {
   "status": true,
-  "msg": "0 empreendimento(s) encontrado(s)",
+  "msg": "0 dispositivo(s) encontrado(s)",
   "data": []
 }
 ```
 
+## Excluir um dispositivo <a name="dispositivos_excluir"></a>
+[^ Topo](#topo) 
+
+Busca um dispositivo pelo ID passado na URL e seta como excluído.
+Usuários nível 1 não tem permissão para esta rota.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+
+Nenhum parâmetro é enviado 
+
+
+### Request
+
+`POST: {host}/dispositivos/excluir/{id}`
+
+
+### Response
+
+```
+{
+  "status": false,
+  "msg": "Não foi localizado",
+  "data": []
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "Foi excluído",
+  "data": [
+    {
+      "id": 2,
+      "excluido": "S",
+      "excluido_por": 1,
+      "data_excluido": "2022-07-26 17:01:55"
+    }
+  ]
+}
+```
 
 
 ## Dispositivos/tipo/salvar<a name="dispositivos_tipo_salvar"></a>
@@ -1015,6 +1247,53 @@ Ou
   "data": []
 }
 ```
+
+## Excluir um tipo de dispositivo <a name="dispositivos_tipo_excluir"></a>
+[^ Topo](#topo) 
+
+Busca um tipo de dispositivo pelo ID passado na URL e seta como excluído.
+Usuários nível 1 não tem permissão para esta rota.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+
+Nenhum parâmetro é enviado 
+
+
+### Request
+
+`POST: {host}/dispositivos/tipo/excluir/{id}`
+
+
+### Response
+
+```
+{
+  "status": false,
+  "msg": "Não foi localizado",
+  "data": []
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "Foi excluído",
+  "data": [
+    {
+      "id": 2,
+      "excluido": "S",
+      "excluido_por": 1,
+      "data_excluido": "2022-07-26 17:01:55"
+    }
+  ]
+}
+```
+
 
 
 ## Adicionar ou editar cenas<a name="cenas_salvar"></a>
@@ -1198,6 +1477,52 @@ Ou
 }
 ```
 
+## Excluir uma cena <a name="cenas_excluir"></a>
+[^ Topo](#topo) 
+
+Busca uma cena pelo ID passado na URL e seta como excluído.
+Usuários nível 1 não tem permissão para esta rota.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+
+Nenhum parâmetro é enviado 
+
+
+### Request
+
+`POST: {host}/cenas/excluir/{id}`
+
+
+### Response
+
+```
+{
+  "status": false,
+  "msg": "Não foi localizado",
+  "data": []
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "Foi excluído",
+  "data": [
+    {
+      "id": 2,
+      "excluido": "S",
+      "excluido_por": 1,
+      "data_excluido": "2022-07-26 17:01:55"
+    }
+  ]
+}
+```
+
 
 ## Adicionar ou editar rotinas<a name="rotinas_salvar"></a>
 [^ Topo](#topo) 
@@ -1369,5 +1694,51 @@ Ou
   "status": true,
   "msg": "0 rotinas(s) encontrado(s)",
   "data": []
+}
+```
+
+## Excluir uma rotina <a name="rotinas_excluir"></a>
+[^ Topo](#topo) 
+
+Busca uma rotina pelo ID passado na URL e seta como excluído.
+Usuários nível 1 não tem permissão para esta rota.
+
+### Bearer token
+ Sim
+
+### Parâmetros
+
+Nenhum parâmetro é enviado 
+
+
+### Request
+
+`POST: {host}/rotinas/excluir/{id}`
+
+
+### Response
+
+```
+{
+  "status": false,
+  "msg": "Não foi localizado",
+  "data": []
+}
+```
+
+Ou
+
+```
+{
+  "status": true,
+  "msg": "Foi excluído",
+  "data": [
+    {
+      "id": 2,
+      "excluido": "S",
+      "excluido_por": 1,
+      "data_excluido": "2022-07-26 17:01:55"
+    }
+  ]
 }
 ```
