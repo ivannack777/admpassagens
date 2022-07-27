@@ -60,7 +60,7 @@ class Pessoas extends BaseController
             $pessoas = PessoaModel::list();
         }
 
-        return $response->withJson($pessoas, true, $pessoas->count() . ' usuário(s) encontrado(s)');
+        return $response->withJson($pessoas, true, $pessoas->count() . ($pessoas->count()>1?' pessoas encontradas':' pessoa encontrada'));
     }
 
 

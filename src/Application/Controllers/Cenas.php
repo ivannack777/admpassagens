@@ -55,7 +55,7 @@ class Cenas extends BaseController
             $cenass = CenaModel::list();
         }
 
-        return $response->withJson($cenass, true, $cenass->count() . ' cenas(s) encontrado(s)');
+        return $response->withJson($cenass, true, $cenass->count() . ($cenass->count()>1?' cenas encontradas':' cena encontrada'));
 
     
     }

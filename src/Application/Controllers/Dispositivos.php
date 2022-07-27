@@ -72,7 +72,7 @@ class Dispositivos extends BaseController
             $dispositivos = DispositivoModel::list();
         }
 
-        return $response->withJson($dispositivos, true, $dispositivos->count() . ' dispositivo(s) encontrado(s)');
+        return $response->withJson($dispositivos, true, $dispositivos->count() .($dispositivos->count()>1 ? ' dispositivos encontrados':' dispositivo encontrado'));
     }
 
 
@@ -99,12 +99,12 @@ class Dispositivos extends BaseController
         }
 
         if (!empty($params)) {
-            $dispositivos = Dispositivo_tipoModel::list($params);
+            $dispositivosTipo = Dispositivo_tipoModel::list($params);
         } else {
-            $dispositivos = Dispositivo_tipoModel::list();
+            $dispositivosTipo = Dispositivo_tipoModel::list();
         }
 
-        return $response->withJson($dispositivos, true, $dispositivos->count() . ' tipo(s) de dispositivo(s) encontrado(s)');
+        return $response->withJson($dispositivosTipo, true, $dispositivosTipo->count() . ( $dispositivosTipo->count()>1?' tipos de dispositivos encontrados':' tipo de dispositivo encontrado'));
     }
 
     /**

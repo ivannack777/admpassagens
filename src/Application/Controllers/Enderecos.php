@@ -62,7 +62,7 @@ class Enderecos extends BaseController
             $enderecos = EnderecoModel::list();
         }
 
-        return $response->withJson($enderecos, true, $enderecos->count() . ' endereco(s) encontrado(s)');
+        return $response->withJson($enderecos, true, $enderecos->count() .($enderecos->count()>1?' endereços encontrados':' endereço encontrado'));
     }
 
 

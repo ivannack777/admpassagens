@@ -67,12 +67,12 @@ class Rotinas extends BaseController
 
 
         if (!empty($params)) {
-            $rotinass = RotinaModel::list($params);
+            $rotinas = RotinaModel::list($params);
         } else {
-            $rotinass = RotinaModel::list();
+            $rotinas = RotinaModel::list();
         }
 
-        return $response->withJson($rotinass, true, $rotinass->count() . ' rotinas(s) encontrado(s)');
+        return $response->withJson($rotinas, true, $rotinas->count() . ($rotinas->count() >1?' rotinas encontradas':' rotina encontrada'));
     }
 
 

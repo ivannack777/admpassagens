@@ -64,7 +64,7 @@ class Empreendimentos extends BaseController
             $empreendimentos = EmpreendimentoModel::list();
         }
 
-        return $response->withJson($empreendimentos, true, $empreendimentos->count() . ' empreendimento(s) encontrado(s)');
+        return $response->withJson($empreendimentos, true, $empreendimentos->count() .  ($empreendimentos->count()>1?' empreendimentos encontrados':' empreendimento encontrado'));
     }
 
 

@@ -68,7 +68,7 @@ class Usuarios extends BaseController
             $usuarios = UsuarioModel::list();
         }
 
-        return $response->withJson($usuarios, true, $usuarios->count() . ' usuário(s) encontrado(s)');
+        return $response->withJson($usuarios, true, $usuarios->count() . ($usuarios->count()>1?' usuários encontrados':' usuário encontrado'));
     }
 
 
