@@ -90,13 +90,11 @@ class Empreendimentos extends BaseController
 
         $usuario_id = $requests['usuario_id'] ?? null;
         $endereco_id = $requests['endereco_id'] ?? null;
-        $empreendimento_id = $requests['empreendimento_id'] ?? null;
         $nome =  $requests['nome'] ?? null;
 
         $dados = [
             'usuario_id' => $usuario_id,
             'endereco_id' => $endereco_id,
-            'empreendimento_id' => $empreendimento_id,
             'nome' => $sanitize->string($nome)->doubles()->firstUp()->get(),
         ];
 

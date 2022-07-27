@@ -119,7 +119,7 @@ class Dispositivos extends BaseController
         }
 
         $usuario_id = $requests['usuario_id'] ?? null;
-        $emrpeendimento_id = $requests['emrpeendimento_id'] ?? null;
+        $empreendimento_id = $requests['empreendimento_id'] ?? null;
         $dispositivo_tipo_id = $requests['dispositivo_tipo_id'] ?? null;
         $nome =  $requests['nome'] ?? null;
         $marca = $requests['marca'] ?? null;
@@ -127,7 +127,7 @@ class Dispositivos extends BaseController
 
         $dados = [
             'usuario_id' => $usuario_id,
-            'emrpeendimento_id' => $emrpeendimento_id,
+            'empreendimento_id' => $empreendimento_id,
             'dispositivo_tipo_id' => $dispositivo_tipo_id,
             'nome' => $sanitize->string($nome)->doubles()->firstUp()->get(),
             'marca' => $sanitize->string($marca)->firstUp()->get(),
