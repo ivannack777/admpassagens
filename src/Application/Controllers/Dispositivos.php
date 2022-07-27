@@ -38,6 +38,7 @@ class Dispositivos extends BaseController
         
         $requests = $request->getParsedBody();
         $usuario_id = $requests['usuario_id'] ?? null;
+        $dispositivo_tipo_id = $requests['dispositivo_tipo_id'] ?? null;
         $nome = $requests['nome'] ?? null;
         $marca = $requests['marca'] ?? null;
         $modelo = $requests['modelo'] ?? null;
@@ -50,6 +51,9 @@ class Dispositivos extends BaseController
             if (!empty($usuario_id)) {
                 $params['usuario_id'] = $usuario_id;
             }
+        }
+        if (!empty($dispositivo_tipo_id)) {
+            $params['dispositivo_tipo_id'] = $dispositivo_tipo_id;
         }
         if (!empty($nome)) {
             $params['nome'] = $nome;
