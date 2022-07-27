@@ -148,7 +148,7 @@ class Dispositivos extends BaseController
             }
         } else {
             $v = new Validator($dados);
-            $v->rule('required', ['usuario_id', 'nome']);
+            $v->rule('required', ['usuario_id', 'nome','empreendimento_id','dispositivo_tipo_id']);
 
             if($v->validate()) {
                 $dispositivoInsert = DispositivoModel::create($dados);
