@@ -17,14 +17,25 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $dispositivos = DB::table('dispositivo');
-        $dispositivos->select('id','dispositivo_tipo_id','usuario_id','nome','marca','modelo','icone', 'estado');
+        $dispositivos->select(
+            'dispositivo.id',
+            'dispositivo.dispositivo_tipo_id',
+            'dispositivo.usuario_id',
+            'dispositivo.nome',
+            'dispositivo.marca',
+            'dispositivo.modelo',
+            'dispositivo.estado',
+            'dispositivo_tipo.icone',
+            'dispositivo_tipo.nome as dispositivo_tipo'
+        );
         foreach($params as $campo => $param){
-            if($campo == 'nome'){
+            if($campo == 'dispositivo.nome'){
                 $dispositivos->where($campo, 'like', "%{$param}%");
             } else{
                 $dispositivos->where($campo, '=', $param);
             }
         }
+        $dispositivos->join('dispositivo_tipo', 'dispositivo.dispositivo_tipo_id', '=', 'dispositivo_tipo.id');
         $result = $dispositivos->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;

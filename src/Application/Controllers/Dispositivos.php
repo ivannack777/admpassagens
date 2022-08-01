@@ -46,24 +46,24 @@ class Dispositivos extends BaseController
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
         $userSession = $_SESSION['user'];
         if ($userSession['nivel'] == '1') {
-            $params['usuario_id'] = $userSession['id'];
+            $params['dispositivo.usuario_id'] = $userSession['id'];
         } else{
             if (!empty($usuario_id)) {
-                $params['usuario_id'] = $usuario_id;
+                $params['dispositivo.usuario_id'] = $usuario_id;
             }
         }
         if (!empty($dispositivo_tipo_id)) {
-            $params['dispositivo_tipo_id'] = $dispositivo_tipo_id;
+            $params['dispositivo.dispositivo_tipo_id'] = $dispositivo_tipo_id;
         }
         if (!empty($nome)) {
-            $params['nome'] = $nome;
+            $params['dispositivo.nome'] = $nome;
         }
         if (!empty($marca)) {
-            $params['marca'] = $marca;
+            $params['dispositivo.marca'] = $marca;
         }
 
         if (!empty($modelo)) {
-            $params['modelo'] = $modelo;
+            $params['dispositivo.modelo'] = $modelo;
         }
 
         if (!empty($params)) {
@@ -173,6 +173,7 @@ class Dispositivos extends BaseController
 
     /**
      * Altera o estado de um dispositivo
+     * criado metodo especifico para APP para ter segurança de que sempre terá id do usuario identificado pelo bearer token
      * @param Request $request
      * @param Response $response
      * @return string json
@@ -203,7 +204,7 @@ class Dispositivos extends BaseController
                 $dispositivos = DispositivoModel::list(['id' => $id]);
                 return $response->withJson($dispositivos, true, 'Estado do dispositivos foi alterado');
             } else {
-                return $response->withJson(['id' => $id, 'usuario_id'=>$usuario_id], false, 'Dispositivo não foi localizado');
+                return $response->withJson(['dispositivo.id' => $id, 'dispositivo.usuario_id'=>$usuario_id], false, 'Dispositivo não foi localizado');
             }
         } 
         
