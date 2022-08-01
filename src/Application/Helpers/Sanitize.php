@@ -8,15 +8,16 @@ class Sanitize
 {
 	/**
 	*	Sanitiza como string
-	*	@var $this->input string que sera samotizada
-	*	@var $modo string
+	*	@var string $this->input string que será sanitizada
+	*	@var string $modo 
 	*	  inner: para limpar caracteres espaços em branco do inicio, final e interior da string
 	*	  doubles: para limpar caracteres espaços em branco do inicio e final e espaços caractes duplicados no interior da string
 	*	  celar: para limpar caracteres que não são letras ou numeros da string
 	*	  regex: para limpar caracteres usando um regex customizado na string
-	*	@var $regex string um regex customizado
+	*	@var string $regex um regex customizado
+	*   @var string $str valor de entrada
 	*/
-	private $input;
+	private string $input='';
 
 	public function __construct(){
 		// $this->input = $str;

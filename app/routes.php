@@ -80,6 +80,7 @@ return function (App $app, Request $request) {
         $group->post('/tipo/salvar[/{id}]', [Dispositivos::class, 'tipo_save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
         $group->post('/tipo/excluir/{id}', [ExcluirController::class, 'exclude']);
+        $group->post('/setEstadoAPP/{id}', [Dispositivos::class, 'setStateApp']);
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/cenas', function (Group $group) {

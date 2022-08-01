@@ -128,6 +128,7 @@ class Dispositivos extends BaseController
         $nome =  $requests['nome'] ?? null;
         $marca = $requests['marca'] ?? null;
         $modelo = $requests['modelo'] ?? null;
+        $icone = $requests['icone'] ?? null;
 
         $dados = [
             'usuario_id' => $usuario_id,
@@ -136,6 +137,7 @@ class Dispositivos extends BaseController
             'nome' => $sanitize->string($nome)->doubles()->firstUp()->get(),
             'marca' => $sanitize->string($marca)->firstUp()->get(),
             'modelo' => $sanitize->string($modelo)->get(),
+            'icone' => $sanitize->string($icone)->get(),
         ];
 
 
@@ -146,9 +148,9 @@ class Dispositivos extends BaseController
 
                 DispositivoModel::where(['id' => $id])->update($dados);
                 $dispositivos = DispositivoModel::list(['id' => $id]);
-                return $response->withJson($dispositivos, true, 'Dispositivos foi salva');
+                return $response->withJson($dispositivos, true, 'Dispositivos foi salvo');
             } else {
-                return $response->withJson($requests, false, 'Dispositivo não foi localizada');
+                return $response->withJson($requests, false, 'Dispositivo não foi localizado');
             }
         } else {
             $v = new Validator($dados);
@@ -157,7 +159,7 @@ class Dispositivos extends BaseController
             if($v->validate()) {
                 $dispositivoInsert = DispositivoModel::create($dados);
                 $dispositivoNew = DispositivoModel::list(['id' => $dispositivoInsert->id]);
-                return $response->withJson($dispositivoNew, true, 'Dispositivo foi adicionada');
+                return $response->withJson($dispositivoNew, true, 'Dispositivo foi adicionado');
             } else {
                 // Errors
                 $Errors = $this->valitorMessages($v->errors());
@@ -166,6 +168,50 @@ class Dispositivos extends BaseController
             }
         }
     }
+
+
+
+    /**
+     * Altera o estado de um dispositivo
+     * @param Request $request
+     * @param Response $response
+     * @return string json
+     */
+    public function setStateApp(Request $request, Response $response, array $args)
+    {
+        $id = $args['id'] ?? null;
+        $sanitize = new Sanitize();
+        $requests = $request->getParsedBody();
+        if (empty($requests)) {
+            return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
+        }
+
+        $usuario_id = $_SESSION['user']['id'] ?? null;
+        $estado = $requests['estado'] ?? null;
+
+        $dados = [
+            'estado' => $sanitize->integer($estado)->get(),
+        ];
+
+        //  var_dump($_SESSION);exit;
+
+        if (!empty($id)) {
+            $dispositivos = DispositivoModel::list(['id' => $id, 'usuario_id'=>$usuario_id]);
+            if ($dispositivos->count()) {
+
+                DispositivoModel::where(['id' => $id])->update($dados);
+                $dispositivos = DispositivoModel::list(['id' => $id]);
+                return $response->withJson($dispositivos, true, 'Estado do dispositivos foi alterado');
+            } else {
+                return $response->withJson(['id' => $id, 'usuario_id'=>$usuario_id], false, 'Dispositivo não foi localizado');
+            }
+        } 
+        
+                return $response->withJson($dados, false, 'ID do dispositivo não foi informado');
+        
+        
+    }
+
 
     /**
      * Salva um tipo de dispositivos 
