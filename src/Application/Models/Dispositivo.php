@@ -22,6 +22,7 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
             'dispositivo.dispositivo_tipo_id',
             'dispositivo.usuario_id',
             'dispositivo.ambiente_id',
+            'ambiente.nome as ambiente_nome',
             'dispositivo.nome',
             'dispositivo.marca',
             'dispositivo.modelo',
@@ -37,6 +38,7 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
             }
         }
         $dispositivos->join('dispositivo_tipo', 'dispositivo.dispositivo_tipo_id', '=', 'dispositivo_tipo.id');
+        $dispositivos->join('ambiente', 'dispositivo.ambiente_id', '=', 'ambiente.id');
         $result = $dispositivos->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;
