@@ -39,6 +39,8 @@ class Dispositivos extends BaseController
         $requests = $request->getParsedBody();
         $usuario_id = $requests['usuario_id'] ?? null;
         $dispositivo_tipo_id = $requests['dispositivo_tipo_id'] ?? null;
+        $empreendimento_id = $requests['empreendimento_id'] ?? null;
+        $ambiente_id = $requests['ambiente_id'] ?? null;
         $nome = $requests['nome'] ?? null;
         $marca = $requests['marca'] ?? null;
         $modelo = $requests['modelo'] ?? null;
@@ -54,6 +56,12 @@ class Dispositivos extends BaseController
         }
         if (!empty($dispositivo_tipo_id)) {
             $params['dispositivo.dispositivo_tipo_id'] = $dispositivo_tipo_id;
+        }
+        if (!empty($empreendimento_id)) {
+            $params['dispositivo.empreendimento_id'] = $empreendimento_id;
+        }
+        if (!empty($ambiente_id)) {
+            $params['dispositivo.ambiente_id'] = $ambiente_id;
         }
         if (!empty($nome)) {
             $params['dispositivo.nome'] = $nome;
@@ -123,31 +131,32 @@ class Dispositivos extends BaseController
         }
 
         $usuario_id = $requests['usuario_id'] ?? null;
-        $empreendimento_id = $requests['empreendimento_id'] ?? null;
         $dispositivo_tipo_id = $requests['dispositivo_tipo_id'] ?? null;
+        $empreendimento_id = $requests['empreendimento_id'] ?? null;
+        $ambiente_id = $requests['ambiente_id'] ?? null;
         $nome =  $requests['nome'] ?? null;
         $marca = $requests['marca'] ?? null;
         $modelo = $requests['modelo'] ?? null;
-        $icone = $requests['icone'] ?? null;
 
         $dados = [
             'usuario_id' => $usuario_id,
-            'empreendimento_id' => $empreendimento_id,
             'dispositivo_tipo_id' => $dispositivo_tipo_id,
+            'empreendimento_id' => $empreendimento_id,
+            'ambiente_id' => $ambiente_id,
             'nome' => $sanitize->string($nome)->doubles()->firstUp()->get(),
             'marca' => $sanitize->string($marca)->firstUp()->get(),
             'modelo' => $sanitize->string($modelo)->get(),
-            'icone' => $sanitize->string($icone)->get(),
         ];
 
+        $dados = array_filter($dados);
 
         if (!empty($id)) {
-            $dispositivos = DispositivoModel::list(['id' => $id]);
+            $dispositivos = DispositivoModel::list(['dispositivo.id' => $id]);
             if ($dispositivos->count()) {
                 //  var_dump($list);exit;
 
                 DispositivoModel::where(['id' => $id])->update($dados);
-                $dispositivos = DispositivoModel::list(['id' => $id]);
+                $dispositivos = DispositivoModel::list(['dispositivo.id' => $id]);
                 return $response->withJson($dispositivos, true, 'Dispositivos foi salvo');
             } else {
                 return $response->withJson($requests, false, 'Dispositivo não foi localizado');
@@ -158,7 +167,7 @@ class Dispositivos extends BaseController
 
             if($v->validate()) {
                 $dispositivoInsert = DispositivoModel::create($dados);
-                $dispositivoNew = DispositivoModel::list(['id' => $dispositivoInsert->id]);
+                $dispositivoNew = DispositivoModel::list(['dispositivo.id' => $dispositivoInsert->id]);
                 return $response->withJson($dispositivoNew, true, 'Dispositivo foi adicionado');
             } else {
                 // Errors
