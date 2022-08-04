@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-// use App\Application\Actions\User\ListUsersAction;
+use App\Application\Controllers\Ambientes;
 use App\Application\Middleware\CheckTokenMiddleware;
 use App\Application\Controllers\Usuarios\Login;
 use App\Application\Controllers\Usuarios\Usuarios;
@@ -73,14 +73,22 @@ return function (App $app, Request $request) {
         $group->post('/pessoa/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 
+
+    $app->group('/ambientes', function (Group $group) {
+        $group->map(['GET','POST'], '/listar', [Ambientes::class, 'list']);
+        $group->post('/salvar[/{id}]', [Ambientes::class, 'save']);
+        $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
+    })->add(CheckTokenMiddleware::class,$app);
+
+
     $app->group('/dispositivos', function (Group $group) {
         $group->map(['GET','POST'], '/listar', [Dispositivos::class, 'list']);
         $group->map(['GET','POST'], '/tipo/listar', [Dispositivos::class, 'tipo_list']);
         $group->post('/salvar[/{id}]', [Dispositivos::class, 'save']);
         $group->post('/tipo/salvar[/{id}]', [Dispositivos::class, 'tipo_save']);
+        $group->post('/setEstadoAPP/{id}', [Dispositivos::class, 'setStateApp']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
         $group->post('/tipo/excluir/{id}', [ExcluirController::class, 'exclude']);
-        $group->post('/setEstadoAPP/{id}', [Dispositivos::class, 'setStateApp']);
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/cenas', function (Group $group) {
@@ -92,6 +100,7 @@ return function (App $app, Request $request) {
     $app->group('/rotinas', function (Group $group) {
         $group->map(['GET','POST'], '/listar', [Rotinas::class, 'list']);
         $group->post('/salvar[/{id}]', [Rotinas::class, 'save']);
+        $group->post('/executar', [Rotinas::class, 'execute']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 
