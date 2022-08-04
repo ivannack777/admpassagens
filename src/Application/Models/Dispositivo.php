@@ -37,10 +37,11 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
                 $dispositivos->where($campo, '=', $param);
             }
         }
-        $dispositivos->join('dispositivo_tipo', 'dispositivo.dispositivo_tipo_id', '=', 'dispositivo_tipo.id');
-        $dispositivos->join('ambiente', 'dispositivo.ambiente_id', '=', 'ambiente.id');
+        $dispositivos->join('dispositivo_tipo', 'dispositivo.dispositivo_tipo_id', '=', 'dispositivo_tipo.id', 'left');
+        $dispositivos->join('ambiente', 'dispositivo.ambiente_id', '=', 'ambiente.id', 'left');
         $result = $dispositivos->get();
-        // var_dump( DB::getQueryLog(), $params);exit;
+        // print_r( DB::getQueryLog());
+        // var_dump( $params);exit;
         return $result;
     }   
 
