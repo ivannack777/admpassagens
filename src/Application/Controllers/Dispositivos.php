@@ -210,7 +210,7 @@ class Dispositivos extends BaseController
             if ($dispositivos->count()) {
 
                 DispositivoModel::where(['id' => $id])->update($dados);
-                $dispositivos = DispositivoModel::list(['id' => $id]);
+                $dispositivos = DispositivoModel::list(['dispositivo.id' => $id]);
                 return $response->withJson($dispositivos, true, 'Estado do dispositivos foi alterado');
             } else {
                 return $response->withJson(['dispositivo.id' => $id, 'dispositivo.usuario_id'=>$usuario_id], false, 'Dispositivo não foi localizado');
@@ -222,6 +222,61 @@ class Dispositivos extends BaseController
         
     }
 
+
+    /**
+     * Altera o favorito de um dispositivo
+     * @param Request $request
+     * @param Response $response
+     * @return string json
+     */
+    public function setFavorite(Request $request, Response $response, array $args)
+    {
+        $id = $args['id'] ?? null;
+        $sanitize = new Sanitize();
+        $requests = $request->getParsedBody();
+        if (empty($requests)) {
+            return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
+        }
+
+        $usuario_id = $_SESSION['user']['id'] ?? null;
+        $favorito = $requests['favorito'] ?? null;
+
+        if (empty($id)) {
+            return $response->withJson([], false, 'ID do dispositivo não foi informado');
+        }
+
+        $dados = [
+            'favorito' => $sanitize->integer($favorito)->get(),
+        ];
+
+
+        $v = new Validator($dados);
+        $v->rule('required', ['favorito']);
+        $v->rule('integer', ['favorito']);
+        $v->rule('in', 'favorito', [0,1]);
+
+
+        if($v->validate()) {
+            $dispositivos = DispositivoModel::list(['dispositivo.id' => $id, 'dispositivo.usuario_id'=>$usuario_id]);
+            if ($dispositivos->count()) {
+
+                DispositivoModel::where(['id' => $id])->update($dados);
+                $dispositivos = DispositivoModel::list(['dispositivo.id' => $id]);
+                return $response->withJson($dispositivos, true, 'Favorito do dispositivos foi alterado');
+            } else {
+                return $response->withJson(['dispositivo.id' => $id, 'dispositivo.usuario_id'=>$usuario_id], false, 'Dispositivo não foi localizado');
+            }
+        } else {
+            // Errors
+            $Errors = $this->valitorMessages($v->errors());
+    
+            return $response->withJson($dados, false,$Errors);
+        }
+        
+                
+        
+        
+    }
 
     /**
      * Salva um tipo de dispositivos 

@@ -28,10 +28,10 @@ class BaseController
             $str .= $field .": ";
             foreach($errorMessages as $errorMessage){
                 $str .= $errorMessage;
+                $str .= $separator;
             }
-            $str .= $separator;
 
         }
-        return $str;
+        return trim($str);
     }
 }
