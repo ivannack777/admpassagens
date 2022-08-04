@@ -22,7 +22,7 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
             'dispositivo.dispositivo_tipo_id',
             'dispositivo.usuario_id',
             'dispositivo.ambiente_id',
-            'ambiente.nome as ambiente_nome',
+            'ambiente.nome as ambiente',
             'dispositivo.nome',
             'dispositivo.marca',
             'dispositivo.modelo',
