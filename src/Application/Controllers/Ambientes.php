@@ -92,7 +92,7 @@ class Ambientes extends BaseController
         $dados = [
             'usuario_id' => $usuario_id,
             'empreendimento_id' => $empreendimento_id,
-            'nome' => $sanitize->string($nome)->get(),
+            'nome' => $sanitize->name($nome, 'ucfirst')->get(),
         ];
 
         if (!empty($id)) {
