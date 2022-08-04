@@ -4,7 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Rotina extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['id','usuario_id', 'nome', 'horarios', 'datas', 'repeticao','excluido','excluido_por','data_excluido'];
+    protected $fillable = ['id','usuario_id', 'nome', 'horarios', 'datas', 'repeticao_tipo', 'repeticao','excluido','excluido_por','data_excluido'];
     public $timestamps = false;
     public $table = 'rotina';
 
