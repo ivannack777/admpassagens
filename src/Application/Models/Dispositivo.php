@@ -4,7 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Dispositivo extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['id','dispositivo_tipo_id','empreendimento_id','usuario_id','nome','marca','modelo','icone', 'estado'];
+    protected $fillable = ['id','dispositivo_tipo_id','empreendimento_id','usuario_id','ambiente_id','nome','marca','modelo','icone', 'estado'];
     public $timestamps = false;
     public $table = 'dispositivo';
 
