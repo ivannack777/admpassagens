@@ -29,7 +29,8 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
             'dispositivo.estado',
             'dispositivo.favorito',
             'dispositivo_tipo.icone',
-            'dispositivo_tipo.nome as dispositivo_tipo'
+            'dispositivo_tipo.nome as dispositivo_tipo',
+            'dispositivo_tipo.botao_tipo'
         );
         foreach($params as $campo => $param){
             if($campo == 'dispositivo.nome'){

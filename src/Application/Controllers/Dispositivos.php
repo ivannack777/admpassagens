@@ -93,11 +93,14 @@ class Dispositivos extends BaseController
     public function tipo_list(Request $request, Response $response)
     {
 
-        $method = $request->getMethod();
-
         $requests = $request->getParsedBody();
+        $id = $requests['id'] ?? null;
         $nome = $requests['nome'] ?? null;
         $descricao = $requests['descricao'] ?? null;
+
+        if (!empty($id)) {
+            $params['id'] = $id;
+        }
 
         if (!empty($nome)) {
             $params['nome'] = $nome;
@@ -206,7 +209,7 @@ class Dispositivos extends BaseController
         //  var_dump($_SESSION);exit;
 
         if (!empty($id)) {
-            $dispositivos = DispositivoModel::list(['id' => $id, 'usuario_id'=>$usuario_id]);
+            $dispositivos = DispositivoModel::list(['dispositivo.id' => $id, 'dispositivo.usuario_id'=>$usuario_id]);
             if ($dispositivos->count()) {
 
                 DispositivoModel::where(['id' => $id])->update($dados);
@@ -284,13 +287,14 @@ class Dispositivos extends BaseController
      * @param Response $response
      * @return string json
      */
-    public function tipo_save(Request $request, Response $response)
+    public function tipo_save(Request $request, Response $response, array $args)
     {
         $nivel = $_SESSION['user']['nivel'];
         if($nivel == '1'){
             return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         }
         
+        $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
         $requests = $request->getParsedBody();
         if (empty($requests)) {
@@ -299,12 +303,16 @@ class Dispositivos extends BaseController
 
         $nome = $requests['nome'] ?? null;
         $descricao = $requests['descricao'] ?? null;
+        $icone = $requests['icone'] ?? null;
+        $botao_tipo = $requests['botao_tipo'] ?? null;
 
         $dados = [
             'nome' => $sanitize->name($nome)->get(),
-            'descricao' => $sanitize->string($descricao)->firstUp(),
+            'descricao' => $sanitize->string($descricao)->firstUp()->get(),
+            'icone' => $icone,
+            'botao_tipo' => $sanitize->string($botao_tipo)->firstUp()->get()
         ];
-        // var_dump($dados);exit;
+        
         if (!empty($id)) {
             $dispositivo_tipos = Dispositivo_tipoModel::list(['id' => $id]);
             if ($dispositivo_tipos->count()) {
@@ -320,6 +328,7 @@ class Dispositivos extends BaseController
                         
             $v = new Validator($dados);
             $v->rule('required', ['nome']);
+            $v->rule('in', 'botao_tipo', ['Power','Switch','Slide']);
             
             if($v->validate()) {
                 $dispositivo_tipoInsert = Dispositivo_tipoModel::create($dados);
