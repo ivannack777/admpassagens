@@ -101,6 +101,10 @@ class Dispositivos extends BaseController
                 unset($dispositivo->icone_power_on);
                 unset($dispositivo->icone_power_off);
 
+                //forçar icone = null temporariamente
+                $dispositivo->icone = null;
+                $dispositivo->icone_power = null;
+
             }
         }
 

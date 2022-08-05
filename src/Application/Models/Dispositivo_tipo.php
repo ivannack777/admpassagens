@@ -18,7 +18,16 @@ class Dispositivo_tipo extends \Illuminate\Database\Eloquent\Model
     {
         DB::enableQueryLog();
         $dispositivo_tipos = DB::table('dispositivo_tipo');
-        $dispositivo_tipos->select('id','nome','descricao','icone','botao_tipo');
+        $dispositivo_tipos->select(
+            'id',
+            'nome',
+            'descricao',
+            // 'dispositivo_tipo.icone_on',
+            // 'dispositivo_tipo.icone_off',
+            // 'dispositivo_tipo.icone_power_on',
+            // 'dispositivo_tipo.icone_power_off',
+            'botao_tipo'
+        );
         foreach($params as $campo => $param){
             $dispositivo_tipos->where($campo, 'like', "%{$param}%");
         }
