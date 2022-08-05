@@ -35,7 +35,7 @@ class Dispositivos extends BaseController
     public function list(Request $request, Response $response)
     {
 
-        
+        $dispositivosArr = [];
         $requests = $request->getParsedBody();
         $id = $requests['id'] ?? null;
         $usuario_id = $requests['usuario_id'] ?? null;
@@ -82,6 +82,26 @@ class Dispositivos extends BaseController
             $dispositivos = DispositivoModel::list($params);
         } else {
             $dispositivos = DispositivoModel::list();
+        }
+
+        if($dispositivos->count()){
+            foreach($dispositivos as $dispositivo){
+                
+                // Por padrão, icone e icone_power fica como off 
+                $dispositivo->icone = $dispositivo->icone_off;
+                $dispositivo->icone_power = $dispositivo->icone_power_off;
+                // se o estado == ligado (1), icone e icone_power fica como on
+                if($dispositivo->estado){
+                    $dispositivo->icone = $dispositivo->icone_on;
+                    $dispositivo->icone_power = $dispositivo->icone_power_on;
+                }
+                // retirar icones on e off, pois já foram substituidos acima
+                unset($dispositivo->icone_on);
+                unset($dispositivo->icone_off);
+                unset($dispositivo->icone_power_on);
+                unset($dispositivo->icone_power_off);
+
+            }
         }
 
         return $response->withJson($dispositivos, true, $dispositivos->count() .($dispositivos->count()>1 ? ' dispositivos encontrados':' dispositivo encontrado'));

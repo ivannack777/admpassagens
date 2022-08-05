@@ -28,10 +28,15 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
             'dispositivo.modelo',
             'dispositivo.estado',
             'dispositivo.favorito',
-            'dispositivo_tipo.icone',
+            'dispositivo_tipo.icone_on',
+            'dispositivo_tipo.icone_off',
+            'dispositivo_tipo.icone_power_on',
+            'dispositivo_tipo.icone_power_off',
             'dispositivo_tipo.nome as dispositivo_tipo',
             'dispositivo_tipo.botao_tipo'
         );
+        // $dispositivos->selectRaw("'' as icone");
+        // $dispositivos->selectRaw("'' as icone_power");
         foreach($params as $campo => $param){
             if($campo == 'dispositivo.nome'){
                 $dispositivos->where($campo, 'like', "%{$param}%");
