@@ -35,17 +35,17 @@ class Dispositivos extends BaseController
     public function list(Request $request, Response $response)
     {
 
-        $dispositivosArr = [];
         $requests = $request->getParsedBody();
         $id = $requests['id'] ?? null;
         $usuario_id = $requests['usuario_id'] ?? null;
         $dispositivo_tipo_id = $requests['dispositivo_tipo_id'] ?? null;
         $empreendimento_id = $requests['empreendimento_id'] ?? null;
         $ambiente_id = $requests['ambiente_id'] ?? null;
+        $dispositivo_ambiente_id = $requests['dispositivo_ambiente_id'] ?? null;
         $nome = $requests['nome'] ?? null;
         $marca = $requests['marca'] ?? null;
         $modelo = $requests['modelo'] ?? null;
-        
+
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
         $userSession = $_SESSION['user'];
         if ($userSession['nivel'] == '1') {
@@ -67,6 +67,9 @@ class Dispositivos extends BaseController
         if (!empty($ambiente_id)) {
             $params['dispositivo.ambiente_id'] = $ambiente_id;
         }
+        if (!empty($dispositivo_ambiente_id)) {
+            $params['dispositivo.dispositivo_ambiente_id'] = $dispositivo_ambiente_id;
+        }
         if (!empty($nome)) {
             $params['dispositivo.nome'] = $nome;
         }
@@ -84,29 +87,7 @@ class Dispositivos extends BaseController
             $dispositivos = DispositivoModel::list();
         }
 
-        if($dispositivos->count()){
-            foreach($dispositivos as $dispositivo){
-                
-                // Por padrão, icone e icone_power fica como off 
-                $dispositivo->icone = $dispositivo->icone_off;
-                $dispositivo->icone_power = $dispositivo->icone_power_off;
-                // se o estado == ligado (1), icone e icone_power fica como on
-                if($dispositivo->estado){
-                    $dispositivo->icone = $dispositivo->icone_on;
-                    $dispositivo->icone_power = $dispositivo->icone_power_on;
-                }
-                // retirar icones on e off, pois já foram substituidos acima
-                unset($dispositivo->icone_on);
-                unset($dispositivo->icone_off);
-                unset($dispositivo->icone_power_on);
-                unset($dispositivo->icone_power_off);
 
-                //forçar icone = null temporariamente
-                $dispositivo->icone = null;
-                $dispositivo->icone_power = null;
-
-            }
-        }
 
         return $response->withJson($dispositivos, true, $dispositivos->count() .($dispositivos->count()>1 ? ' dispositivos encontrados':' dispositivo encontrado'));
     }
@@ -248,9 +229,50 @@ class Dispositivos extends BaseController
             }
         } 
         
-                return $response->withJson($dados, false, 'ID do dispositivo não foi informado');
+        return $response->withJson($dados, false, 'ID do dispositivo não foi informado');
+    }
+
+
+    /**
+     * Altera o estado de um dispositivo
+     * criado metodo especifico para APP para ter segurança de que sempre terá id do usuario identificado pelo bearer token
+     * @param Request $request
+     * @param Response $response
+     * @return string json
+     */
+    public function setStateGroupApp(Request $request, Response $response, array $args)
+    {
+        $idDispositivoAmbiente = $args['idDispositivoAmbiente'] ?? null;
         
+        $sanitize = new Sanitize();
+        $requests = $request->getParsedBody();
         
+        if (empty($requests)) {
+            return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
+        }
+
+        $usuario_id = $_SESSION['user']['id'] ?? null;
+        $estado = $requests['estado'] ?? null;
+
+        $dados = [
+            'estado' => $sanitize->integer($estado)->get(),
+        ];
+
+        //  var_dump($_SESSION);exit;
+
+        if (!empty($idDispositivoAmbiente)) {
+            $dispositivos = DispositivoModel::list(['dispositivo.dispositivo_ambiente_id' => $idDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id]);
+            if ($dispositivos->count()) {
+
+                DispositivoModel::where(['dispositivo_ambiente_id' => $idDispositivoAmbiente])->update($dados);
+                $dispositivos = DispositivoModel::list(['dispositivo.dispositivo_ambiente_id' => $idDispositivoAmbiente]);
+                return $response->withJson($dispositivos, true, 'Estado do dispositivos foi alterado');
+            } else {
+                return $response->withJson(['dispositivo.id' => $idDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id], false, 'Dispositivo não foi localizado');
+            }
+        } 
+        
+        return $response->withJson($dados, false, 'ID do dispositivo não foi informado');
     }
 
 

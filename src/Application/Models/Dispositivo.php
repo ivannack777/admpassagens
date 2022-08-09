@@ -4,7 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Dispositivo extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['id','dispositivo_tipo_id','empreendimento_id','usuario_id','ambiente_id','nome','marca','modelo','icone', 'estado'];
+    protected $fillable = ['id','dispositivo_tipo_id','empreendimento_id','usuario_id','ambiente_id','dispositivo_ambiente_id','nome','marca','modelo','icone', 'estado'];
     public $timestamps = false;
     public $table = 'dispositivo';
 
@@ -22,6 +22,7 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
             'dispositivo.dispositivo_tipo_id',
             'dispositivo.usuario_id',
             'dispositivo.ambiente_id',
+            'dispositivo.dispositivo_ambiente_id',
             'ambiente.nome as ambiente',
             'dispositivo.nome',
             'dispositivo.marca',
@@ -47,8 +48,30 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
         $dispositivos->join('dispositivo_tipo', 'dispositivo.dispositivo_tipo_id', '=', 'dispositivo_tipo.id', 'left');
         $dispositivos->join('ambiente', 'dispositivo.ambiente_id', '=', 'ambiente.id', 'left');
         $result = $dispositivos->get();
-        // print_r( DB::getQueryLog());
-        // var_dump( $params);exit;
+        // print_r( DB::getQueryLog());  var_dump( $params);exit;
+        if($result->count()){
+            foreach($result as $dispositivo){
+                
+                // Por padrão, icone e icone_power fica como off 
+                $dispositivo->icone = $dispositivo->icone_off;
+                $dispositivo->icone_power = $dispositivo->icone_power_off;
+                // se o estado == ligado (1), icone e icone_power fica como on
+                if($dispositivo->estado){
+                    $dispositivo->icone = $dispositivo->icone_on;
+                    $dispositivo->icone_power = $dispositivo->icone_power_on;
+                }
+                // retirar icones on e off, pois já foram substituidos acima
+                unset($dispositivo->icone_on);
+                unset($dispositivo->icone_off);
+                unset($dispositivo->icone_power_on);
+                unset($dispositivo->icone_power_off);
+
+                //forçar icone = null temporariamente
+                $dispositivo->icone = null;
+                $dispositivo->icone_power = null;
+
+            }
+        }
         return $result;
     }   
 

@@ -8,6 +8,7 @@ use App\Application\Controllers\Usuarios\Login;
 use App\Application\Controllers\Usuarios\Usuarios;
 use App\Application\Controllers\Usuarios\Pessoas;
 use App\Application\Controllers\Dispositivos;
+use App\Application\Controllers\DispositivosAmbiente;
 use App\Application\Controllers\Cenas;
 use App\Application\Controllers\Rotinas;
 use App\Application\Controllers\Enderecos;
@@ -84,9 +85,11 @@ return function (App $app, Request $request) {
     $app->group('/dispositivos', function (Group $group) {
         $group->map(['GET','POST'], '/listar', [Dispositivos::class, 'list']);
         $group->map(['GET','POST'], '/tipo/listar', [Dispositivos::class, 'tipo_list']);
+        $group->map(['GET','POST'], '/ambiente/listar', [DispositivosAmbiente::class, 'list']);
         $group->post('/salvar[/{id}]', [Dispositivos::class, 'save']);
         $group->post('/tipo/salvar[/{id}]', [Dispositivos::class, 'tipo_save']);
         $group->post('/setEstadoAPP/{id}', [Dispositivos::class, 'setStateApp']);
+        $group->post('/setEstadoAmbienteAPP/{idDispositivoAmbiente}', [Dispositivos::class, 'setStateGroupApp']);
         $group->post('/setFavorito/{id}', [Dispositivos::class, 'setFavorite']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
         $group->post('/tipo/excluir/{id}', [ExcluirController::class, 'exclude']);
