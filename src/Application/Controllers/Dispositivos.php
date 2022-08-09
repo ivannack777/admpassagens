@@ -45,6 +45,7 @@ class Dispositivos extends BaseController
         $nome = $requests['nome'] ?? null;
         $marca = $requests['marca'] ?? null;
         $modelo = $requests['modelo'] ?? null;
+        $favorito = $requests['favorito'] ?? null;
 
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
         $userSession = $_SESSION['user'];
@@ -76,9 +77,11 @@ class Dispositivos extends BaseController
         if (!empty($marca)) {
             $params['dispositivo.marca'] = $marca;
         }
-
         if (!empty($modelo)) {
             $params['dispositivo.modelo'] = $modelo;
+        }
+        if (!empty($favorito)) {
+            $params['dispositivo.favorito'] = $favorito;
         }
 
         if (!empty($params)) {
