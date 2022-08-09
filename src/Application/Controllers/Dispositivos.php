@@ -266,13 +266,13 @@ class Dispositivos extends BaseController
 
                 DispositivoModel::where(['dispositivo_ambiente_id' => $idDispositivoAmbiente])->update($dados);
                 $dispositivos = DispositivoModel::list(['dispositivo.dispositivo_ambiente_id' => $idDispositivoAmbiente]);
-                return $response->withJson($dispositivos, true, 'Estado do dispositivos foi alterado');
+                return $response->withJson($dispositivos, true, 'Estados dos dispositivos do ambiente foram alterados');
             } else {
-                return $response->withJson(['dispositivo.id' => $idDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id], false, 'Dispositivo não foi localizado');
+                return $response->withJson(['dispositivo.id' => $idDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id], false, 'Ambiente não foi localizado');
             }
         } 
         
-        return $response->withJson($dados, false, 'ID do dispositivo não foi informado');
+        return $response->withJson($dados, false, 'ID do ambiente não foi informado');
     }
 
 
