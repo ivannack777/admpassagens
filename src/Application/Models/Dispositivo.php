@@ -29,6 +29,7 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
             'dispositivo.modelo',
             'dispositivo.estado',
             'dispositivo.favorito',
+            'dispositivo.configuracoes',
             'dispositivo_tipo.icone_on',
             'dispositivo_tipo.icone_off',
             'dispositivo_tipo.icone_power_on',
