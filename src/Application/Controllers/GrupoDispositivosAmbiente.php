@@ -42,14 +42,14 @@ class GrupoDispositivosAmbiente extends BaseController
         $nome = $requests['nome'] ?? null;
 
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
-        $userSession = $_SESSION['user'];
-        if ($userSession['nivel'] == '1') {
-            $params['grupo_dispositivo_ambiente.usuario_id'] = $userSession['id'];
-        } else{
-            if (!empty($usuario_id)) {
-                $params['grupo_dispositivo_ambiente.usuario_id'] = $usuario_id;
-            }
-        }
+        // $userSession = $_SESSION['user'];
+        // if ($userSession['nivel'] == '1') {
+        //     $params['grupo_dispositivo_ambiente.usuario_id'] = $userSession['id'];
+        // } else{
+        //     if (!empty($usuario_id)) {
+        //         $params['grupo_dispositivo_ambiente.usuario_id'] = $usuario_id;
+        //     }
+        // }
         if (!empty($id)) {
             $params['grupo_dispositivo_ambiente.id'] = $id;
         }
