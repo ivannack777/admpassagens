@@ -8,13 +8,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
 // use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
-use App\Application\Models\DispositivoAmbiente as DispositivoAmbienteModel;
+use App\Application\Models\GrupoDispositivoAmbiente as GrupoDispositivoAmbiente;
 
 use App\Application\Helpers\Sanitize;
 use Valitron\Validator;
 use App\Application\Controllers\BaseController;
 
-class DispositivosAmbiente extends BaseController
+class GrupoDispositivosAmbiente extends BaseController
 {
     protected $container;
 
@@ -39,40 +39,36 @@ class DispositivosAmbiente extends BaseController
         $id = $requests['id'] ?? null;
         $usuario_id = $requests['usuario_id'] ?? null;
         $ambiente_id = $requests['ambiente_id'] ?? null;
-        $dispositivo_id = $requests['dispositivo_id'] ?? null;
         $nome = $requests['nome'] ?? null;
 
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
         $userSession = $_SESSION['user'];
         if ($userSession['nivel'] == '1') {
-            $params['dispositivoAmbiente.usuario_id'] = $userSession['id'];
+            $params['grupo_dispositivo_ambiente.usuario_id'] = $userSession['id'];
         } else{
             if (!empty($usuario_id)) {
-                $params['dispositivoAmbiente.usuario_id'] = $usuario_id;
+                $params['grupo_dispositivo_ambiente.usuario_id'] = $usuario_id;
             }
         }
         if (!empty($id)) {
-            $params['dispositivoAmbiente.id'] = $id;
+            $params['grupo_dispositivo_ambiente.id'] = $id;
         }
         if (!empty($ambiente_id)) {
-            $params['dispositivoAmbiente.ambiente_id'] = $ambiente_id;
-        }
-        if (!empty($dispositivo_id)) {
-            $params['dispositivoAmbiente.dispositivo_id'] = $dispositivo_id;
+            $params['grupo_dispositivo_ambiente.ambiente_id'] = $ambiente_id;
         }
         if (!empty($nome)) {
-            $params['dispositivoAmbiente.nome'] = $nome;
+            $params['grupo_dispositivo_ambiente.nome'] = $nome;
         }
 
         if (!empty($params)) {
-            $dispositivoAmbientes = DispositivoAmbienteModel::list($params);
+            $dispositivoAmbientes = GrupoDispositivoAmbiente::list($params);
         } else {
-            $dispositivoAmbientes = DispositivoAmbienteModel::list();
+            $dispositivoAmbientes = GrupoDispositivoAmbiente::list();
         }
 
 
 
-        return $response->withJson($dispositivoAmbientes, true, $dispositivoAmbientes->count() .($dispositivoAmbientes->count()>1 ? ' dispositivoAmbientes encontrados':' dispositivoAmbiente encontrado'));
+        return $response->withJson($dispositivoAmbientes, true, $dispositivoAmbientes->count() .($dispositivoAmbientes->count()>1 ? ' grupo dispositivo/ambientes encontrados':' grupo de dispositivo/ambiente encontrado'));
     }
 
 

@@ -4,7 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Dispositivo extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['id','dispositivo_tipo_id','empreendimento_id','usuario_id','ambiente_id','dispositivo_ambiente_id','nome','marca','modelo','icone', 'estado'];
+    protected $fillable = ['id','dispositivo_tipo_id','empreendimento_id','usuario_id','ambiente_id','grupo_dispositivo_ambiente_id','nome','marca','modelo','icone', 'estado'];
     public $timestamps = false;
     public $table = 'dispositivo';
 
@@ -22,7 +22,7 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
             'dispositivo.dispositivo_tipo_id',
             'dispositivo.usuario_id',
             'dispositivo.ambiente_id',
-            'dispositivo.dispositivo_ambiente_id',
+            'dispositivo.grupo_dispositivo_ambiente_id',
             'ambiente.nome as ambiente',
             'dispositivo.nome',
             'dispositivo.marca',

@@ -41,7 +41,7 @@ class Dispositivos extends BaseController
         $dispositivo_tipo_id = $requests['dispositivo_tipo_id'] ?? null;
         $empreendimento_id = $requests['empreendimento_id'] ?? null;
         $ambiente_id = $requests['ambiente_id'] ?? null;
-        $dispositivo_ambiente_id = $requests['dispositivo_ambiente_id'] ?? null;
+        $grupo_dispositivo_ambiente_id = $requests['grupo_dispositivo_ambiente_id'] ?? null;
         $nome = $requests['nome'] ?? null;
         $marca = $requests['marca'] ?? null;
         $modelo = $requests['modelo'] ?? null;
@@ -68,8 +68,8 @@ class Dispositivos extends BaseController
         if (!empty($ambiente_id)) {
             $params['dispositivo.ambiente_id'] = $ambiente_id;
         }
-        if (!empty($dispositivo_ambiente_id)) {
-            $params['dispositivo.dispositivo_ambiente_id'] = $dispositivo_ambiente_id;
+        if (!empty($grupo_dispositivo_ambiente_id)) {
+            $params['dispositivo.grupo_dispositivo_ambiente_id'] = $grupo_dispositivo_ambiente_id;
         }
         if (!empty($nome)) {
             $params['dispositivo.nome'] = $nome;
@@ -85,6 +85,66 @@ class Dispositivos extends BaseController
         }
 
         if (!empty($params)) {
+            $dispositivos = DispositivoModel::list($params);
+        } else {
+            $dispositivos = DispositivoModel::list();
+        }
+
+
+
+        return $response->withJson($dispositivos, true, $dispositivos->count() .($dispositivos->count()>1 ? ' dispositivos encontrados':' dispositivo encontrado'));
+    }
+
+
+
+
+    /**
+     * Localiza e retorna um dispositivos passando 'dispositivo' por json request
+     * @param Request $request
+     * @param Response $response
+     * @return string json
+     */
+    public function listAbienteGroup(Request $request, Response $response)
+    {
+        
+        $requests = $request->getParsedBody();
+        $id = $requests['id'] ?? null;
+        $usuario_id = $requests['usuario_id'] ?? null;
+        $empreendimento_id = $requests['empreendimento_id'] ?? null;
+        $ambiente_id = $requests['ambiente_id'] ?? null;
+        $grupo_dispositivo_ambiente_id = $requests['grupo_dispositivo_ambiente_id'] ?? null;
+
+        //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
+        $userSession = $_SESSION['user'];
+        if ($userSession['nivel'] == '1') {
+            $params['dispositivo.usuario_id'] = $userSession['id'];
+        } else{
+            if (!empty($usuario_id)) {
+                $params['dispositivo.usuario_id'] = $usuario_id;
+            }
+        }
+
+        if (!empty($grupo_dispositivo_ambiente_id)) {
+            $params['dispositivo.grupo_dispositivo_ambiente_id'] = $grupo_dispositivo_ambiente_id;
+        } else{
+            //return  $response->withJson($requests, false, 'Parâmetros incorretos: grupo_dispositivo_ambiente_id é obrigatório', 401);
+        }
+
+
+        if (!empty($id)) {
+            $params['dispositivo.id'] = $id;
+        }
+
+        if (!empty($empreendimento_id)) {
+            $params['dispositivo.empreendimento_id'] = $empreendimento_id;
+        }
+        if (!empty($ambiente_id)) {
+            $params['dispositivo.ambiente_id'] = $ambiente_id;
+        }
+
+
+        if (!empty($params)) {
+            // var_dump($params);exit;
             $dispositivos = DispositivoModel::list($params);
         } else {
             $dispositivos = DispositivoModel::list();
@@ -264,11 +324,11 @@ class Dispositivos extends BaseController
         //  var_dump($_SESSION);exit;
 
         if (!empty($idDispositivoAmbiente)) {
-            $dispositivos = DispositivoModel::list(['dispositivo.dispositivo_ambiente_id' => $idDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id]);
+            $dispositivos = DispositivoModel::list(['dispositivo.grupo_dispositivo_ambiente_id' => $idDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id]);
             if ($dispositivos->count()) {
 
-                DispositivoModel::where(['dispositivo_ambiente_id' => $idDispositivoAmbiente])->update($dados);
-                $dispositivos = DispositivoModel::list(['dispositivo.dispositivo_ambiente_id' => $idDispositivoAmbiente]);
+                DispositivoModel::where(['grupo_dispositivo_ambiente_id' => $idDispositivoAmbiente])->update($dados);
+                $dispositivos = DispositivoModel::list(['dispositivo.grupo_dispositivo_ambiente_id' => $idDispositivoAmbiente]);
                 return $response->withJson($dispositivos, true, 'Estados dos dispositivos do ambiente foram alterados');
             } else {
                 return $response->withJson(['dispositivo.id' => $idDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id], false, 'Ambiente não foi localizado');
