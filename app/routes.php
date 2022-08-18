@@ -86,7 +86,7 @@ return function (App $app, Request $request) {
         $group->map(['GET','POST'], '/listar', [Dispositivos::class, 'list']);
         $group->map(['GET','POST'], '/tipo/listar', [Dispositivos::class, 'tipo_list']);
         $group->map(['GET','POST'], '/ambiente/listar', [DispositivosAmbiente::class, 'list']);
-        $group->map(['GET','POST'], '/grupo_ambiente/list', [GrupoDispositivosAmbiente::class, 'list']);
+        $group->map(['GET','POST'], '/grupo_ambiente/listar', [GrupoDispositivosAmbiente::class, 'list']);
         $group->post('/salvar[/{id}]', [Dispositivos::class, 'save']);
         $group->post('/tipo/salvar[/{id}]', [Dispositivos::class, 'tipo_save']);
         $group->post('/setEstadoAPP/{id}', [Dispositivos::class, 'setStateApp']);
