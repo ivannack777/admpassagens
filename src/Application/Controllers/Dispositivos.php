@@ -305,7 +305,7 @@ class Dispositivos extends BaseController
      */
     public function setStateGroupApp(Request $request, Response $response, array $args)
     {
-        $idDispositivoAmbiente = $args['idDispositivoAmbiente'] ?? null;
+        $idGrupoDispositivoAmbiente = $args['idGrupoDispositivoAmbiente'] ?? null;
         
         $sanitize = new Sanitize();
         $requests = $request->getParsedBody();
@@ -323,15 +323,15 @@ class Dispositivos extends BaseController
 
         //  var_dump($_SESSION);exit;
 
-        if (!empty($idDispositivoAmbiente)) {
-            $dispositivos = DispositivoModel::list(['dispositivo.grupo_dispositivo_ambiente_id' => $idDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id]);
+        if (!empty($idGrupoDispositivoAmbiente)) {
+            $dispositivos = DispositivoModel::list(['dispositivo.grupo_dispositivo_ambiente_id' => $idGrupoDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id]);
             if ($dispositivos->count()) {
 
-                DispositivoModel::where(['grupo_dispositivo_ambiente_id' => $idDispositivoAmbiente])->update($dados);
-                $dispositivos = DispositivoModel::list(['dispositivo.grupo_dispositivo_ambiente_id' => $idDispositivoAmbiente]);
+                DispositivoModel::where(['grupo_dispositivo_ambiente_id' => $idGrupoDispositivoAmbiente])->update($dados);
+                $dispositivos = DispositivoModel::list(['dispositivo.grupo_dispositivo_ambiente_id' => $idGrupoDispositivoAmbiente]);
                 return $response->withJson($dispositivos, true, 'Estados dos dispositivos do ambiente foram alterados');
             } else {
-                return $response->withJson(['dispositivo.id' => $idDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id], false, 'Ambiente não foi localizado');
+                return $response->withJson(['dispositivo.id' => $idGrupoDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id], false, 'Ambiente não foi localizado');
             }
         } 
         
