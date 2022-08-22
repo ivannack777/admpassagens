@@ -4,7 +4,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 class Dispositivo extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['id','dispositivo_tipo_id','empreendimento_id','usuario_id','ambiente_id','grupo_dispositivo_ambiente_id','nome','marca','modelo','icone', 'estado'];
+    protected $fillable = ['id','dispositivo_tipo_id','empreendimento_id','usuario_id','ambiente_id','grupo_dispositivo_ambiente_id','nome','marca','modelo','icone', 'estado','propriedades','configuracoes'];
     public $timestamps = false;
     public $table = 'dispositivo';
 
@@ -29,6 +29,7 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
             'dispositivo.modelo',
             'dispositivo.estado',
             'dispositivo.favorito',
+            'dispositivo.propriedades',
             'dispositivo.configuracoes',
             'dispositivo_tipo.icone_on',
             'dispositivo_tipo.icone_off',
@@ -52,6 +53,10 @@ class Dispositivo extends \Illuminate\Database\Eloquent\Model
         // print_r( DB::getQueryLog());  var_dump( $params);exit;
         if($result->count()){
             foreach($result as $dispositivo){
+
+                //retornar como objeto json
+                $dispositivo->propriedades = $dispositivo->propriedades ? json_decode($dispositivo->propriedades) : null;
+                $dispositivo->configuracoes = $dispositivo->configuracoes ? json_decode($dispositivo->configuracoes) : null;
                 
                 // Por padrão, icone e icone_power fica como off 
                 $dispositivo->icone = $dispositivo->icone_off;
