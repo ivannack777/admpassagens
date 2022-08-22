@@ -90,7 +90,7 @@ return function (App $app, Request $request) {
         $group->post('/salvar[/{id}]', [Dispositivos::class, 'save']);
         $group->post('/tipo/salvar[/{id}]', [Dispositivos::class, 'tipo_save']);
         $group->post('/setEstadoAPP/{id}', [Dispositivos::class, 'setStateApp']);
-        $group->post('/setEstadoGrupoAPP/{idGrupoDispositivoAmbiente}', [Dispositivos::class, 'setStateGroupApp']);
+        $group->post('/setEstadoGrupoAPP/{idGrupoDispositivoAmbiente}', [GrupoDispositivosAmbiente::class, 'setStateGroupApp']);
         $group->post('/setFavorito/{id}', [Dispositivos::class, 'setFavorite']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
         $group->post('/tipo/excluir/{id}', [ExcluirController::class, 'exclude']);

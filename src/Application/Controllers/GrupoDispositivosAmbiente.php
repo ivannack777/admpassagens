@@ -8,7 +8,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
 // use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
-use App\Application\Models\GrupoDispositivoAmbiente as GrupoDispositivoAmbiente;
+use App\Application\Models\GrupoDispositivoAmbiente as GrupoDispositivoAmbienteModel;
+use App\Application\Models\Dispositivo as DispositivoModel;
 
 use App\Application\Helpers\Sanitize;
 use Valitron\Validator;
@@ -61,9 +62,9 @@ class GrupoDispositivosAmbiente extends BaseController
         }
 
         if (!empty($params)) {
-            $dispositivoAmbientes = GrupoDispositivoAmbiente::list($params);
+            $dispositivoAmbientes = GrupoDispositivoAmbienteModel::list($params);
         } else {
-            $dispositivoAmbientes = GrupoDispositivoAmbiente::list();
+            $dispositivoAmbientes = GrupoDispositivoAmbienteModel::list();
         }
 
 
@@ -135,6 +136,58 @@ class GrupoDispositivosAmbiente extends BaseController
         }
     }
 
+    /**
+     * Altera o estado de um dispositivo
+     * criado metodo especifico para APP para ter segurança de que sempre terá id do usuario identificado pelo bearer token
+     * @param Request $request
+     * @param Response $response
+     * @return string json
+     */
+    public function setStateGroupApp(Request $request, Response $response, array $args)
+    {
+        $idGrupoDispositivoAmbiente = $args['idGrupoDispositivoAmbiente'] ?? null;
+        
+        $sanitize = new Sanitize();
+        $requests = $request->getParsedBody();
+        
+        if (empty($requests)) {
+            return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
+        }
+
+        $usuario_id = $_SESSION['user']['id'] ?? null;
+        $estado = $requests['estado'] ?? null;
+
+
+        $dados = [
+            'estado' => $sanitize->integer($estado)->get(),
+        ];
+
+        //  var_dump($_SESSION);exit;
+
+        if (!empty($idGrupoDispositivoAmbiente)) {
+            $dispositivos = DispositivoModel::list(['dispositivo.grupo_dispositivo_ambiente_id' => $idGrupoDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id]);
+            if ($dispositivos->count()) {
+
+                //atualizar o estado do grupo_dispositivo_ambiente
+                GrupoDispositivoAmbienteModel::where(['grupo_dispositivo_ambiente.id' => $idGrupoDispositivoAmbiente])->update($dados);
+
+                 //atualizar o estado dos dispositivos  do grupo
+                DispositivoModel::where(['dispositivo.grupo_dispositivo_ambiente_id' => $idGrupoDispositivoAmbiente])->update($dados);
+
+                $grupoDispositivos = GrupoDispositivoAmbienteModel::list(['grupo_dispositivo_ambiente.id' => $idGrupoDispositivoAmbiente]);
+                $dispositivos = DispositivoModel::list(['dispositivo.grupo_dispositivo_ambiente_id' => $idGrupoDispositivoAmbiente]);
+                
+                //adicionar dispositivos ao grupo para retorno
+                $grupoDispositivos[0]->dispositivos = $dispositivos;
+
+                return $response->withJson($grupoDispositivos, true, 'Estados dos dispositivos do ambiente foram alterados');
+            } else {
+                return $response->withJson(['dispositivo.id' => $idGrupoDispositivoAmbiente, 'dispositivo.usuario_id'=>$usuario_id], false, 'Grupo de dispositivos não foi localizado');
+            }
+        } 
+        
+        return $response->withJson($dados, false, 'ID do ambiente não foi informado');
+    }
 
 
 }
