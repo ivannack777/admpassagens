@@ -67,7 +67,12 @@ class GrupoDispositivosAmbiente extends BaseController
             $dispositivoAmbientes = GrupoDispositivoAmbienteModel::list();
         }
 
-
+        if( $dispositivoAmbientes->count()){
+            foreach($dispositivoAmbientes as $dispositivoAmbiente){
+                $dispositivos = DispositivoModel::list(['dispositivo.grupo_dispositivo_ambiente_id' => $dispositivoAmbiente->id]);
+                $dispositivoAmbiente->dispositivos = $dispositivos;
+            }
+        }
 
         return $response->withJson($dispositivoAmbientes, true, $dispositivoAmbientes->count() .($dispositivoAmbientes->count()>1 ? ' grupo dispositivo/ambientes encontrados':' grupo de dispositivo/ambiente encontrado'));
     }
