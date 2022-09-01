@@ -4,28 +4,25 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-use Slim\Http\Response;
+use App\Application\Models\Usuarios;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface as Middleware;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use App\Application\Models\Usuario;
 use Slim\Exception\HttpUnauthorizedException;
-use Monolog\Logger;
-use Monolog\Handler\RotatingFileHandler;
-use \Slim\Routing\RouteContext;
-
+use Slim\Http\Response;
+use Slim\Routing\RouteContext;
 
 class CheckTokenMiddleware implements Middleware
 {
-
     /**
      * {@inheritdoc}
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
-
         $routeContext = RouteContext::fromRequest($request);
-        $uri =   $request->getUri();
+        $uri = $request->getUri();
         $headers = $request->getHeaders();
 
         $bearer = $request->getHeader('Authorization');
@@ -33,19 +30,19 @@ class CheckTokenMiddleware implements Middleware
         if (isset($bearer[0]) && !empty($bearer[0]) && strpos($bearer[0], 'Bearer') !== false) {
             $bearer = explode(' ', $bearer[0]);
             if (isset($bearer[1]) && !empty($bearer[1])) {
-                $usuarios = Usuario::getUserByToken($bearer[1]);
+                $usuarios = Usuarios::getUserByToken($bearer[1]);
                 // var_dump($bearer, $usuarios->count());
                 if ($usuarios->count() === 1) {
                     session_start();
                     $_SESSION = [
                         'user' => [
-                            'id'        => $usuarios[0]->id,
-                            'usuario'   => $usuarios[0]->usuario,
-                            'email'     => $usuarios[0]->email,
-                            'celular'   => $usuarios[0]->celular,
-                            'token'     => $usuarios[0]->token,
-                            'nivel'     => $usuarios[0]->nivel,
-                        ]
+                            'id' => $usuarios[0]->id,
+                            'usuario' => $usuarios[0]->usuario,
+                            'email' => $usuarios[0]->email,
+                            'celular' => $usuarios[0]->celular,
+                            'token' => $usuarios[0]->token,
+                            'nivel' => $usuarios[0]->nivel,
+                        ],
                     ];
                     // $body = preg_replace('/\s+/', '', $request->getBody() ?? null);
                     // $caminho = '';

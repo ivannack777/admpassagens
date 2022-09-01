@@ -18,7 +18,7 @@
     padding: 8px;
   }
 </style>
-# API Automação <a name="topo"></a>
+# API Ticketbooking <a name="topo"></a>
 - [Autenticação](#login_auth) 
 - [Adicionar ou editar usuários](#usuarios_salvar) 
 - [Listar ou pesquisar usuários](#usuarios_listar) 
@@ -29,18 +29,15 @@
 - [Adicionar ou editar endereços](#enderecos_salvar) 
 - [Listar ou pesquisar endereços](#enderecos_listar) 
 - [Excluir um endereço](#enderecos_excluir) 
-- [Adicionar ou editar empreendimentos](#empreendimentos_salvar) 
-- [Listar ou pesquisar empreendimentos](#empreendimentos_listar) 
-- [Excluir um empreendimentos](#empreendimentos_excluir) 
-- [Adicionar ou editar dispositivos](#dispositivos_salvar) 
-- [Listar ou pesquisar dispositivos](#dispositivos_listar) 
-- [Excluir ou pesquisar dispositivos](#dispositivos_excluir) 
-- [Adicionar ou editar cenas](#cenas_salvar) 
-- [Listar ou pesquisar cenas](#cenas_listar) 
-- [Exluir uma cenas](#cenas_excluir) 
-- [Adicionar ou editar rotinas](#rotinas_salvar) 
-- [Listar ou pesquisar rotinas](#rotinas_listar) 
-- [Excluir uma rotinas](#rotinas_excluir) 
+- [Adicionar ou editar empresas](#empresas_salvar) 
+- [Listar ou pesquisar empresas](#empresas_listar) 
+- [Excluir um empresas](#empresas_excluir) 
+- [Adicionar ou editar veiculos](#veiculos_salvar) 
+- [Listar ou pesquisar veiculos](#veiculos_listar) 
+- [Excluir ou pesquisar veiculos](#veiculos_excluir) 
+- [Adicionar ou editar viagens](#viagens_salvar) 
+- [Listar ou pesquisar viagens](#viagens_listar) 
+- [Exluir uma viagens](#viagens_excluir) 
 
 
 
@@ -711,7 +708,7 @@ Ou
 }
 ```
 
-## Adicionar ou editar empreendimentos <a name="empreendimentos_salvar"></a>
+## Adicionar ou editar empresas <a name="empresas_salvar"></a>
 [^ Topo](#topo) 
 
 Adiciona ou edita um empreendimento.
@@ -734,7 +731,7 @@ Parâmetros usados na requisição
 
 ### Request
 
-`POST: {host}/empreendimentos/salvar[/{id}]`
+`POST: {host}/empresas/salvar[/{id}]`
 
 ```
 
@@ -750,7 +747,7 @@ Parâmetros usados na requisição
 ```
 {{
   "status": true,
-  "msg": "Empreendimentos foi salvo",
+  "msg": "Empresas foi salvo",
   "data": [
     {
       "id": 2,
@@ -775,11 +772,11 @@ Ou
 
 
 
-## Listar ou pesquisar empreendimentos <a name="empreendimentos_listar"></a>
+## Listar ou pesquisar empresas <a name="empresas_listar"></a>
 [^ Topo](#topo) 
 
 Busca um empreendimento pelo nome, usupario_id ou endereco_id
-Se não for enviado nenhum dos parâmetros no request, será retornado todos os empreendimentos cadastrados,
+Se não for enviado nenhum dos parâmetros no request, será retornado todos os empresas cadastrados,
 Usuário nível 1 não tem acesso a esta área.
 
 ### Bearer token
@@ -797,7 +794,7 @@ Parâmetros usados na requisição
 
 ### Request
 
-`GET|POST: {host}/empreendimentos/lista`
+`GET|POST: {host}/empresas/lista`
 
 ```
 {
@@ -857,7 +854,7 @@ Ou
 ```
 
 
-## Excluir um empreendimento <a name="empreendimentos_excluir"></a>
+## Excluir um empreendimento <a name="empresas_excluir"></a>
 [^ Topo](#topo) 
 
 Busca um empreendimento pelo ID passado na URL e seta como excluído.
@@ -873,7 +870,7 @@ Nenhum parâmetro é enviado
 
 ### Request
 
-`POST: {host}/empreendimentos/excluir/{id}`
+`POST: {host}/empresas/excluir/{id}`
 
 
 ### Response
@@ -903,10 +900,10 @@ Ou
 }
 ```
 
-## Adicionar ou editar dispositivos <a name="dispositivos_salvar"></a>
+## Adicionar ou editar veiculos <a name="veiculos_salvar"></a>
 [^ Topo](#topo) 
 
-Adiciona ou edita um dispositivo.
+Adiciona ou edita um veiculos.
 Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
 Usuário nível 1 não tem acesso a esta área.
 
@@ -925,14 +922,14 @@ Parâmetros usados na requisição
 
 ### Request
 
-`POST: {host}/dispositivos/salvar[/{id}]`
+`POST: {host}/veiculos/salvar[/{id}]`
 
 ```
 {
 	"usuario_id": "1",
-	"dispositivo_tipo_id": 2,
+	"veiculos_tipo_id": 2,
 	"emrpeendimento_id": 2,
-	"nome":" exemplo  de     dispositivo ",
+	"nome":" exemplo  de     veiculos ",
 	"marca": "Marca",
 	"modelo": "M-1234"
 }
@@ -942,13 +939,13 @@ Parâmetros usados na requisição
 ```
 {
   "status": true,
-  "msg": "Dispositivo foi adicionada",
+  "msg": "Veiculos foi adicionada",
   "data": [
     {
       "id": 4,
-      "dispositivo_tipo_id": 2,
+      "veiculos_tipo_id": 2,
       "usuario_id": 1,
-      "nome": "Exemplo de dispositivo",
+      "nome": "Exemplo de veiculos",
       "marca": "Marca",
       "modelo": "M-1234"
     }
@@ -969,11 +966,11 @@ Ou
 
 
 
-## Listar ou pesquisar dispositivos<a name="dispositivos_listar"></a>
+## Listar ou pesquisar veiculos<a name="veiculos_listar"></a>
 [^ Topo](#topo) 
 
-Busca um dispositivo pelo nome, dispositivo_tipo_id, usuario_id, marca ou modelo
-Se não for enviado nenhum dos parâmetros no request, será retornado todos os dispositivos cadastrados,
+Busca um veiculos pelo nome, veiculos_tipo_id, usuario_id, marca ou modelo
+Se não for enviado nenhum dos parâmetros no request, será retornado todos os veiculos cadastrados,
 Porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
 
 ### Bearer token
@@ -984,16 +981,16 @@ Parâmetros usados na requisição
 
 | Parâmetro             |Tipo     | Descrição                |
 | --------------------- | ------  | -------------------------|
-| [dispositivo_tipo_id] | string  | ID do tipo de dispositivo |
+| [veiculos_tipo_id] | string  | ID do tipo de veiculos |
 | [usuario_id]          | string  | ID de um usuário |
-| [nome]                | string  | Nome de um dispositivo |
-| [marca]               | string  | Marca de um dispositivo |
-| [modelo]              | string  | Modelo de um dispositivo |
+| [nome]                | string  | Nome de um veiculos |
+| [marca]               | string  | Marca de um veiculos |
+| [modelo]              | string  | Modelo de um veiculos |
 
 
 ### Request
 
-`GET|POST: {host}/dispositivos/lista`
+`GET|POST: {host}/veiculos/lista`
 
 ```
 {
@@ -1007,21 +1004,21 @@ Parâmetros usados na requisição
 ``` 
 {
   "status": true,
-  "msg": "2 dispositivo(s) encontrado(s)",
+  "msg": "2 veiculos(s) encontrado(s)",
   "data": [
     {
       "id": 1,
-      "dispositivo_tipo_id": 2,
+      "veiculos_tipo_id": 2,
       "usuario_id": 1,
-      "nome": "Exemplo de dispositivo",
+      "nome": "Exemplo de veiculos",
       "marca": "Marca",
       "modelo": "M-1234"
     },
     {
       "id": 2,
-      "dispositivo_tipo_id": 2,
+      "veiculos_tipo_id": 2,
       "usuario_id": 1,
-      "nome": "Nome de outro dispositivo",
+      "nome": "Nome de outro veiculos",
       "marca": "Marca",
       "modelo": "M-1234"
     }
@@ -1034,13 +1031,13 @@ Ou
 ```
 {
   "status": true,
-  "msg": "1 dispositivo(s) encontrado(s)",
+  "msg": "1 veiculos(s) encontrado(s)",
   "data": [
     {
       "id": 4,
-      "dispositivo_tipo_id": 2,
+      "veiculos_tipo_id": 2,
       "usuario_id": 1,
-      "nome": "Exemplo de dispositivo",
+      "nome": "Exemplo de veiculos",
       "marca": "Marca",
       "modelo": "M-1234"
     }
@@ -1053,15 +1050,15 @@ Ou
 ```
 {
   "status": true,
-  "msg": "0 dispositivo(s) encontrado(s)",
+  "msg": "0 veiculos(s) encontrado(s)",
   "data": []
 }
 ```
 
-## Excluir um dispositivo <a name="dispositivos_excluir"></a>
+## Excluir um veiculos <a name="veiculos_excluir"></a>
 [^ Topo](#topo) 
 
-Busca um dispositivo pelo ID passado na URL e seta como excluído.
+Busca um veiculos pelo ID passado na URL e seta como excluído.
 Usuários nível 1 não tem permissão para esta rota.
 
 ### Bearer token
@@ -1074,7 +1071,7 @@ Nenhum parâmetro é enviado
 
 ### Request
 
-`POST: {host}/dispositivos/excluir/{id}`
+`POST: {host}/veiculos/excluir/{id}`
 
 
 ### Response
@@ -1105,10 +1102,10 @@ Ou
 ```
 
 
-## Dispositivos/tipo/salvar<a name="dispositivos_tipo_salvar"></a>
+## Veiculoss/tipo/salvar<a name="veiculos_tipo_salvar"></a>
 [^ Topo](#topo) 
 
-Adiciona ou edita um tipo de dispositivo.
+Adiciona ou edita um tipo de veiculos.
 Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
 Se ID não for passado na URL, faz a adição de um novo registro.
 
@@ -1121,13 +1118,13 @@ Parâmetros usados na requisição
 
 | Parâmetro     | Tipo    | Descrição     |
 | ------------- | ------- | -------------------------|
-| [nome]        | string  | Nome do dispositivo |
-| [descricao]   | string  | Descrição de um tipo de dispositivo |
+| [nome]        | string  | Nome do veiculos |
+| [descricao]   | string  | Descrição de um tipo de veiculos |
 
 
 ### Request
 
-`POST: {host}/dispositivos/tipo/salvar[/{id}]`
+`POST: {host}/veiculos/tipo/salvar[/{id}]`
 
 ```
 {
@@ -1140,11 +1137,11 @@ Parâmetros usados na requisição
 ```
 {
   "status": true,
-  "msg": "Dispositivo foi adicionada",
+  "msg": "Veiculos foi adicionada",
   "data": [
     {
       "id": 8,
-      "dispositivo_tipo_id": 2,
+      "veiculos_tipo_id": 2,
       "usuario_id": 1,
       "nome": "Iluminação da sala",
       "marca": "Philipps",
@@ -1171,10 +1168,10 @@ Ou
 
 
 
-## Dispositivos/tipo/listar<a name="dispositivos_tipo_listar"></a>
+## Veiculoss/tipo/listar<a name="veiculos_tipo_listar"></a>
 [^ Topo](#topo) 
 
-Busca um tipo de dispositivo, nome ou descricao
+Busca um tipo de veiculos, nome ou descricao
 Se não for enviado nenhum dos parâmetros no request, será retornado todos os usuários cadastrados,
 Porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
 
@@ -1186,13 +1183,13 @@ Parâmetros usados na requisição
 
 | Parâmetro             |Tipo     | Descrição                |
 | --------------------- | ------  | -------------------------|
-| [nome]                | string  | Nome de um tipo de dispositivo |
-| [descricao]          | string  | Descrição de um tipo de dispositivo |
+| [nome]                | string  | Nome de um tipo de veiculos |
+| [descricao]          | string  | Descrição de um tipo de veiculos |
 
 
 ### Request
 
-`GET|POST: {host}/dispositivos/tipo/lista`
+`GET|POST: {host}/veiculos/tipo/lista`
 
 ```
 {
@@ -1206,7 +1203,7 @@ Parâmetros usados na requisição
 ``` 
 {
   "status": true,
-  "msg": "2 tipo(s) de dispositivo(s) encontrado(s)",
+  "msg": "2 tipo(s) de veiculos(s) encontrado(s)",
   "data": [
     {
       "id": 12,
@@ -1227,7 +1224,7 @@ Ou
 ```
 {
   "status": true,
-  "msg": "1 tipo(s) de dispositivo(s) encontrado(s)",
+  "msg": "1 tipo(s) de veiculos(s) encontrado(s)",
   "data": [
     {
       "id": 12,
@@ -1243,15 +1240,15 @@ Ou
 ```
 {
   "status": true,
-  "msg": "0 tipo(s) de dispositivo(s) encontrado(s)",
+  "msg": "0 tipo(s) de veiculos(s) encontrado(s)",
   "data": []
 }
 ```
 
-## Excluir um tipo de dispositivo <a name="dispositivos_tipo_excluir"></a>
+## Excluir um tipo de veiculos <a name="veiculos_tipo_excluir"></a>
 [^ Topo](#topo) 
 
-Busca um tipo de dispositivo pelo ID passado na URL e seta como excluído.
+Busca um tipo de veiculos pelo ID passado na URL e seta como excluído.
 Usuários nível 1 não tem permissão para esta rota.
 
 ### Bearer token
@@ -1264,7 +1261,7 @@ Nenhum parâmetro é enviado
 
 ### Request
 
-`POST: {host}/dispositivos/tipo/excluir/{id}`
+`POST: {host}/veiculos/tipo/excluir/{id}`
 
 
 ### Response
@@ -1296,7 +1293,7 @@ Ou
 
 
 
-## Adicionar ou editar cenas<a name="cenas_salvar"></a>
+## Adicionar ou editar viagens<a name="viagens_salvar"></a>
 [^ Topo](#topo) 
 
 Adiciona ou edita uma cena.
@@ -1318,7 +1315,7 @@ Parâmetros usados na requisição
 
 ### Request
 
-`POST: {host}/cenas/salvar[/{id}]`
+`POST: {host}/viagens/salvar[/{id}]`
 
 ```
 {
@@ -1326,21 +1323,21 @@ Parâmetros usados na requisição
 	"nome":"Sala de star",
 	"configuracoes": [
 		{
-			"dispositivo_id": 1,
+			"veiculos_id": 1,
 			"state": 1,
 			"bright": 80
 		},
 		{
-		"dispositivo_id": 2,
+		"veiculos_id": 2,
 			"state": 1,
 			"bright": 50
 		},
 		{
-			"dispositivo_id": 3,
+			"veiculos_id": 3,
 			"state": 0
 		},
 		{
-		  "dispositivo_id": 4,
+		  "veiculos_id": 4,
 			"stare": 1,
 			"teperatura": 23,
 			"speed": 4
@@ -1360,7 +1357,7 @@ Parâmetros usados na requisição
       "id": 2,
       "usuario_id": 1,
       "nome": "Exemplo de cena",
-      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"dispositivo_id\": 1}, {\"state\": 1, \"bright\": 50, \"dispositivo_id\": 2}, {\"state\": 0, \"dispositivo_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"dispositivo_id\": 4}]",
+      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"veiculos_id\": 1}, {\"state\": 1, \"bright\": 50, \"veiculos_id\": 2}, {\"state\": 0, \"veiculos_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"veiculos_id\": 4}]",
       "excluido": "N",
       "excluido_por": null,
       "data_excluido": null,
@@ -1382,11 +1379,11 @@ Ou
 ```
 
 
-## Listar ou pesquisar cenas<a name="cenas_listar"></a>
+## Listar ou pesquisar viagens<a name="viagens_listar"></a>
 [^ Topo](#topo) 
 
 Busca uma cena pelo nome ou usuario_id.
-Se não for enviado nenhum dos parâmetros no request, será retornado todos as cenas cadastrados,
+Se não for enviado nenhum dos parâmetros no request, será retornado todos as viagens cadastrados,
 Porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
 
 ### Bearer token
@@ -1398,12 +1395,12 @@ Parâmetros usados na requisição
 | Parâmetro             |Tipo     | Descrição                |
 | --------------------- | ------  | -------------------------|
 | [usuario_id]          | string  | ID de um usuário |
-| [nome]                | string  | Nome de um dispositivo |
+| [nome]                | string  | Nome de um veiculos |
 
 
 ### Request
 
-`GET|POST: {host}/cenas/lista`
+`GET|POST: {host}/viagens/lista`
 
 ```
 {
@@ -1417,13 +1414,13 @@ Parâmetros usados na requisição
 ``` 
 {
   "status": true,
-  "msg": "2 cenas(s) encontrado(s)",
+  "msg": "2 viagens(s) encontrado(s)",
   "data": [
     {
       "id": 1,
       "usuario_id": 1,
       "nome": "Exemplo de cena",
-      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"dispositivo_id\": 1}, {\"state\": 1, \"bright\": 50, \"dispositivo_id\": 2}, {\"state\": 0, \"dispositivo_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"dispositivo_id\": 4}]",
+      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"veiculos_id\": 1}, {\"state\": 1, \"bright\": 50, \"veiculos_id\": 2}, {\"state\": 0, \"veiculos_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"veiculos_id\": 4}]",
       "excluido": "N",
       "excluido_por": null,
       "data_excluido": null,
@@ -1434,7 +1431,7 @@ Parâmetros usados na requisição
       "id": 2,
       "usuario_id": 1,
       "nome": "Teste de cena",
-      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"dispositivo_id\": 1}, {\"state\": 1, \"bright\": 50, \"dispositivo_id\": 2}, {\"state\": 0, \"dispositivo_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"dispositivo_id\": 4}]",
+      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"veiculos_id\": 1}, {\"state\": 1, \"bright\": 50, \"veiculos_id\": 2}, {\"state\": 0, \"veiculos_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"veiculos_id\": 4}]",
       "excluido": "N",
       "excluido_por": null,
       "data_excluido": null,
@@ -1450,13 +1447,13 @@ Ou
 ```
 {
   "status": true,
-  "msg": "1 cenas(s) encontrado(s)",
+  "msg": "1 viagens(s) encontrado(s)",
   "data": [
     {
       "id": 1,
       "usuario_id": 1,
       "nome": "Exemplo de cena",
-      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"dispositivo_id\": 1}, {\"state\": 1, \"bright\": 50, \"dispositivo_id\": 2}, {\"state\": 0, \"dispositivo_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"dispositivo_id\": 4}]",
+      "configuracoes": "[{\"state\": 1, \"bright\": 80, \"veiculos_id\": 1}, {\"state\": 1, \"bright\": 50, \"veiculos_id\": 2}, {\"state\": 0, \"veiculos_id\": 3}, {\"speed\": 4, \"stare\": 1, \"teperatura\": 23, \"veiculos_id\": 4}]",
       "excluido": "N",
       "excluido_por": null,
       "data_excluido": null,
@@ -1477,7 +1474,7 @@ Ou
 }
 ```
 
-## Excluir uma cena <a name="cenas_excluir"></a>
+## Excluir uma cena <a name="viagens_excluir"></a>
 [^ Topo](#topo) 
 
 Busca uma cena pelo ID passado na URL e seta como excluído.
@@ -1493,7 +1490,7 @@ Nenhum parâmetro é enviado
 
 ### Request
 
-`POST: {host}/cenas/excluir/{id}`
+`POST: {host}/viagens/excluir/{id}`
 
 
 ### Response
@@ -1523,222 +1520,3 @@ Ou
 }
 ```
 
-
-## Adicionar ou editar rotinas<a name="rotinas_salvar"></a>
-[^ Topo](#topo) 
-
-Adiciona ou edita uma rotina de uma cena previamente cadastrada.
-Se ID for passado na URL, faz a busca, caso encontre, faz a atualização dos dados.
-Se ID não for passado na URL, faz a adição de um novo registro.
-
-
-### Bearer token
- Sim
-
-### Parâmetros
-Parâmetros usados na requisição
-
-| Parâmetro     | Tipo    | Descrição     |
-| ------------- | ------- | ----------- | --------------|
-| [usuario_id]  | string  | ID de um usuário |
-| [cena_id]     | string  | ID de um endereço |
-| [nome]        | string  | Nome da rotina |
-| [horarios]    | string  | Horarios da rotina |
-| [datas]       | string  | Datas da rotina |
-| [repeticao]   | string  | Repetições da rotina |
-
-
-### Request
-
-`POST: {host}/rotina/salvar[/{id}]`
-
-```
-{
-  "usuario_id":"1",
-	"cena_id":"1",
-  "nome":"Nome da rotina editada2",
-  "horarios":"10:00,11:00",
-  "datas":"01/05/2022,01/06/2022",
-  "repeticao":null	
-}
-```
-### Response
-
-```
-{
-  "status": true,
-  "msg": "Dispositivo foi adicionada",
-  "data": [
-    {
-      "id": 4,
-      "dispositivo_tipo_id": 2,
-      "usuario_id": 1,
-      "nome": "Exemplo de dispositivo",
-      "marca": "Marca",
-      "modelo": "M-1234"
-    }
-  ]
-}
-```
-
-Ou
-
-```
-{
-  "status": false,
-  "msg": "Parâmetros incorretos.",
-  "data": null
-}
-```
-
-
-## Listar ou pesquisar rotinas<a name="rotinas_listar"></a>
-[^ Topo](#topo) 
-
-Busca uma rotina  nome de usuário, usuario_id ou cena_id
-Se não for enviado nenhum dos parâmetros no request, será retornado todos as rotinas cadastrados,
-Porem se o Bearer token for de um usuário nível 1, filtrará só os dados do proprio usuário.
-
-### Bearer token
- Sim
-
-### Parâmetros
-Parâmetros usados na requisição
-
-| Parâmetro             |Tipo     | Descrição                |
-| --------------------- | ------  | -------------------------|
-| [nome]          | string  | ID de um usuário |
-| [usuario_id] | string  | ID do tipo de dispositivo |
-| [cena_id]          | string  | ID de um usuário |
-
-
-### Request
-
-`GET|POST: {host}/dispositivos/lista`
-
-```
-{
-	"nome":"exemplo"
-}
-
-```
-
-### Response
-
-``` 
-{
-  "status": true,
-  "msg": "2 rotinas(s) encontrado(s)",
-  "data": [
-    {
-      "id": 13,
-      "usuario_id": 1,
-      "nome": "Exemplo de rotina",
-      "horarios": "11:00,11:00",
-      "datas": "2022-06-01,2022-06-01",
-      "repeticao": null,
-      "ativo": null,
-      "excluido": "N",
-      "excluido_por": null,
-      "data_excluido": null,
-      "data_insert": "2022-07-25 17:25:32",
-      "data_update": null
-    },
-    {
-      "id": 14,
-      "usuario_id": 1,
-      "nome": "Testes de rotina",
-      "horarios": "11:00,11:00",
-      "datas": "2022-06-01,2022-06-01",
-      "repeticao": null,
-      "ativo": null,
-      "excluido": "N",
-      "excluido_por": null,
-      "data_excluido": null,
-      "data_insert": "2022-07-25 17:25:41",
-      "data_update": null
-    }
-  ]
-}
-```
-
-Ou
-
-```
-{
-  "status": true,
-  "msg": "1 rotinas(s) encontrado(s)",
-  "data": [
-    {
-      "id": 13,
-      "usuario_id": 1,
-      "nome": "Exemplo de rotina",
-      "horarios": "11:00,11:00",
-      "datas": "2022-06-01,2022-06-01",
-      "repeticao": null,
-      "ativo": null,
-      "excluido": "N",
-      "excluido_por": null,
-      "data_excluido": null,
-      "data_insert": "2022-07-25 17:25:32",
-      "data_update": null
-    }
-  ]
-}
-``` 
-
-Ou
-
-```
-{
-  "status": true,
-  "msg": "0 rotinas(s) encontrado(s)",
-  "data": []
-}
-```
-
-## Excluir uma rotina <a name="rotinas_excluir"></a>
-[^ Topo](#topo) 
-
-Busca uma rotina pelo ID passado na URL e seta como excluído.
-Usuários nível 1 não tem permissão para esta rota.
-
-### Bearer token
- Sim
-
-### Parâmetros
-
-Nenhum parâmetro é enviado 
-
-
-### Request
-
-`POST: {host}/rotinas/excluir/{id}`
-
-
-### Response
-
-```
-{
-  "status": false,
-  "msg": "Não foi localizado",
-  "data": []
-}
-```
-
-Ou
-
-```
-{
-  "status": true,
-  "msg": "Foi excluído",
-  "data": [
-    {
-      "id": 2,
-      "excluido": "S",
-      "excluido_por": 1,
-      "data_excluido": "2022-07-26 17:01:55"
-    }
-  ]
-}
-```
