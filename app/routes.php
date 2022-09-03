@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Application\Controllers\Empresas;
 use App\Application\Controllers\Enderecos;
 use App\Application\Controllers\ExcluirController;
-use App\Application\Controllers\GrupoVeiculosAmbiente;
+use App\Application\Controllers\Localidades;
 use App\Application\Controllers\Usuarios\Login;
 use App\Application\Controllers\Usuarios\Pessoas;
 use App\Application\Controllers\Usuarios\Usuarios;
@@ -46,7 +46,7 @@ return function (App $app, Request $request) {
     });
 
     $app->get('/', function (Request $request, Response $response) {
-        // $response->getBody()->write('Olá, bem bindo a API Automação!');
+        $response->getBody()->write('Olá, bem bindo a API Automação!');
 
         $readme = file_get_contents(__DIR__.'/../doc/usage.md');
         $Parsedown = new Parsedown();
@@ -56,7 +56,7 @@ return function (App $app, Request $request) {
 
         return $response;
     });
-
+    
     $app->post('/usuarios/login/auth', [Login::class, 'auth']);
 
     $app->group('/usuarios', function (Group $group) {
@@ -82,6 +82,13 @@ return function (App $app, Request $request) {
         $group->map(['GET', 'POST'], '/listar', [Viagens::class, 'list']);
         $group->post('/salvar[/{id}]', [Viagens::class, 'save']);
         $group->post('/executar', [Viagens::class, 'execute']);
+        $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
+    });
+
+    $app->group('/localidades', function (Group $group) {
+        $group->map(['GET', 'POST'], '/listar', [Localidades::class, 'list']);
+        $group->post('/salvar[/{id}]', [Localidades::class, 'save']);
+        $group->post('/executar', [Localidades::class, 'execute']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     });
 
