@@ -33,6 +33,7 @@ class Localidades extends BaseController
         $usuario_id = $requests['usuario_id'] ?? null;
         $nome = $requests['nome'] ?? null;
         $uf = $requests['uf'] ?? null;
+        $nome_uf = $requests['nome_uf'] ?? null;
         
         $params['codigo_categoria'] = [
             1, //cidade
@@ -44,6 +45,9 @@ class Localidades extends BaseController
         }
         if (!empty($uf)) {
             $params['uf'] = $uf;
+        }
+        if (!empty($nome_uf)) {
+            $params['nome_uf'] = $nome_uf;
         }
 
         if (!empty($params)) {
