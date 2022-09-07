@@ -9,6 +9,11 @@ class Viagens extends \Illuminate\Database\Eloquent\Model
     protected $fillable = ['veiculos_id', 'descricao', 'origem', 'destino', 'data_saida', 'data_chegada', 'detalhes'];
     public $timestamps = false;
     public $table = 'viagens';
+        protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     /**
      * localiza e retorna um viagens pelo campo passado em $params.
