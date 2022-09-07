@@ -29,8 +29,10 @@
         "monolog/monolog": "^2.6",
         "php-di/php-di": "^6.4",
         "slim/http": "^1.2",
+        "slim/php-view": "^3.2",
         "slim/psr7": "^1.5",
         "slim/slim": "^4.10",
+        "slim/twig-view": "^3.3",
         "vlucas/phpdotenv": "^5.4",
         "vlucas/valitron": "^1.4"
     },

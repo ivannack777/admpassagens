@@ -1,0 +1,21 @@
+.pointer{
+    cursor: pointer;
+}
+.list-label{
+    background: initial;
+    transition: background 1.2s;
+}
+.list-label:hover{
+    background: rgb(202, 199, 199);
+
+}
+.edit-input{
+    display: none;
+}
+
+.success-transition{
+    background: #60c6606b;
+}
+.error-transition{
+    background: #ce55556b;
+}
