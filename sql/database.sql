@@ -306,6 +306,52 @@ CREATE TABLE IF NOT EXISTS `automacao`.`dispositivo_ambiente` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+CREATE TABLE ibge_localidades_geo (
+    id INT NOT NULL,
+    geocodigo INT NOT NULL,
+    tipo VARCHAR(20) NULL DEFAULT NULL,
+    geocodigo_subdistrito INT NOT NULL,
+    subdistrito VARCHAR(20) NULL DEFAULT NULL,
+    geocodigo_distrito INT NOT NULL,
+    distrito VARCHAR(20) NULL DEFAULT NULL,
+    geocodigo_municipio INT NOT NULL,
+    municipio VARCHAR(20) NULL DEFAULT NULL,
+    microregiao VARCHAR(20) NULL DEFAULT NULL,
+    meso_regiao VARCHAR(20) NULL DEFAULT NULL,
+    UF VARCHAR(20) NULL DEFAULT NULL,
+    codigo_nivel INT NOT NULL,
+    codigo_categoria INT NOT NULL,
+    categoria VARCHAR(20) NULL DEFAULT NULL,
+    localidade VARCHAR(20) NULL DEFAULT NULL,
+    longitude DECIMAL(20,16) NULL DEFAULT NULL,
+    latitude DECIMAL(20,16) NULL DEFAULT NULL,
+    altitude DECIMAL(20,16) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE ibge_localidades (
+    id INT NOT NULL AUTO_INCREMENT,
+    uf VARCHAR(20) NULL DEFAULT NULL,
+    nome_uf VARCHAR(20) NULL DEFAULT NULL,
+    codigo_regiao_geografica_intermediaria INT NOT NULL,
+    nome_regiao_geografica_intermediaria VARCHAR(50) NULL DEFAULT NULL,
+    codigo_regiao_geografica_imediata INT NOT NULL,
+    nome_regiao_geografica_imediata VARCHAR(50) NULL DEFAULT NULL,
+    codigo_mesorregiao_geografica INT NOT NULL,
+    nome_mesorregiao VARCHAR(50) NULL DEFAULT NULL,
+    codigo_microrregiao_geografica INT NOT NULL,
+    nome_microrregiao VARCHAR(50) NULL DEFAULT NULL,
+    codigo_municipio INT NOT NULL,
+    codigo_municipio_completo INT NOT NULL,
+    nome_municipio VARCHAR(100) NULL DEFAULT NULL,
+    codigo_distrito VARCHAR(50) NULL DEFAULT NULL,
+    codigo_de_distrito_completo INT NOT NULL,
+    nome_distrito VARCHAR(50) NULL DEFAULT NULL,
+    codigo_subdistrito INT NOT NULL,
+    codigo_de_subdistrito_completo INT NOT NULL,
+    nome_subdistrito VARCHAR(50) NULL DEFAULT NULL,
+    codigo_categoria INT NOT NULL,
+    categoria VARCHAR(20) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`));
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

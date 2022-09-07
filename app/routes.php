@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Application\Controllers\Empresas;
 use App\Application\Controllers\Enderecos;
 use App\Application\Controllers\ExcluirController;
+use App\Application\Controllers\Localidades;
 use App\Application\Controllers\Usuarios\Login;
 use App\Application\Controllers\Usuarios\Pessoas;
 use App\Application\Controllers\Usuarios\Usuarios;
@@ -51,7 +52,7 @@ return function (App $app, Request $request) {
         $renderer = new PhpRenderer('../Views');
         return $renderer->render($response, 'index.php', $args);
     });
-
+    
     $app->post('/usuarios/login/auth', [Login::class, 'auth']);
 
     $app->group('/usuarios', function (Group $group) {
@@ -78,6 +79,13 @@ return function (App $app, Request $request) {
         $group->map(['GET', 'POST'], '/listar[/{modo}]', [Viagens::class, 'list']);
         $group->post('/salvar[/{id}]', [Viagens::class, 'save']);
         $group->post('/executar', [Viagens::class, 'execute']);
+        $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
+    });
+
+    $app->group('/localidades', function (Group $group) {
+        $group->map(['GET', 'POST'], '/listar', [Localidades::class, 'list']);
+        $group->post('/salvar[/{id}]', [Localidades::class, 'save']);
+        $group->post('/executar', [Localidades::class, 'execute']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     });
 
