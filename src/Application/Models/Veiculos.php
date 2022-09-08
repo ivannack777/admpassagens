@@ -21,16 +21,12 @@ class Veiculos extends \Illuminate\Database\Eloquent\Model
         $veiculoss = DB::table('veiculos');
         $veiculoss->select(
             'veiculos.id',
-            'veiculos.empresas_id',
             'veiculos.veiculos_tipo_id',
             'veiculos.marca',
             'veiculos.modelo',
             'veiculos.ano',
             'veiculos.codigo',
             'veiculos.placa',
-            'veiculos_tipo.nome as tipo_nome',
-            'veiculos_tipo.descricao as tipo_descricao',
-            'empresas.nome as empresa',
         );
         // $veiculoss->selectRaw("'' as icone");
         // $veiculoss->selectRaw("'' as icone_power");
@@ -38,7 +34,6 @@ class Veiculos extends \Illuminate\Database\Eloquent\Model
             $veiculoss->where($campo, '=', $param);
         }
         $veiculoss->join('veiculos_tipo', 'veiculos.veiculos_tipo_id', '=', 'veiculos_tipo.id', 'left');
-        $veiculoss->join('empresas', 'veiculos.empresas_id', '=', 'empresas.id', 'left');
         $result = $veiculoss->get();
         // print_r( DB::getQueryLog());  var_dump( $params);exit;
 
