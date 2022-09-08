@@ -19,6 +19,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
+use Slim\Views\PhpRenderer;
 
 return function (App $app, Request $request) {
     //salvar log da rota
@@ -45,16 +46,11 @@ return function (App $app, Request $request) {
         return $response;
     });
 
-    $app->get('/', function (Request $request, Response $response) {
+    $app->get('/', function (Request $request, Response $response, $args) {
         // $response->getBody()->write('Olá, bem bindo a API Automação!');
 
-        $readme = file_get_contents(__DIR__.'/../doc/usage.md');
-        $Parsedown = new Parsedown();
-        $md = $Parsedown->text($readme); // prints: <p>Hello <em>Parsedown</em>!</p>
-
-        $response->getBody()->write($md);
-
-        return $response;
+        $renderer = new PhpRenderer('../Views');
+        return $renderer->render($response, 'index.php', $args);
     });
     
     $app->post('/usuarios/login/auth', [Login::class, 'auth']);
@@ -69,17 +65,18 @@ return function (App $app, Request $request) {
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/veiculos', function (Group $group) {
-        $group->map(['GET', 'POST'], '/listar', [Veiculos::class, 'list']);
+        $group->map(['GET', 'POST'], '/listar[/{modo}]', [Veiculos::class, 'list']);
         $group->map(['GET', 'POST'], '/tipo/listar', [Veiculos::class, 'tipo_list']);
         $group->post('/salvar[/{id}]', [Veiculos::class, 'save']);
         $group->post('/tipo/salvar[/{id}]', [Veiculos::class, 'tipo_save']);
         $group->post('/setFavorito/{id}', [Veiculos::class, 'setFavorite']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
         $group->post('/tipo/excluir/{id}', [ExcluirController::class, 'exclude']);
-    })->add(CheckTokenMiddleware::class);
+    });
+    //->add(CheckTokenMiddleware::class);
 
     $app->group('/viagens', function (Group $group) {
-        $group->map(['GET', 'POST'], '/listar', [Viagens::class, 'list']);
+        $group->map(['GET', 'POST'], '/listar[/{modo}]', [Viagens::class, 'list']);
         $group->post('/salvar[/{id}]', [Viagens::class, 'save']);
         $group->post('/executar', [Viagens::class, 'execute']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);

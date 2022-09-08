@@ -6,8 +6,9 @@ namespace App\Application\Controllers;
 
 use App\Application\Helpers\Sanitize;
 use App\Application\Models\Veiculos as VeiculosModel;
-// use Psr\Http\Message\ResponseInterface as Response;
 use App\Application\Models\Veiculos_tipo as Veiculos_tipoModel;
+use App\Application\Models\Empresas as EmpresasModel;
+// use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
@@ -20,6 +21,7 @@ class Veiculos extends BaseController
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct();
         $this->container = $container;
     }
 
@@ -28,7 +30,7 @@ class Veiculos extends BaseController
      *
      * @return string json
      */
-    public function list(Request $request, Response $response)
+    public function list(Request $request, Response $response, $args)
     {
         $requests = $request->getParsedBody();
         $id = $requests['id'] ?? null;
@@ -42,7 +44,7 @@ class Veiculos extends BaseController
         $placa = $requests['placa'] ?? null;
 
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuarios_id
-        $userSession = $_SESSION['user'];
+        // $userSession = $_SESSION['user'];
 
         if (!empty($id)) {
             $params['veiculos.id'] = $id;
@@ -70,12 +72,24 @@ class Veiculos extends BaseController
         }
 
         if (!empty($params)) {
-            $veiculoss = VeiculosModel::list($params);
+            $dados['veiculos'] = VeiculosModel::list($params);
         } else {
-            $veiculoss = VeiculosModel::list();
+            $dados['veiculos'] = VeiculosModel::list();
+        }
+        $dados['empresas'] = EmpresasModel::list();
+        $dados['veiculos_tipo'] = Veiculos_tipoModel::list();
+        
+        if ($args['modo']??false == 'lista') {
+            sleep(1);
+            return $this->views->render($response, 'veiculos_list.php', $dados);
+        } else {
+            $this->views->render($response, 'header.php', $dados);
+            $this->views->render($response, 'left.php', $dados);
+            $this->views->render($response, 'right_top.php', $dados);
+            $this->views->render($response, 'veiculos.php', $dados);
+            return $this->views->render($response, 'footer.php', $dados);
         }
 
-        return $response->withJson($veiculoss, true, $veiculoss->count().($veiculoss->count() > 1 ? ' veiculos encontrados' : ' veiculos encontrado'));
     }
 
     /**
