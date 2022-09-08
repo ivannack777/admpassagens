@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace App\Application\Controllers;
 use Psr\Container\ContainerInterface;
-use Slim\Views\PhpRenderer;
 
 class BaseController
 {
     protected $container;
-    protected $views;
-    
 
     // constructor receives container instance
-    public function __construct(ContainerInterface $container=null)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->views = new PhpRenderer('../Views');
     }
 
     /**
@@ -38,20 +34,4 @@ class BaseController
         }
         return trim($str);
     }
-
-
-    /**
-     * Converte dada 
-     * @param string $date
-     * @return string $format
-     */
-    public function dateFormat($date, $format='d/m/Y H:i')
-    {
-        //retirar / repetidas, exeto as // depois do :
-        $dt = \DateTime::createFromFormat($format,$date);
-        return $dt->format('Y-m-d H:i:s') ;
-        
-        return $dt;
-    }
-
 }

@@ -6,7 +6,6 @@ namespace App\Application\Controllers;
 
 use App\Application\Helpers\Sanitize;
 use App\Application\Models\Viagens as ViagenModel;
-use App\Application\Models\Veiculos as VeiculosModel;
 // use Psr\Http\Message\ResponseInterface as Response;
 use Exception;
 use Psr\Container\ContainerInterface;
@@ -17,15 +16,11 @@ use Valitron\Validator;
 class Viagens extends BaseController
 {
     protected $container;
-    protected $ViagenModel;
 
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
-
-        parent::__construct();
         $this->container = $container;
-        $this->ViagenModel = new ViagenModel();
     }
 
     /**
@@ -33,26 +28,18 @@ class Viagens extends BaseController
      *
      * @return string json
      */
-    public function list(Request $request, Response $response, $args)
+    public function list(Request $request, Response $response)
     {
-        $dados = [];
-        $requests = $request->getQueryParams();
+        $requests = $request->getParsedBody();
 
-
-        // $descricao = $requests['descricao'] ?? null;
-        // $origem = $requests['origem'] ?? null;
-        // $destino = $requests['destino'] ?? null;
-        // $data_saida = $requests['data_saida'] ?? null;
-        // $data_chegada = $requests['data_chegada'] ?? null;
+        $descricao = $requests['descricao'] ?? null;
+        $origem = $requests['origem'] ?? null;
+        $destino = $requests['destino'] ?? null;
+        $data_saida = $requests['data_saida'] ?? null;
+        $data_chegada = $requests['data_chegada'] ?? null;
 
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
 
-
-        // var_dump($this->views);
-        // var_dump($request->getMethod());
-        // var_dump($request->getUri()->getQuery());
-        // var_dump($request->getQueryParams());
-        // exit;
         if (!empty($descricao)) {
             $params['descricao'] = $descricao;
         }
@@ -69,28 +56,14 @@ class Viagens extends BaseController
             $params['data_chegada'] = $data_chegada;
         }
 
-        $dados['veiculos'] = VeiculosModel::list();
         if (!empty($params)) {
-            $dados['viagens'] = $this->ViagenModel->list($params);
+            $viagens = ViagenModel::list($params);
         } else {
-            $dados['viagens'] = $this->ViagenModel->list();
-        }
-        //usando $this->view setado em BaseController
-        if ($args['modo']??false == 'lista') {
-            sleep(1);
-            return $this->views->render($response, 'viagens_list.php', $dados);
-        } else {
-            $this->views->render($response, 'header.php', $dados);
-            $this->views->render($response, 'left.php', $dados);
-            $this->views->render($response, 'right_top.php', $dados);
-            $this->views->render($response, 'viagens.php', $dados);
-            return $this->views->render($response, 'footer.php', $dados);
+            $viagens = ViagenModel::list();
         }
 
-        // return $response->withJson($viagens, true, $viagens->count().($viagens->count() > 1 ? ' viagens encontradas' : ' viagen encontrada'));
+        return $response->withJson($viagens, true, $viagens->count().($viagens->count() > 1 ? ' viagens encontradas' : ' viagen encontrada'));
     }
-
-
 
     /**
      * Salva um viagenss.
@@ -108,8 +81,8 @@ class Viagens extends BaseController
         $descricao = $requests['descricao'] ?? null;
         $origem = $requests['origem'] ?? null;
         $destino = $requests['destino'] ?? null;
-        $data_saida = $this->dateFormat($requests['data_saida']) ?? null;
-        $data_chegada = $this->dateFormat($requests['data_chegada']) ?? null;
+        $data_saida = $requests['data_saida'] ?? null;
+        $data_chegada = $requests['data_chegada'] ?? null;
         $detalhes = $requests['detalhes'] ?? null;
         $veiculos_id = $requests['veiculos_id'] ?? null;
 
@@ -202,6 +175,6 @@ class Viagens extends BaseController
         }
         exit;
 
-        return $response->withJson($viagens, true, $viagens->count() . ($viagens->count() > 1 ? ' viagens encontradas' : ' viagen encontrada'));
+        return $response->withJson($viagens, true, $viagens->count().($viagens->count() > 1 ? ' viagens encontradas' : ' viagen encontrada'));
     }
 }
