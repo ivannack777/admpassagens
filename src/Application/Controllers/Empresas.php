@@ -19,6 +19,7 @@ class Empresas extends BaseController
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct();
         $this->container = $container;
     }
 
@@ -29,10 +30,10 @@ class Empresas extends BaseController
      */
     public function list(Request $request, Response $response)
     {
-        $nivel = $_SESSION['user']['nivel'];
-        if ($nivel == '1') {
-            return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
-        }
+        // $nivel = $_SESSION['user']['nivel'];
+        // if ($nivel == '1') {
+        //     return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
+        // }
 
         $requests = $request->getParsedBody();
         $usuarios_id = $requests['usuarios_id'] ?? null;
@@ -40,14 +41,14 @@ class Empresas extends BaseController
         $nome = $requests['nome'] ?? null;
 
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuarios_id
-        $userSession = $_SESSION['user'];
-        if ($userSession['nivel'] == '1') {
-            $params['usuarios_id'] = $userSession['id'];
-        } else {
-            if (!empty($usuarios_id)) {
-                $params['usuarios_id'] = $usuarios_id;
-            }
-        }
+        // $userSession = $_SESSION['user'];
+        // if ($userSession['nivel'] == '1') {
+        //     $params['usuarios_id'] = $userSession['id'];
+        // } else {
+        //     if (!empty($usuarios_id)) {
+        //         $params['usuarios_id'] = $usuarios_id;
+        //     }
+        // }
 
         if (!empty($enderecos_id)) {
             $params['enderecos_id'] = $enderecos_id;
@@ -57,12 +58,22 @@ class Empresas extends BaseController
         }
 
         if (!empty($params)) {
-            $empresas = EmpresasModel::list($params);
+            $dados['empresas'] = EmpresasModel::list($params);
         } else {
-            $empresas = EmpresasModel::list();
+            $dados['empresas'] = EmpresasModel::list();
         }
 
-        return $response->withJson($empresas, true, $empresas->count().($empresas->count() > 1 ? ' empresas encontradas' : ' empresa encontrada'));
+        
+        if ($args['modo']??false == 'lista') {
+            sleep(1);
+            return $this->views->render($response, 'veiculos_list.php', $dados);
+        } else {
+            $this->views->render($response, 'header.php', $dados);
+            $this->views->render($response, 'left.php', $dados);
+            $this->views->render($response, 'right_top.php', $dados);
+            $this->views->render($response, 'empresas.php', $dados);
+            return $this->views->render($response, 'footer.php', $dados);
+        }
     }
 
     /**
@@ -72,10 +83,10 @@ class Empresas extends BaseController
      */
     public function save(Request $request, Response $response, array $args)
     {
-        $nivel = $_SESSION['user']['nivel'];
-        if ($nivel == '1') {
-            return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
-        }
+        // $nivel = $_SESSION['user']['nivel'];
+        // if ($nivel == '1') {
+        //     return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
+        // }
 
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
@@ -89,8 +100,8 @@ class Empresas extends BaseController
         $nome = $requests['nome'] ?? null;
 
         $dados = [
-            'usuarios_id' => $usuarios_id,
-            'enderecos_id' => $enderecos_id,
+            // 'usuarios_id' => $usuarios_id,
+            // 'enderecos_id' => $enderecos_id,
             'nome' => $sanitize->string($nome)->doubles()->firstUp()->get(),
         ];
 

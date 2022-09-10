@@ -127,87 +127,13 @@
     </div>
     <!--/.col-->
 
-    <div class="col-lg-3 col-md-6">
-        <div class="social-box facebook">
-            <i class="fa fa-facebook"></i>
-            <ul>
-                <li>
-                    <span class="count">40</span> k
-                    <span>friends</span>
-                </li>
-                <li>
-                    <span class="count">450</span>
-                    <span>feeds</span>
-                </li>
-            </ul>
-        </div>
-        <!--/social-box-->
-    </div>
-    <!--/.col-->
-
-
-    <div class="col-lg-3 col-md-6">
-        <div class="social-box twitter">
-            <i class="fa fa-twitter"></i>
-            <ul>
-                <li>
-                    <span class="count">30</span> k
-                    <span>friends</span>
-                </li>
-                <li>
-                    <span class="count">450</span>
-                    <span>tweets</span>
-                </li>
-            </ul>
-        </div>
-        <!--/social-box-->
-    </div>
-    <!--/.col-->
-
-
-    <div class="col-lg-3 col-md-6">
-        <div class="social-box linkedin">
-            <i class="fa fa-linkedin"></i>
-            <ul>
-                <li>
-                    <span class="count">40</span> +
-                    <span>contacts</span>
-                </li>
-                <li>
-                    <span class="count">250</span>
-                    <span>feeds</span>
-                </li>
-            </ul>
-        </div>
-        <!--/social-box-->
-    </div>
-    <!--/.col-->
-
-
-    <div class="col-lg-3 col-md-6">
-        <div class="social-box google-plus">
-            <i class="fa fa-google-plus"></i>
-            <ul>
-                <li>
-                    <span class="count">94</span> k
-                    <span>followers</span>
-                </li>
-                <li>
-                    <span class="count">92</span>
-                    <span>circles</span>
-                </li>
-            </ul>
-        </div>
-        <!--/social-box-->
-    </div>
-    <!--/.col-->
 
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-4">
-                        <h4 class="card-title mb-0">veiculos</h4>
+                        <h4 class="card-title mb-0">Veículos</h4>
                         <div class="small text-muted"><?= $veiculos->count() ?> veiculos estão sendo exibidas></div>
                     </div>
                     <!--/.col-->
@@ -414,13 +340,13 @@
             success: function(retorno) {
                 jQuery("#formMediumModal").modal("hide")
                 if (retorno.status == true) {
-                    jQuery("#label_marca" + id).html(jQuery("#marca").val());
-                    jQuery("#label_modelo" + id).html(jQuery("#modelo").val());
-                    jQuery("#label_ano" + id).html(jQuery("#ano").val());
-                    jQuery("#label_codigo" + id).html(jQuery("#codigo").val());
-                    jQuery("#label_placa" + id).html(jQuery("#placa").val());
-                    jQuery("#label_empresa" + id).html(jQuery("#empresas_id :selected").text());
-                    jQuery("#label_tipo" + id).html(jQuery("#veiculos_tipo_id :selected").text());
+                    jQuery("#label_marca" + id).html(retorno.data.nome);
+                    jQuery("#label_modelo" + id).html(retorno.data.descricao);
+                    jQuery("#label_ano" + id).html(retorno.data.ano);
+                    jQuery("#label_codigo" + id).html(retorno.data.codigo);
+                    jQuery("#label_placa" + id).html(retorno.data.placa);
+                    jQuery("#label_empresa" + id).html(retorno.data.empresas_id);
+                    jQuery("#label_tipo" + id).html(retorno.data.veiculos_tipo_id);
                     jQuery("#linha" + id).addClass('success-transition');
                 } else {
                     jQuery("#linha" + id).addClass('error-transition');

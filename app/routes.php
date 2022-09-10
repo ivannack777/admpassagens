@@ -106,5 +106,6 @@ return function (App $app, Request $request) {
 
             return $handler->handle($request);
         });
-    })->add(CheckTokenMiddleware::class);
+    });
+    //->add(CheckTokenMiddleware::class);
 };

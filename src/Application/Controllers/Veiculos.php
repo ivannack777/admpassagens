@@ -116,12 +116,22 @@ class Veiculos extends BaseController
         }
 
         if (!empty($params)) {
-            $veiculossTipo = Veiculos_tipoModel::list($params);
+            $dados['veiculosTipo'] = Veiculos_tipoModel::list($params);
         } else {
-            $veiculossTipo = Veiculos_tipoModel::list();
+            $dados['veiculosTipo'] = Veiculos_tipoModel::list();
         }
 
-        return $response->withJson($veiculossTipo, true, $veiculossTipo->count().($veiculossTipo->count() > 1 ? ' tipos de veiculoss encontrados' : ' tipo de veiculos encontrado'));
+        if ($args['modo']??false == 'lista') {
+            sleep(1);
+            return $this->views->render($response, 'veiculos_list.php', $dados);
+        } else {
+            $this->views->render($response, 'header.php', $dados);
+            $this->views->render($response, 'left.php', $dados);
+            $this->views->render($response, 'right_top.php', $dados);
+            $this->views->render($response, 'veiculos_tipo.php', $dados);
+            return $this->views->render($response, 'footer.php', $dados);
+        }
+
     }
 
     /**
@@ -197,10 +207,10 @@ class Veiculos extends BaseController
      */
     public function tipo_save(Request $request, Response $response, array $args)
     {
-        $nivel = $_SESSION['user']['nivel'];
-        if ($nivel == '1') {
-            return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
-        }
+        // $nivel = $_SESSION['user']['nivel'];
+        // if ($nivel == '1') {
+        //     return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
+        // }
 
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
@@ -211,14 +221,10 @@ class Veiculos extends BaseController
 
         $nome = $requests['nome'] ?? null;
         $descricao = $requests['descricao'] ?? null;
-        $icone = $requests['icone'] ?? null;
-        $botao_tipo = $requests['botao_tipo'] ?? null;
 
         $dados = [
             'nome' => $sanitize->name($nome)->get(),
             'descricao' => $sanitize->string($descricao)->firstUp()->get(),
-            'icone' => $icone,
-            'botao_tipo' => $sanitize->string($botao_tipo)->firstUp()->get(),
         ];
 
         if (!empty($id)) {
@@ -236,7 +242,6 @@ class Veiculos extends BaseController
         } else {
             $v = new Validator($dados);
             $v->rule('required', ['nome']);
-            $v->rule('in', 'botao_tipo', ['Power', 'Switch', 'Slide']);
 
             if ($v->validate()) {
                 $veiculos_tipoInsert = Veiculos_tipoModel::create($dados);

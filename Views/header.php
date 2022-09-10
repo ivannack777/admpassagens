@@ -36,10 +36,12 @@
     <script src="<?= $this->siteUrl('vendors/bootstrap/dist/js/bootstrap.min.js') ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/main.js') ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/jquery.datetimepicker.full.min.js') ?>"></script>
+    <script src="<?= $this->siteUrl('assets/js/moment-with-locales.js') ?>"></script>
     <script src="https://kit.fontawesome.com/8158c55e47.js" crossorigin="anonymous"></script>
 
     <script>
         jQuery.datetimepicker.setLocale('pt-BR');
+
     </script>
 
 </head>
