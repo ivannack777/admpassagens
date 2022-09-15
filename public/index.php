@@ -10,6 +10,8 @@ use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 use Valitron\Validator;
+use Psr\Log\LoggerInterface;
+use Slim\Http\ServerRequest;
 
 require __DIR__.'/../vendor/autoload.php';
 
@@ -85,9 +87,30 @@ $app->addBodyParsingMiddleware();
 
 // Add Error Middleware
 // comentado para exibir erro padrão
-//  $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, $logError, $logErrorDetails);
-//  $errorMiddleware->setDefaultErrorHandler($errorHandler);
+// Define Custom Error Handler
+$customErrorHandler = function (
+    ServerRequest $request,
+    Throwable $exception,
+    bool $displayErrorDetails,
+    bool $logErrors,
+    bool $logErrorDetails,
+    ?LoggerInterface $logger = null
+) use ($app) {
+    // $logger->error($exception->getMessage());
 
+    $payload = ['error' => $exception->getMessage()];
+
+    $response = $app->getResponseFactory()->createResponse();
+    $response->getBody()->write(
+        json_encode($payload, JSON_UNESCAPED_UNICODE)
+    );
+
+    return $response;
+};
+
+// Add Error Middleware
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+$errorMiddleware->setDefaultErrorHandler($customErrorHandler);
 // Run App & Emit Response
 $response = $app->handle($request);
 $responseEmitter = new ResponseEmitter();
