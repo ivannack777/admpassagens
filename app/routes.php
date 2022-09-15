@@ -11,6 +11,8 @@ use App\Application\Controllers\Usuarios\Pessoas;
 use App\Application\Controllers\Usuarios\Usuarios;
 use App\Application\Controllers\Veiculos;
 use App\Application\Controllers\Viagens;
+use App\Application\Controllers\Clientes;
+use App\Application\Controllers\Pedidos;
 use App\Application\Middleware\CheckTokenMiddleware;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
@@ -78,14 +80,24 @@ return function (App $app, Request $request) {
     $app->group('/viagens', function (Group $group) {
         $group->map(['GET', 'POST'], '/listar[/{modo}]', [Viagens::class, 'list']);
         $group->post('/salvar[/{id}]', [Viagens::class, 'save']);
-        $group->post('/executar', [Viagens::class, 'execute']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     });
 
     $app->group('/localidades', function (Group $group) {
         $group->map(['GET', 'POST'], '/listar', [Localidades::class, 'list']);
         $group->post('/salvar[/{id}]', [Localidades::class, 'save']);
-        $group->post('/executar', [Localidades::class, 'execute']);
+        $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
+    });
+
+    $app->group('/clientes', function (Group $group) {
+        $group->map(['GET', 'POST'], '/listar', [Clientes::class, 'list']);
+        $group->post('/salvar[/{id}]', [Clientes::class, 'save']);
+        $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
+    });
+
+    $app->group('/pedidos', function (Group $group) {
+        $group->map(['GET', 'POST'], '/listar', [Pedidos::class, 'list']);
+        $group->post('/salvar[/{id}]', [Pedidos::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     });
 

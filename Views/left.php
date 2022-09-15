@@ -58,8 +58,10 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="<?= $this->siteUrl('viagens/listar') ?>"> <i class="menu-icon fas fa-road"></i>Viagens </a>
-                    <a href="<?= $this->siteUrl('empresas/listar') ?>"> <i class="menu-icon far fa-building"></i>Empresas </a>
+                    <a href="<?= $this->siteUrl('viagens/listar') ?>"> <i class="menu-icon fas fa-road"></i> Viagens </a>
+                    <a href="<?= $this->siteUrl('empresas/listar') ?>"> <i class="menu-icon far fa-building"></i> Empresas</a>
+                    <a href="<?= $this->siteUrl('clientes/listar') ?>"> <i class="menu-icon fas fa-user-tag"></i> Clientes</a>
+                    <a href="<?= $this->siteUrl('pedidos/listar') ?>"> <i class="menu-icon fas fa-file-invoice-dollar"></i> Pedidos</a>
 
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fas fa-bus"></i>Viculos</a>

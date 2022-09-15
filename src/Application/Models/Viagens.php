@@ -6,7 +6,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class Viagens extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['veiculos_id', 'descricao', 'origem', 'destino', 'data_saida', 'data_chegada', 'detalhes'];
+    protected $fillable = ['veiculos_id', 'descricao', 'origem_id', 'destino_id', 'data_saida', 'data_chegada', 'detalhes'];
     public $timestamps = false;
     public $table = 'viagens';
 
@@ -24,8 +24,21 @@ class Viagens extends \Illuminate\Database\Eloquent\Model
             'viagens.key',
             'viagens.veiculos_id',
             'viagens.descricao',
-            'viagens.origem',
-            'viagens.destino',
+            'viagens.origem_id',
+
+            'localidades_origem.localidade as localidade_origem',
+            'localidades_origem.nome_municipio as municipio_origem',
+            'localidades_origem.nome_distrito as distrito_origem',
+            'localidades_origem.nome_uf as nome_uf_origem',
+            'localidades_origem.sigla_uf as sigla_uf_origem',
+            
+            'localidades_destino.localidade as localidade_destino',
+            'localidades_destino.nome_municipio as municipio_destino',
+            'localidades_destino.nome_distrito as distrito_destino',
+            'localidades_destino.nome_uf as nome_uf_destino',
+            'localidades_destino.sigla_uf as sigla_uf_destino',
+            
+            'viagens.destino_id',
             'viagens.data_saida',
             'viagens.data_chegada',
             'viagens.detalhes',
@@ -39,6 +52,8 @@ class Viagens extends \Illuminate\Database\Eloquent\Model
             $viagens->where($campo, '=', $param);
         }
         $viagens->join('veiculos', 'veiculos.id', '=', 'viagens.veiculos_id', 'left');
+        $viagens->join(DB::raw('ibge_localidades localidades_origem'), 'localidades_origem.id', '=', 'viagens.origem_id', 'left');
+        $viagens->join(DB::raw('ibge_localidades localidades_destino'), 'localidades_destino.id', '=', 'viagens.destino_id', 'left');
         $viagens->where('viagens.excluido', '=', 'N');
 
         $result = $viagens->get();

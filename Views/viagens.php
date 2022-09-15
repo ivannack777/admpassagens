@@ -247,8 +247,8 @@
         ?>
             <tr id="linha<?= $viagem->id ?>" class="list-label">
                 <td><span id="label_descricao<?= $viagem->id ?>"><?= $viagem->descricao ?></span></td>
-                <td><span id="label_origem<?= $viagem->id ?>"><?= $viagem->origem ?></span></td>
-                <td><span id="label_destino<?= $viagem->id ?>"><?= $viagem->destino ?></span></td>
+                <td><span id="label_origem_id<?= $viagem->id ?>"><?= $viagem->origem_id ?> <?= $viagem->localidade_origem ?></span></td>
+                <td><span id="label_destino_id<?= $viagem->id ?>"><?= $viagem->destino_id ?> <?= $viagem->localidade_destino ?></span></td>
                 <td><span id="label_data_saida<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?></span></td>
                 <td><span id="label_data_chegada<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?></span></td>
                 <td><span id="label_detalhes<?= $viagem->id ?>"><?= $viagem->detalhes ?></span></td>
@@ -267,8 +267,8 @@
                         data-id="<?= $viagem->id ?>" 
                         data-veiculos_id="<?= $viagem->veiculos_id ?>" 
                         data-descricao="<?= $viagem->descricao ?>" 
-                        data-origem="<?= $viagem->origem ?>"
-                        data-destino="<?= $viagem->destino ?>" 
+                        data-origem_id="<?= $viagem->origem_id ?>"
+                        data-destino_id="<?= $viagem->destino_id ?>" 
                         data-data_saida="<?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?>" 
                         data-data_chegada="<?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?>" 
                         data-detalhes="<?= $viagem->detalhes ?>">
@@ -302,13 +302,13 @@
                         <small class="form-text text-muted">ex. 99/99/9999</small>
                     </div>
                     <div class="form-group">
-                        <label class="control-label mb-1" for="origem">Origem</label>
-                        <input type="text" class="form-control" id="origem" name="origem" value="" />
+                        <label class="control-label mb-1" for="origem_id">Origem</label>
+                        <input type="text" class="form-control" id="origem_id" name="origem_id" value="" />
                     </div>
                     <div class="form-group">
-                        <label class="control-label mb-1" for="destino">Destino</label>
+                        <label class="control-label mb-1" for="destino_id">Destino</label>
 
-                        <input type="text" class="form-control" id="destino" name="destino" value="" />
+                        <input type="text" class="form-control" id="destino_id" name="destino_id" value="" />
                     </div>
 
                     <div class="form-group">
@@ -416,8 +416,8 @@
         }
 
         jQuery("#descricao").val(este.data('descricao'));
-        jQuery("#origem").val(este.data('origem'));
-        jQuery("#destino").val(este.data('destino'));
+        jQuery("#origem_id").val(este.data('origem_id'));
+        jQuery("#destino_id").val(este.data('destino_id'));
         jQuery("#data_saida").val(este.data('data_saida'));
         jQuery("#data_chegada").val(este.data('data_chegada'));
         jQuery("#detalhes").val(este.data('detalhes'));
@@ -445,7 +445,7 @@
                     let data_saida = new moment(retorno.data[0].data_saida);
                     let data_chegada = new moment(retorno.data[0].data_chegada);
                     jQuery("#label_descricao"+id).html(retorno.data[0].descricao);
-                    jQuery("#label_destino"+id).html(retorno.data[0].destino);
+                    jQuery("#label_destino_id"+id).html(retorno.data[0].destino_id);
                     jQuery("#label_data_saida"+id).html(data_saida.format('DD/MM/YYYY HH:mm'));
                     jQuery("#label_data_chegada"+id).html(data_chegada.format('DD/MM/YYYY HH:mm'));
                     jQuery("#label_detalhes"+id).html(retorno.data[0].detalhes);
