@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/style.css') ?>">
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/estilos.css') ?>">
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/jquery.datetimepicker.min.css') ?>">
+    <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/select2.css') ?>">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
@@ -37,6 +38,8 @@
     <script src="<?= $this->siteUrl('assets/js/main.js') ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/jquery.datetimepicker.full.min.js') ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/moment-with-locales.js') ?>"></script>
+    <script src="<?= $this->siteUrl('assets/js/select2.full.min.js') ?>"></script>
+    <script src="<?= $this->siteUrl('assets/js/jquery.mask.min.js') ?>"></script>
     <script src="https://kit.fontawesome.com/8158c55e47.js" crossorigin="anonymous"></script>
 
     <script>
@@ -46,5 +49,4 @@
 
 </head>
 
-<body>
-    <div id="msgfloat" style="display: none; position:absolute; top:50px; left:300px;"></div>
+<body class="bg-dark">

@@ -23,6 +23,7 @@ class Enderecos extends \Illuminate\Database\Eloquent\Model
         foreach ($params as $campo => $param) {
             $enderecos->where($campo, '=', $param);
         }
+        $enderecos->where('enderecos.excluido', 'N');
         $result = $enderecos->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;

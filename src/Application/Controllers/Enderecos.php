@@ -29,7 +29,7 @@ class Enderecos extends BaseController
      */
     public function list(Request $request, Response $response)
     {
-        $nivel = $_SESSION['user']['nivel'];
+        $nivel = $_SESSION['admpassagens']['user']['nivel'];
         if ($nivel == '1') {
             return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         }
@@ -69,7 +69,7 @@ class Enderecos extends BaseController
      */
     public function save(Request $request, Response $response, array $args)
     {
-        $nivel = $_SESSION['user']['nivel'];
+        $nivel = $_SESSION['admpassagens']['user']['nivel'];
         if ($nivel == '1') {
             return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         }

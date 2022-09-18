@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Controllers\Usuarios;
 
+use App\Application\Controllers\BaseController;
 use App\Application\Models\Usuarios;
 use Monolog\Handler\RotatingFileHandler;
 // use Psr\Http\Message\ResponseInterface as Response;
@@ -11,8 +12,9 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
+use Slim\Views\PhpRenderer;
 
-class Login
+class Login extends BaseController
 {
     protected $container;
     protected $config;
@@ -20,6 +22,7 @@ class Login
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct();
         $this->container = $container;
     }
 
@@ -47,7 +50,7 @@ class Login
             $usuarios = Usuarios::list();
         }
 
-        return $response->withJson($usuarios, true, $usuarios->count().' usuário(s) encontrado(s)');
+        return $response->withJson($usuarios, true, $usuarios->count() . ' usuário(s) encontrado(s)');
     }
 
     /**
@@ -58,12 +61,12 @@ class Login
     public function auth(Request $request, Response $response): Response
     {
         $body = preg_replace('/\s+/', '', $request->getBody() ?? null);
-        $log = new Logger(__CLASS__.'::'.__FUNCTION__.$body);
+        $log = new Logger(__CLASS__ . '::' . __FUNCTION__ . $body);
         $log->pushHandler(new RotatingFileHandler($_ENV['ACCESS_LOG'], 5, Logger::DEBUG));
         $caminho = '';
         $headers = $request->getHeaders();
         foreach ($headers as $name => $values) {
-            $caminho .= $name.': '.implode(', ', $values).'; ';
+            $caminho .= $name . ': ' . implode(', ', $values) . '; ';
         }
         $requests = array_map('trim', $request->getParsedBody() ?? []);
 
@@ -99,38 +102,144 @@ class Login
             $dados['caminho'] = $caminho;
             $login = Usuarios::list(['id' => $usuario->id]);
 
-            $log->info($caminho.'Usuário autenticado');
+            $log->info($caminho . 'Usuário autenticado');
 
             return  $response->withJson([$login], true, 'Usuário autenticado');
         } else {
-            $log->info($caminho.'Usuário não encontrado');
+            $log->info($caminho . 'Usuário não encontrado');
 
             return   $response->withJson([], true, 'Usuário não encontrado');
         }
     }
+    
+    public function loginForm(Request $request, Response $response): Response
+    {
+        $dados = [];
+        $views = new PhpRenderer('../Views');
+        $this->views->render($response, 'header.php', $dados);
+        $views->render($response, 'login.php', $dados);
+        return $this->views->render($response, 'footer.php', $dados);
+    }
+
+    public function registrarForm(Request $request, Response $response): Response
+    {
+        $dados = [];
+        $views = new PhpRenderer('../Views');
+        $this->views->render($response, 'header.php', $dados);
+        $this->views->render($response, 'registro.php', $dados);
+        return $this->views->render($response, 'footer.php', $dados);
+    }
+
+    public function resetsenhaForm(Request $request, Response $response): Response
+    {
+        $dados = [];
+        
+        $this->views->render($response, 'header.php', $dados);
+        $this->views->render($response, 'resetsenha.php', $dados);
+        return $this->views->render($response, 'footer.php', $dados);
+    }
 
     /**
-     * Registra login na tabela usuarios_login.
+     * Localiza, autentica e registra login
      *
      * @return string json
      */
     public function login(Request $request, Response $response): Response
     {
-        $requests = array_map('trim', $request->getParsedBody() ?? []);
+        session_start();
+        $requests = $request->getParsedBody();
 
-        $dados['usuarios_id'] = $requests['usuario_id'] ?? null;
-        $dados['device_id'] = $requests['device_id'] ?? null;
-        $dados['push_token'] = preg_replace('/(ExponentPushToken\[)([\d\w]+)(\])/', '$2', $requests['push_token']) ?? null;
+        $usuario  = $requests['usuario'] ?? false;
+        $email  = $requests['email'] ?? false;
+        $celular = $requests['celular'] ?? false;
+        $identificador = $requests['identificador'] ?? false;
+        $senha  = $requests['senha'] ?? false;
+        // $dados['push_token'] = preg_replace('/(ExponentPushToken\[)([\d\w]+)(\])/', '$2', $requests['push_token']) ?? null;
 
-        if ($dados['usuarios_id']) {
-            $usuariosLog = Usuarios::login($dados);
-            if ($usuariosLog) {
-                return  $response->withJson($usuariosLog, true, 'Login foi salvo');
+        if ($usuario) {
+            $params['usuario'] = $usuario;
+        }
+        if ($email) {
+            $params['email'] = $email;
+        }
+        if ($celular) {
+            $params['celular'] = $celular;
+        }
+        if ($identificador) {
+            $params['identificador'] = $identificador;
+        }
+
+        if (!empty($params) && !empty($senha)) {
+            $usuarios = Usuarios::list($params);
+
+            if ($usuarios->count()) {
+                $paramsAuth = [
+                    'id' => $usuarios[0]->id,
+                    'senha' => hash('sha256', $senha)
+                ];
+                $usuariosAuth = Usuarios::auth($paramsAuth);
+
+                if ($usuariosAuth->count()) {
+                    $_SESSION['admpassagens']['user'] = [
+                                'id' => $usuarios[0]->id,
+                                'usuario' => $usuarios[0]->usuario,
+                                'email' => $usuarios[0]->email,
+                                'celular' => $usuarios[0]->celular,
+                                'token' => $usuarios[0]->token,
+                                'nivel' => $usuarios[0]->nivel,
+                    ];
+
+                    //gravar log do login ;)
+                    $usuariosDadosLog = [
+                        'usuarios_id' => $usuarios[0]->id,
+                        'uri' =>  $request->getUri(),
+                        'direcao' => 'E', //Entrada
+                    ];
+                    
+                    $usuariosLog = Usuarios::log($usuariosDadosLog);
+                    
+                    if ($usuariosLog) {
+                        //verifica se 'rememberuri' existe na sessão 
+                        $rememberuri = $_SESSION['admpassagens']['rememberuri'] ?? false;
+                        //se exisitir faz o redirect para o endereço, senão redireciona para raiz
+                        return $response->withHeader('Location', $rememberuri ? $rememberuri->getPath() : '/')->withStatus(302);
+                    } else {
+                        return  $response->withJson([$usuariosLog], false, 'Falha ao salvar login');
+                    }
+                } else{
+                    return  $response->withJson($params, false, 'Usuário não foi autenticado, verique sua senha!', 403);    
+                }
             } else {
-                return  $response->withJson($usuariosLog, false, 'Falha ao salvar login');
+                return  $response->withJson($params, false, 'Usuário não foi localizado!', 401);
             }
         } else {
-            return $response->withJson(['dados' => $requests], false, 'Paramatros incorretos', 401);
+            return $response->withJson(['dados' => $requests], false, 'Paramatros incorretos.', 401);
         }
+    }
+
+
+    /**
+     * Localiza, autentica e registra login
+     *
+     * @return string json
+     */
+    public function logout(Request $request, Response $response): Response
+    {
+        session_start();
+        var_dump($_SESSION);
+        if($_SESSION['admpassagens'] ?? false && $_SESSION['admpassagens'] ['user'] ?? false){
+            $usuariosDadosLog = [
+                'usuarios_id' => $_SESSION['admpassagens'] ['user']['id'],
+                'uri' =>  $request->getUri(),
+                'direcao' => 'S', //Saída
+            ];
+            unset($_SESSION['admpassagens'] ['user']);
+            // session_destroy();
+             //gravar log do logout ;)
+            Usuarios::log($usuariosDadosLog);
+            
+        }
+        
+        return $response->withHeader('Location', '/usuarios/login/form')->withStatus(302);
     }
 }

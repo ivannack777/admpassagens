@@ -10,6 +10,8 @@ class BaseController
 {
     protected $container;
     protected $views;
+    protected $session;
+    
     
 
     // constructor receives container instance
@@ -17,6 +19,9 @@ class BaseController
     {
         $this->container = $container;
         $this->views = new PhpRenderer('../Views');
+        $session = $_SESSION['admpassagens'] ?? false;
+        $this->views->setAttributes(['session'=> $session] );
+        $this->usersession = $session;
     }
 
     /**
@@ -52,6 +57,14 @@ class BaseController
         return $dt->format('Y-m-d H:i:s') ;
         
         return $dt;
+    }
+
+    public function getUserSession($idx=false){
+        $userSession = $_SESSION['admpassagens']['user'] ?? false;
+        if($userSession){
+            return $idx ? $userSession[$idx]??null : $userSession;
+        }
+        return false;
     }
 
 }

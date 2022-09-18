@@ -8,8 +8,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
 // use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
-use App\Application\Models\Usuario as UsuarioModel;
-use App\Application\Models\Pessoa as PessoaModel;
+use App\Application\Models\Usuarios as UsuariosModel;
+use App\Application\Models\Pessoas as PessoasModel;
 
 use App\Application\Helpers\Sanitize;
 use Valitron\Validator;
@@ -22,13 +22,14 @@ class Usuarios extends BaseController
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct();
         $this->container = $container;
     }
 
 
 
     /**
-     * Localiza e retorna um usuarios passando 'usuario' por json request
+     * Localiza e retorna um Usuarios passando 'usuario' por json request
      * @param Request $request
      * @param Response $response
      * @return string json
@@ -41,12 +42,15 @@ class Usuarios extends BaseController
         $usuario = $requests['usuario']??null;
         $email = $requests['email']??null;
         $celular = $requests['celular']??null;
-        $usuarios = [];
+        $Usuarios = [];
 
-        //se o nivel do usuario for 1: cliente, sempre faz filtro pelo id
-        $userSession = $_SESSION['user'];
-        if ($userSession['nivel'] == '1') {
-            $params['id'] = $userSession['id'];
+        //se o nivel do Usuarios for 1: cliente, sempre faz filtro pelo id
+        if ($this->getUserSession('nivel') < '3') {
+            return $response->withJson([], false, 'Acesso não autorizado',403);  
+        } 
+
+        if ($this->getUserSession('id')) {
+            $params['id'] = $this->getUserSession('id');
         } 
 
         if (!empty($id))  {
@@ -63,18 +67,29 @@ class Usuarios extends BaseController
         }
 
         if (!empty($params)) {
-            $usuarios = UsuarioModel::list($params);
+            $dados['usuarios'] = UsuariosModel::list($params);
         } else {
-            $usuarios = UsuarioModel::list();
+            $dados['usuarios'] = UsuariosModel::list();
         }
+        
 
-        return $response->withJson($usuarios, true, $usuarios->count() . ($usuarios->count()>1?' usuários encontrados':' usuário encontrado'));
+        //return $response->withJson($Usuarios, true, $Usuarios->count() . ($Usuarios->count()>1?' usuários encontrados':' usuário encontrado'));
+        if ($args['modo']??false == 'lista') {
+            sleep(1);
+            return $this->views->render($response, 'veiculos_list.php', $dados);
+        } else {
+            $this->views->render($response, 'header.php', $dados);
+            $this->views->render($response, 'left.php', $dados);
+            $this->views->render($response, 'right_top.php', $dados);
+            $this->views->render($response, 'usuarios.php', $dados);
+            return $this->views->render($response, 'footer.php', $dados);
+        }
     }
 
 
 
     /**
-     * Salva um usuario
+     * Salva um Usuarios
      * Se passar o id pela URL faz update, senão faz insert
      * @param Request $request
      * @param Response $response
@@ -86,40 +101,49 @@ class Usuarios extends BaseController
         $sanitize = new Sanitize();
         $requests = $request->getParsedBody();
         if(empty($requests)){
-            return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
+            return  $response->withJson([], false, 'Parâmetros incorretos.', 401);
         }
         $usuario = $sanitize->username($requests['usuario']??null)->get();
         $email = $sanitize->email($requests['email']??null)->get();
         $celular = $sanitize->number($requests['celular']??null, 'clear')->get();
         $senha = $sanitize->password($requests['senha']??null)->get();
-        $pessoa_id = $sanitize->integer($requests['pessoa_id']??null)->get();
+        $resenha = $sanitize->password($requests['resenha']??null)->get();
+        $pessoas_id = $sanitize->integer($requests['pessoas_id']??null)->get();
         $nivel = $sanitize->integer($requests['nivel']??null)->get();
-        $token = hash('sha256', $usuario. time());
+        
+        if (!empty($senha)) {
+            if ($this->getUserSession('nivel') < '5') {
+                return $response->withJson([], false, 'Acesso não autorizado',403);  
+            } 
+            if ($senha != $resenha) {
+                return $response->withJson([], false, 'As senhas não coincidem');
+            }
 
-     
+        }
 
-        $dados=[
+        $dados = array_filter([
             'usuario' => $usuario,
             'email' => $email,
             'celular' => $celular,
             'senha' => !empty($senha)?hash('sha256', $senha):null,
-            'token' => $token,
-            'pessoa_id' => $pessoa_id,
+            'pessoas_id' => $pessoas_id,
             'nivel' => $nivel,
-        ];
+        ]);
 
-        if (!empty($pessoa_id)) {
-            $pessoas = PessoaModel::list(['id'=>$pessoa_id]);
+        var_dump($dados);exit;
+
+        if (!empty($pessoas_id)) {
+            $pessoas = PessoasModel::list(['id'=>$pessoas_id]);
             if($pessoas->count()===0){
-                return $response->withJson($dados, false, 'Pessoa não encontrada pelo pessoa_id: '. $pessoa_id);
+                return $response->withJson($dados, false, 'Pessoas não encontrada pelo pessoas_id: '. $pessoas_id);
             }
          
         }
         if (!empty($id)) {
-            $usuarios = UsuarioModel::list(['id' => $id]);
-            if ($usuarios->count()) {
-                UsuarioModel::where(['id' => $id])->update($dados);
-                $usuarios = UsuarioModel::list(['id' => $id]);
+            $Usuarios = UsuariosModel::list(['id' => $id]);
+            if ($Usuarios->count()) {
+                UsuariosModel::where(['id' => $id])->update($dados);
+                $Usuarios = UsuariosModel::list(['id' => $id]);
                 return $response->withJson($dados, true, 'Usuario foi salvo');
             } else {
                 return $response->withJson($requests, false, 'Usuario não foi localizado');
@@ -132,10 +156,10 @@ class Usuarios extends BaseController
 
             // $v->rules([
             //     'requiredWithout' => [
-            //         ['usuario', ['email', 'celular'], true, 'msg'] //se não existir email ou celular, usuario será obrigatorio
+            //         ['usuario', ['email', 'celular'], true, 'msg'] //se não existir email ou celular, Usuarios será obrigatorio
             //     ],
             //     'requiredWith' => [
-            //         ['password', ['usuario']] //se existir usuario, então senha será obrigatorio
+            //         ['password', ['usuario']] //se existir Usuarios, então senha será obrigatorio
             //     ],
             //     'email' => [
             //         ['email']
@@ -145,11 +169,13 @@ class Usuarios extends BaseController
             //     ]
             // ]);
             
-            //se não existir email ou celular, usuario será obrigatorio
-            $v->rule('requiredWithout' , 'usuario', ['email', 'celular'])->message('Se não existir email ou celular, usuario será obrigatorio');
+            //se não existir email ou celular, Usuarios será obrigatorio
+            $v->rule('requiredWithout' , 'usuario', ['email', 'celular'])->message('Se não existir email ou celular, usuario é obrigatorio');
+            $v->rule('requiredWithout' , 'email', ['usuario', 'celular'])->message('Se não existir email ou celular, email é obrigatorio');
+            $v->rule('requiredWithout' , 'celular', ['usuario', 'email'])->message('Se não existir email ou celular, celular é obrigatorio');
             
-            //se existir usuario, então senha será obrigatorio
-            $v->rule('requiredWith' , 'senha' ,['usuario'] )->message('senha é obrigatório junto com usuario');
+            //se existir Usuarios, então senha será obrigatorio
+            $v->rule('requiredWith' , 'senha' ,['usuario'] )->message('senha é obrigatório junto com Usuarios');
             
             //aplicar validação de e-mail para o campo ['email']
             $v->rule('email' , ['email']);
@@ -161,23 +187,24 @@ class Usuarios extends BaseController
             if ($v->validate()) {
 
                 $dados = array_filter($dados);
-                $usuarios = UsuarioModel::list($dados);
-                if ($usuarios->count()) {
+                $Usuarios = UsuariosModel::list($dados);
+                if ($Usuarios->count()) {
                     return $response->withJson($dados, false, 'Já existe um usuário com esta identificação');    
                 }
-                $usuarioInsert = UsuarioModel::create($dados);
-                $usuarioNew = UsuarioModel::list(['id' => $usuarioInsert->id]);
+                
+                $dados['token'] = hash('sha256', $usuario.$email.$celular.time());
+                $usuarioInsert = UsuariosModel::create($dados);
+                $usuarioNew = UsuariosModel::list(['id' => $usuarioInsert->id]);
                 return $response->withJson($usuarioNew, true, 'Usuario foi adicionado');
             } else {
-                echo "Nok";
                 // exit;
-                 // Errors
-                 $Errors = $this->valitorMessages($v->errors());
-                 return $response->withJson($dados, false,$Errors);
+                // Errors
+                $Errors = $this->valitorMessages($v->errors());
+                return $response->withJson($dados, false,$Errors);
             }
         }
 
-        return $response->withJson(false, true, ' usuário foi salvo');
+        return $response->withJson([], true, ' usuário foi salvo');
 
     
     }

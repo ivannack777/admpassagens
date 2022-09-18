@@ -18,8 +18,8 @@ class Veiculos extends \Illuminate\Database\Eloquent\Model
     public static function list(array $params = [])
     {
         // DB::enableQueryLog();
-        $veiculoss = DB::table('veiculos');
-        $veiculoss->select(
+        $veiculos = DB::table('veiculos');
+        $veiculos->select(
             'veiculos.id',
             'veiculos.empresas_id',
             'veiculos.veiculos_tipo_id',
@@ -32,14 +32,15 @@ class Veiculos extends \Illuminate\Database\Eloquent\Model
             'veiculos_tipo.descricao as tipo_descricao',
             'empresas.nome as empresa',
         );
-        // $veiculoss->selectRaw("'' as icone");
-        // $veiculoss->selectRaw("'' as icone_power");
+        // $veiculos->selectRaw("'' as icone");
+        // $veiculos->selectRaw("'' as icone_power");
         foreach ($params as $campo => $param) {
-            $veiculoss->where($campo, '=', $param);
+            $veiculos->where($campo, '=', $param);
         }
-        $veiculoss->join('veiculos_tipo', 'veiculos.veiculos_tipo_id', '=', 'veiculos_tipo.id', 'left');
-        $veiculoss->join('empresas', 'veiculos.empresas_id', '=', 'empresas.id', 'left');
-        $result = $veiculoss->get();
+        $veiculos->where('veiculos.excluido', 'N');
+        $veiculos->join('veiculos_tipo', 'veiculos.veiculos_tipo_id', '=', 'veiculos_tipo.id', 'left');
+        $veiculos->join('empresas', 'veiculos.empresas_id', '=', 'empresas.id', 'left');
+        $result = $veiculos->get();
         // print_r( DB::getQueryLog());  var_dump( $params);exit;
 
         return $result;

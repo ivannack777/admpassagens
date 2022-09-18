@@ -47,7 +47,7 @@
                             <div class="dropdown-menu" aria-labelledby="message">
                                 <p class="red">You have 4 Mails</p>
                                 <a class="dropdown-item media bg-flat-color-1" href="<?= $this->siteUrl() ?>#">
-                                <span class="photo media-left"><img alt="avatar" src="images/avatar/1.jpg"></span>
+                                <span class="photo media-left"><img alt="avatar" src="<?= $this->siteUrl('images/avatar/1.jpg') ?>"></span>
                                 <span class="message media-body">
                                     <span class="name float-left">Jonathan Smith</span>
                                     <span class="time float-right">Just now</span>
@@ -55,7 +55,7 @@
                                 </span>
                             </a>
                                 <a class="dropdown-item media bg-flat-color-4" href="<?= $this->siteUrl() ?>#">
-                                <span class="photo media-left"><img alt="avatar" src="images/avatar/2.jpg"></span>
+                                <span class="photo media-left"><img alt="avatar" src="<?= $this->siteUrl('images/avatar/2.jpg') ?>"></span>
                                 <span class="message media-body">
                                     <span class="name float-left">Jack Sanders</span>
                                     <span class="time float-right">5 minutes ago</span>
@@ -63,7 +63,7 @@
                                 </span>
                             </a>
                                 <a class="dropdown-item media bg-flat-color-5" href="<?= $this->siteUrl() ?>#">
-                                <span class="photo media-left"><img alt="avatar" src="images/avatar/3.jpg"></span>
+                                <span class="photo media-left"><img alt="avatar" src="<?= $this->siteUrl('images/avatar/3.jpg') ?>"></span>
                                 <span class="message media-body">
                                     <span class="name float-left">Cheryl Wheeler</span>
                                     <span class="time float-right">10 minutes ago</span>
@@ -71,7 +71,7 @@
                                 </span>
                             </a>
                                 <a class="dropdown-item media bg-flat-color-3" href="<?= $this->siteUrl() ?>#">
-                                <span class="photo media-left"><img alt="avatar" src="images/avatar/4.jpg"></span>
+                                <span class="photo media-left"><img alt="avatar" src="<?= $this->siteUrl('images/avatar/4.jpg') ?>"></span>
                                 <span class="message media-body">
                                     <span class="name float-left">Rachel Santos</span>
                                     <span class="time float-right">15 minutes ago</span>
@@ -86,7 +86,7 @@
                 <div class="col-sm-5">
                     <div class="user-area dropdown float-right">
                         <a href="<?= $this->siteUrl() ?>#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="user-avatar rounded-circle" src="images/admin.jpg" alt="User Avatar">
+                            <img class="user-avatar rounded-circle" src="<?= $this->siteUrl('images/admin.jpg') ?>" alt="User Avatar">
                         </a>
 
                         <div class="user-menu dropdown-menu">
@@ -96,18 +96,15 @@
 
                             <a class="nav-link" href="<?= $this->siteUrl() ?>#"><i class="fa fa-cog"></i> Settings</a>
 
-                            <a class="nav-link" href="<?= $this->siteUrl() ?>#"><i class="fa fa-power-off"></i> Logout</a>
+                            <a class="nav-link" href="<?= $this->siteUrl('usuarios/login/sair') ?>"><i class="fa fa-power-off"></i> Sair</a>
                         </div>
                     </div>
 
                     <div class="language-select dropdown" id="language-select">
                         <a class="dropdown-toggle" href="<?= $this->siteUrl() ?>#" data-toggle="dropdown"  id="language" aria-haspopup="true" aria-expanded="true">
-                            <i class="flag-icon flag-icon-us"></i>
+                            <i class="flag-icon flag-icon-br"></i>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="language">
-                            <div class="dropdown-item">
-                                <span class="flag-icon flag-icon-fr"></span>
-                            </div>
                             <div class="dropdown-item">
                                 <i class="flag-icon flag-icon-es"></i>
                             </div>

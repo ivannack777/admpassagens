@@ -134,7 +134,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <h4 class="card-title mb-0">Veículos</h4>
-                        <div class="small text-muted"><?= $veiculosTipo->count() ?> tipos de veículos estão sendo exibiaos></div>
+                        <div class="small text-muted"><?= $veiculosTipo->count() ?> tipos de veículos estão sendo exibidos></div>
                     </div>
                     <!--/.col-->
                     <div class="col-sm-8 hidden-sm-down">
@@ -164,15 +164,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($veiculosTipo as $tipo) :
+                            <?php 
+                            
+                            foreach ($veiculosTipo as $tipo) :
                             ?>
                                 <tr id="linha<?= $tipo->id ?>" class="list-label">
                                     <td><span id="label_nome<?= $tipo->id ?>"><?= $tipo->nome ?></span></td>
                                     <td><span id="label_descricao<?= $tipo->id ?>"><?= $tipo->descricao ?></span></td>
                                     <td>
-                                        <i class="far fa-edit editar pointer text-info" data-id="<?= $tipo->id ?>" data-nome="<?= $tipo->nome ?>" data-descricao="<?= $tipo->descricao ?>">
+                                        <i class="far fa-edit editar pointer text-info" title="Editar" style="margin-right: 8px;" data-id="<?= $tipo->id ?>" data-nome="<?= $tipo->nome ?>" data-descricao="<?= $tipo->descricao ?>">
                                         </i>
-                                        <i class="fas fa-times excluir pointer text-danger" data-id="<?= $tipo->id ?>"></i>
+                                        <i class="fas fa-times excluir pointer text-danger" title="Excluir" style="margin-right: 8px;" data-id="<?= $tipo->id ?>"></i>
                                     </td>
                                 </tr>
 
@@ -300,5 +302,13 @@
                 show_message(st.status + ' ' + st.statusText, 'danger');
             }
         });
+    });
+
+    jQuery(".excluir").click(function() {
+        var este = jQuery(this);
+        var id = este.data('id');
+        var rota = '<?= $this->siteUrl('veiculos/tipo/excluir/') ?>' + id;
+
+        excluir(este, rota, 'Você realmente quer excluir este tipo de veículo?');
     });
 </script>

@@ -6,12 +6,12 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class Usuarios extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['id', 'pessoa_id', 'usuario', 'senha', 'token', 'email', 'celular', 'nivel', 'excluido', 'excluido_por', 'data_excluido'];
+    protected $fillable = ['id', 'pessoas_id', 'usuarios', 'senha', 'token', 'email', 'celular', 'nivel', 'excluido', 'excluido_por', 'data_excluido'];
     public $timestamps = false;
     public $table = 'usuarios';
 
     /**
-     * localiza e retorna um usuario pelo campo passado em $params.
+     * localiza e retorna um usuarios pelo campo passado em $params.
      *
      * @return Usuarios
      */
@@ -20,51 +20,52 @@ class Usuarios extends \Illuminate\Database\Eloquent\Model
         // DB::enableQueryLog();
         $usuarios = DB::table('usuarios');
         $usuarios->select(
-            'usuario.id',
-            'usuario.pessoa_id',
-            'usuario.usuario',
-            'usuario.token',
-            'usuario.email',
-            'usuario.celular',
-            'pessoa.nome',
-            'pessoa.cpf_cnpj',
-            'pessoa.documento',
+            'usuarios.id',
+            'usuarios.pessoas_id',
+            'usuarios.usuario',
+            'usuarios.token',
+            'usuarios.email',
+            'usuarios.celular',
+            'usuarios.nivel',
+            // 'pessoa.nome',
+            // 'pessoa.cpf_cnpj',
+            // 'pessoa.documento',
         );
-        if (isset($params['id'])) {
-            $usuarios->where('usuario.id', $params['id']);
-        }
-        if (isset($params['usuario'])) {
-            $usuarios->where('usuario.usuario', '=', $params['usuario']);
-        }
-        if (isset($params['email'])) {
-            $usuarios->where('usuario.email', '=', $params['email']);
-        }
-        if (isset($params['celular'])) {
-            $usuarios->where('usuario.celular', '=', $params['celular']);
-        }
+        foreach($params as $campo => $param){
 
-        $usuarios->join('pessoa', 'usuario.pessoa_id', '=', 'pessoa.id', 'left');
+            if ($campo == 'identificador') {
+                $usuarios->where('usuarios.usuario', $param);
+                $usuarios->orWhere('usuarios.email', $param);
+                $usuarios->orWhere('usuarios.celular', $param);
+            } else {
+                $usuarios->where($campo, $param);    
+            }
+        }
+        
+        
+        $usuarios->where('usuarios.excluido', 'N');
+        // $usuarios->join('pessoa', 'usuarios.pessoas_id', '=', 'pessoa.id', 'left');
         $result = $usuarios->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;
     }
 
     /**
-     * localiza e retorna um usuario pelo campo token.
+     * localiza e retorna um usuarios pelo campo token.
      *
      * @return Usuarios
      */
-    public static function auth(array $params, string $senha)
+    public static function auth(array $params)
     {
         // DB::enableQueryLog();
-        if (!empty($params) && !empty($senha)) {
+        if (!empty($params)) {
             $usuarios = DB::table('usuarios');
-            $usuarios->select('id', 'pessoa_id', 'usuario', 'token', 'email', 'celular', 'nivel');
+            $usuarios->select('id', 'usuario', 'token', 'email', 'celular', 'nivel');
 
             foreach ($params as $campo => $param) {
                 $usuarios->where($campo, '=', $param);
             }
-            $usuarios->where('senha', '=', $senha);
+            // $usuarios->where('senha', '=', $params['senha']);
             $result = $usuarios->get();
             // var_dump(DB::getQueryLog());exit;
             return $result;
@@ -74,7 +75,7 @@ class Usuarios extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * localiza e retorna um usuario pelo campo token.
+     * localiza e retorna um usuarios pelo campo token.
      * Usado em CheckTokenMiddleware.
      *
      * @return Usuarios
@@ -93,15 +94,15 @@ class Usuarios extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * Salva login na tabela usuario_login.
+     * Salva login na tabela usuarios_login.
      *
      * @return Usuarios
      */
-    public static function login(array $dados)
+    public static function log(array $dados)
     {
         // DB::enableQueryLog();
         if (!empty($dados)) {
-            $usuariosLogin = DB::table('usuarios_login')->insert($dados);
+            $usuariosLogin = DB::table('usuarios_log')->insert($dados);
 
             return $usuariosLogin;
         }

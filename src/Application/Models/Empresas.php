@@ -27,6 +27,7 @@ class Empresas extends \Illuminate\Database\Eloquent\Model
                 $empresas->where($campo, '=', $param);
             }
         }
+        $empresas->where('empresas.excluido', 'N');
         $result = $empresas->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;

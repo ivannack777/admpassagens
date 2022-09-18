@@ -180,9 +180,10 @@
                                     <td><span id="label_empresa<?= $veiculo->id ?>"><?= $veiculo->empresa ?></span></td>
                                     <td><span id="label_tipo<?= $veiculo->id ?>"><?= $veiculo->tipo_nome ?> <?= $veiculo->tipo_descricao ?></span></td>
                                     <td>
-                                        <i class="far fa-edit editar pointer text-info" data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
+                                        <i class="far fa-edit editar pointer text-info" title="Editar" style="margin-right: 8px;" title="editar" style="margin-right: 8px;" 
+                                        data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
                                         </i>
-                                        <i class="fas fa-times excluir pointer text-danger" data-id="<?= $veiculo->id ?>"></i>
+                                        <i class="fas fa-times excluir pointer text-danger" title="Excluir" style="margin-right: 8px;" data-id="<?= $veiculo->id ?>"></i>
                                     </td>
                                 </tr>
 
@@ -312,6 +313,16 @@
 
 
 <script>
+
+    jQuery('#empresas_id').select2({
+        dropdownParent: jQuery('#formMediumModal'),
+        class:'form-control'
+    });
+    jQuery('#veiculos_tipo_id').select2({
+        dropdownParent: jQuery('#formMediumModal'),
+        class:'form-control'
+    });
+
     jQuery(".editar").click(function() {
         var este = jQuery(this);
         var id = jQuery("#veiculo_id").val(este.data('id'));
@@ -356,5 +367,13 @@
                 show_message(st.status + ' ' + st.statusText, 'danger');
             }
         });
+    });
+
+    jQuery(".excluir").click(function() {
+        var este = jQuery(this);
+        var id = este.data('id');
+        var rota = '<?= $this->siteUrl('veiculos/excluir/') ?>' + id;
+
+        excluir(este, rota, 'Você realmente quer excluir este veículo?');
     });
 </script>

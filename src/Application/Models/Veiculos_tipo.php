@@ -33,8 +33,9 @@ class Veiculos_tipo extends \Illuminate\Database\Eloquent\Model
                 $veiculos_tipos->where($campo, '=', $param);
             }
         }
+        $veiculos_tipos->where('veiculos_tipo.excluido', 'N');
         $result = $veiculos_tipos->get();
-
+        // print_r( DB::getQueryLog());  var_dump( $params);exit;
         return $result;
     }
 }

@@ -168,9 +168,9 @@
                                 <tr id="linha<?= $empresa->id ?>" class="list-label">
                                     <td><span id="label_nome<?= $empresa->id ?>"><?= $empresa->nome ?></span></td>
                                     <td>
-                                        <i class="far fa-edit editar pointer text-info" data-id="<?= $empresa->id ?>" data-nome="<?= $empresa->nome ?>">
+                                        <i class="far fa-edit editar pointer text-info" title="Editar" style="margin-right: 8px;" data-id="<?= $empresa->id ?>" data-nome="<?= $empresa->nome ?>">
                                         </i>
-                                        <i class="fas fa-times excluir pointer text-danger" data-id="<?= $empresa->id ?>"></i>
+                                        <i class="fas fa-times excluir pointer text-danger" title="Excluir" style="margin-right: 8px;" data-id="<?= $empresa->id ?>"></i>
                                     </td>
                                 </tr>
 
@@ -300,5 +300,13 @@
                 show_message(st.status + ' ' + st.statusText, 'danger');
             }
         });
+    });
+
+    jQuery(".excluir").click(function() {
+        var este = jQuery(this);
+        var id = este.data('id');
+        var rota = '<?= $this->siteUrl('empresas/excluir/') ?>' + id;
+
+        excluir(este, rota, 'Você realmente quer excluir esta empresa?');
     });
 </script>

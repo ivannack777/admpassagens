@@ -208,7 +208,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <h4 class="card-title mb-0">Viagens</h4>
-                        <div class="small text-muted"><?= $viagens->count() ?> viagens estão sendo exibidas></div>
+                        <div class="small text-muted"><?= $usuarios->count() ?> usuarios estão sendo exibidas></div>
                     </div>
                     <!--/.col-->
                     <div class="col-sm-8 hidden-sm-down">
@@ -230,124 +230,46 @@
                     <!--/.col-->
 
                     <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
-    <thead>
-        <tr>
-            <td>Descrição</td>
-            <td>Origem</td>
-            <td>Destino</td>
-            <td>Saída</td>
-            <td>Chegada</td>
-            <td>Detalhes</td>
-            <td>Veículo</td>
-            <td><i class="fas fa-cog"></i></td>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($viagens as $viagem) :
-        ?>
-            <tr id="linha<?= $viagem->id ?>" class="list-label">
-                <td><span id="label_descricao<?= $viagem->id ?>"><?= $viagem->descricao ?></span></td>
-                <td><span id="label_origem_id<?= $viagem->id ?>"><?= $viagem->origem_id ?> <?= $viagem->localidade_origem ?></span></td>
-                <td><span id="label_destino_id<?= $viagem->id ?>"><?= $viagem->destino_id ?> <?= $viagem->localidade_destino ?></span></td>
-                <td><span id="label_data_saida<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?></span></td>
-                <td><span id="label_data_chegada<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?></span></td>
-                <td><span id="label_detalhes<?= $viagem->id ?>"><?= $viagem->detalhes ?></span></td>
-                <td><span id="label_veiculos_id<?= $viagem->id ?>">
-                        <?=
-                        $viagem->marca . " " .
-                            $viagem->modelo . " " .
-                            $viagem->ano . " " .
-                            $viagem->codigo . " " .
-                            $viagem->placa 
-                        ?>
-                    </span>
-                </td>
-                <td>
-                    <i class="far fa-edit editar pointer text-info" title="Editar" style="margin-right: 8px;" 
-                        data-id="<?= $viagem->id ?>" 
-                        data-veiculos_id="<?= $viagem->veiculos_id ?>" 
-                        data-descricao="<?= $viagem->descricao ?>" 
-                        data-origem_id="<?= $viagem->origem_id ?>"
-                        data-destino_id="<?= $viagem->destino_id ?>" 
-                        data-data_saida="<?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?>" 
-                        data-data_chegada="<?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?>" 
-                        data-detalhes="<?= $viagem->detalhes ?>">
-                    </i>
-                    <span class=""><i class="fas fa-times excluir pointer text-danger" title="Excluir" style="margin-right: 8px;" data-id="<?= $viagem->id ?>"></i></span>
-                </td>
-            </tr>
+                        <thead>
+                            <tr>
+                                <td>Usuário</td>
+                                <td>E-mail</td>
+                                <td>Celular</td>
+                                <td>Pessoa</td>
+                                <td>Nível</td>
+                                <td><i class="fas fa-cog"></i></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($usuarios as $usuario) :
+                            ?>
+                                <tr id="linha<?= $usuario->id ?>" class="list-label">
+                                    <td><span id="label_usuario<?= $usuario->id ?>"><?= $usuario->usuario ?></span></td>
+                                    <td><span id="label_email<?= $usuario->id ?>"><?= $usuario->email ?> </span></td>
+                                    <td><span id="label_celular<?= $usuario->id ?>"><?= $usuario->celular ?> </span></td>
+                                    <td><span id="label_pessoas_id<?= $usuario->id ?>"><?= $usuario->pessoas_id ?></span></td>
+                                    <td><span id="label_nivel<?= $usuario->id ?>"><?= $usuario->nivel ?></span></td>
 
-        <?php endforeach ?>
-    </tbody>
-</table>
+                                    <td>
+                                        <i class="far fa-edit editar pointer text-info" title="Editar" style="margin-right: 8px;" data-id="<?= $usuario->id ?>" data-usuario="<?= $usuario->usuario ?>" data-email="<?= $usuario->email ?>" data-celular="<?= $usuario->celular ?>" data-pessoas_id="<?= $usuario->pessoas_id ?>" data-nivel="<?= $usuario->nivel ?>">
+                                        </i>
+                                        <span class=""><i class="fas fa-times excluir pointer text-danger" title="Excluir" style="margin-right: 8px;" data-id="<?= $usuario->id ?>"></i></span>
 
+                                        <?php $session = $this->getAttributes();
+                                        $usersession = $session['session']['user'] ?? false;
+                                        if ($usersession && $usersession['nivel'] >= 5) : ?>
+                                            <span class=""><i class="fas fa-lock chpass pointer text-warning" title="Alterar senha" style="margin-right: 8px;" data-id="<?= $usuario->id ?>"></i></span>
+                                        <?php endif ?>
+                                    </td>
+                                </tr>
 
-
-<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="mediumModalLabel">Viagem</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formViagem">
-                    <input type="hidden" id="viagem_id" name="viagem_id" value="" />
-
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="descricao">Descrição</label>
-                        <input type="text" class="form-control" id="descricao" name="descricao" value="" />
-                        <small class="form-text text-muted">ex. 99/99/9999</small>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="origem_id">Origem</label>
-                        <input type="text" class="form-control" id="origem_id" name="origem_id" value="" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="destino_id">Destino</label>
-
-                        <input type="text" class="form-control" id="destino_id" name="destino_id" value="" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="data_saida">Data/hora saída</label>
-                        <input type="text" class="form-control datas" id="data_saida" name="data_saida" value="" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="data_chegada">Data/hora chegada</label>
-                        <input type="text" class="form-control datas" id="data_chegada" name="data_chegada" value="" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="detalhes">Detalhes</label>
-                        <input type="text" class="form-control" id="detalhes" name="detalhes" value="" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="veiculo_id">Veículo</label>
-
-                        <select class="form-control" id="veiculos_id" name="veiculos_id">
-                            <option value="0">Selecione...</option>
-                            <?php foreach ($veiculos as $veiculo) : ?>
-                                <option value="<?= $veiculo->id ?>"><?=
-                                                                        $veiculo->marca . " " .
-                                                                        $veiculo->modelo . " " .
-                                                                        $veiculo->ano . " " .
-                                                                        $veiculo->codigo . " " .
-                                                                        $veiculo->placa . " "
-                                                                    ?></option>
                             <?php endforeach ?>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="btnSalvar"><i class="fa fa-save salvar pointer"></i> Salvar</button>
-            </div>
-        </div>
-    </div>
-</div>
+                        </tbody>
+                    </table>
+
+
+
+
 
 
 
@@ -399,65 +321,179 @@
     </div>
 </div> <!-- .content -->
 
+<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Usuário</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formUsuario">
+                    <input type="hidden" id="usuario_id" name="usuario_id" value="" />
 
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="usuario">Usuário</label>
+                        <input type="text" class="form-control" id="usuario" name="usuario" value="" />
+                        <small class="form-text text-muted">ex. 99/99/9999</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="email">E-mail</label>
+                        <input type="text" class="form-control" id="email" name="email" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="celular">Celular</label>
+
+                        <input type="text" class="form-control" id="celular" name="celular" value="" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="nivel">Nível</label>
+                        <select class="form-control" id="nivel" name="nivel">
+                            <option value="0">Selecione...</option>
+                                <option value="1">1 - Básico</option>
+                                <option value="3">3 - Médio</option>
+                                <option value="5">5 - Super</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnSalvar"><i class="fa fa-save salvar pointer"></i> Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="formMediumModalChpass" tabindex="-1" role="dialog" aria-labelledby="smallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Alterar senha</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formSenha">
+                    <input type="hidden" id="senha_usuario_id" name="senha_usuario_id" value="" />
+
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="usuario">Nova senha</label>
+                        <input type="password" class="form-control" id="senha" name="senha" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="resenha">Repetir nova senha</label>
+                        <input type="password" class="form-control" id="resenha" name="resenha" value="" />
+                    </div>
+                    <div class="form-group">
+                    <div class="alert" id="chpassDiag"></div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnSalvarSenha"><i class="fa fa-save salvar pointer"></i> Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     jQuery(".datas").datetimepicker({
         format: "d/m/Y H:i"
     });
 
-    jQuery('#veiculos_id').select2({
-        dropdownParent: jQuery('#formMediumModal'),
-        class:'form-control'
-    });
-
     jQuery(".editar").click(function() {
         var este = jQuery(this);
-        var id = jQuery("#viagem_id").val(este.data('id'));
-  
-        if( este.data('veiculos_id')){
-            jQuery('#veiculos_id option[value="' + este.data('veiculos_id') + '"]').prop('selected', true);
+        jQuery("#usuario_id").val(este.data('id'));
+
+        if (este.data('pessoas_id')) {
+            jQuery('#pessoas_id option[value="' + este.data('pessoas_id') + '"]').prop('selected', true);
         } else {
-            jQuery('#veiculos_id option[value="0"]').prop('selected', true);
+            jQuery('#pessoas_id option[value="0"]').prop('selected', true);
+        }
+        if (este.data('nivel')) {
+            jQuery('#nivel option[value="' + este.data('nivel') + '"]').prop('selected', true);
+        } else {
+            jQuery('#nivel option[value="0"]').prop('selected', true);
         }
 
-        jQuery("#descricao").val(este.data('descricao'));
-        jQuery("#origem_id").val(este.data('origem_id'));
-        jQuery("#destino_id").val(este.data('destino_id'));
-        jQuery("#data_saida").val(este.data('data_saida'));
-        jQuery("#data_chegada").val(este.data('data_chegada'));
-        jQuery("#detalhes").val(este.data('detalhes'));
+        jQuery("#usuario").val(este.data('usuario'));
+        jQuery("#email").val(este.data('email'));
+        jQuery("#celular").val(este.data('celular'));
 
         jQuery("#formMediumModal").modal("show")
     });
 
+    jQuery(".chpass").click(function() {
+        var este = jQuery(this);
+        var id = jQuery("#senha_usuario_id").val(este.data('id'));
+        jQuery("#formMediumModalChpass").modal("show")
+    });
+
     jQuery("#btnSalvar").click(function() {
         var este = jQuery(this);
-        var id = jQuery("#viagem_id").val();
-
-        este.parents('tr').find('.edit-input').css('display', 'none');
-        este.parents('tr').find('.edit-label').css('display', 'initial');
-        var form = jQuery("#formViagem");
+        var id = jQuery("#usuario_id").val();
+        var form = jQuery("#formUsuario");
 
         jQuery.ajax({
             type: 'POST',
-            url: '<?= $this->siteUrl('viagens/salvar/') ?>' + id,
+            url: '<?= $this->siteUrl('usuarios/salvar/') ?>' + id,
             data: form.serialize(),
             dataType: 'json',
             beforeSend: function() {},
             success: function(retorno) {
                 jQuery("#formMediumModal").modal("hide")
                 if (retorno.status == true) {
-                    let data_saida = new moment(retorno.data[0].data_saida);
-                    let data_chegada = new moment(retorno.data[0].data_chegada);
-                    jQuery("#label_descricao"+id).html(retorno.data[0].descricao);
-                    jQuery("#label_destino_id"+id).html(retorno.data[0].destino_id);
-                    jQuery("#label_data_saida"+id).html(data_saida.format('DD/MM/YYYY HH:mm'));
-                    jQuery("#label_data_chegada"+id).html(data_chegada.format('DD/MM/YYYY HH:mm'));
-                    jQuery("#label_detalhes"+id).html(retorno.data[0].detalhes);
-                    jQuery("#label_veiculos_id"+id).html(retorno.data[0].marca +' '+ retorno.data[0].modelo +' '+ retorno.data[0].ano +' '+ retorno.data[0].codigo +' '+ retorno.data[0].placa);
-                    jQuery("#linha"+id).addClass('success-transition');
+                    show_message(retorno.msg, 'success');
+                    let data_saida = new moment(retorno.data.data_saida);
+                    let data_chegada = new moment(retorno.data.data_chegada);
+                    jQuery("#label_usuario" + id).html(retorno.data.usuario);
+                    jQuery("#label_celular" + id).html(retorno.data.celular);
+                    jQuery("#label_data_saida" + id).html(data_saida.format('DD/MM/YYYY HH:mm'));
+                    jQuery("#label_data_chegada" + id).html(data_chegada.format('DD/MM/YYYY HH:mm'));
+                    jQuery("#label_pessoas_id" + id).html(retorno.data.pessoas_id);
+                    jQuery("#label_veiculos_id" + id).html(retorno.data.marca + ' ' + retorno.data.modelo + ' ' + retorno.data.ano + ' ' + retorno.data.codigo + ' ' + retorno.data.placa);
+                    jQuery("#linha" + id).addClass('success-transition');
                 } else {
-                    jQuery("#linha"+id).addClass('error-transition');
+                    jQuery("#linha" + id).addClass('error-transition');
+                    show_message(retorno.msg, 'danger');
+                }
+            },
+            error: function(st) {
+                show_message(st.status + ' ' + st.statusText, 'danger');
+            }
+        });
+    });
+
+    jQuery("#btnSalvarSenha").click(function() {
+        var este = jQuery(this);
+        var id = jQuery("#senha_usuario_id").val();
+        var formSenha = jQuery("#formSenha");
+        var senha = jQuery("#senha").val();
+        var resenha = jQuery("#resenha").val();
+
+        if(senha != resenha){
+            jQuery("#chpassDiag").html('As senhas não coincidem').removeClass().addClass('text-danger');
+            return false;
+        }
+
+        jQuery.ajax({
+            type: 'POST',
+            url: '<?= $this->siteUrl('usuarios/salvar/') ?>' + id,
+            data: formSenha.serialize(),
+            dataType: 'json',
+            beforeSend: function() {},
+            success: function(retorno) {
+                if (retorno.status == true) {
+                    jQuery("#formMediumModalChpass").modal("hide")
+                    show_message("Senha foi alterada", 'success');
+                } else {
+                    jQuery("#chpassDiag").html(retorno.msg).removeClass().addClass('text-danger');
                 }
             },
             error: function(st) {
@@ -469,8 +505,8 @@
     jQuery(".excluir").click(function() {
         var este = jQuery(this);
         var id = este.data('id');
-        var rota = '<?= $this->siteUrl('viagens/excluir/') ?>' + id;
+        var rota = '<?= $this->siteUrl('usuarios/excluir/') ?>' + id;
 
-        excluir(este, rota, 'Você realmente quer excluir esta viagem?');
+        excluir(este, rota, 'Você realmente quer excluir este usuário?');
     });
 </script>

@@ -49,7 +49,7 @@
     font-size: 10px;
     font-weight: 600;
     color: #9da0a8;
-    text-transform: uppercase; }
+  }
   .gaugejs-wrap.sparkline {
     position: relative; }
     .gaugejs-wrap.sparkline .value {
@@ -78,7 +78,6 @@
     height: inherit;
     font-size: 10px;
     font-weight: 600;
-    text-transform: uppercase;
     background-color: #fff;
     border: 1px solid #e9ecef;
     border-radius: 2px;
@@ -154,7 +153,6 @@
     height: inherit;
     font-size: 10px;
     font-weight: 600;
-    text-transform: uppercase;
     background-color: #fff;
     border: 1px solid #e9ecef;
     border-radius: 2px;
@@ -251,7 +249,6 @@
     font-family: FontAwesome;
     font-size: 10px;
     font-weight: 600;
-    text-transform: uppercase;
     background-color: #fff;
     border: 1px solid #e9ecef;
     border-radius: 2px;
@@ -347,7 +344,6 @@
     height: inherit;
     font-size: 10px;
     font-weight: 600;
-    text-transform: uppercase;
     background-color: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 2px;
@@ -660,7 +656,7 @@
         font-size: 18px;
         font-weight: 500;
         color: #949CA0;
-        text-transform: uppercase; }
+      }
   .social-box.facebook i {
     color: #fff;
     background: #3b5998; }
@@ -1061,7 +1057,6 @@ aside.left-panel {
     font-weight: 700;
     line-height: 50px;
     padding: 15px 0 0;
-    text-transform: uppercase;
     width: 100%; }
   .navbar .navbar-nav {
     float: none;
@@ -1495,7 +1490,7 @@ header .form-inline {
     color: #8c8c8c;
     font-size: 14px;
     position: relative;
-    text-transform: uppercase; }
+  }
   .user-area .count {
     background: #d9534f;
     border-radius: 50%;
@@ -1830,14 +1825,13 @@ header .form-inline {
 
 .login-form .btn {
   width: 100%;
-  text-transform: uppercase;
   font-size: 14px;
   padding: 15px;
   border: 0; }
 
 .login-form label {
   color: #878787;
-  text-transform: uppercase; }
+}
 
 .login-form label a {
   color: #ff2e44; }

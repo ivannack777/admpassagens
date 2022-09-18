@@ -11,14 +11,14 @@ class Pessoas extends \Illuminate\Database\Eloquent\Model
     public $table = 'pessoas';
 
     /**
-     * localiza e retorna um pessoa pelo campo passado em $params.
+     * localiza e retorna um pessoas pelo campo passado em $params.
      *
      * @return Pessoas
      */
     public static function list(array $params = [])
     {
         // DB::enableQueryLog();
-        $pessoas = DB::table('pessoa');
+        $pessoas = DB::table('pessoas');
         $pessoas->select('id', 'endereco_id', 'nome', 'cpf_cnpj', 'natureza', 'documento', 'orgao_emissor');
         if (isset($params['id'])) {
             $pessoas->where('id', $params['id']);
@@ -32,14 +32,14 @@ class Pessoas extends \Illuminate\Database\Eloquent\Model
         if (isset($params['documento'])) {
             $pessoas->where('documento', '=', $params['documento']);
         }
-
+        $pessoas->where('pessoas.excluido', 'N');
         $result = $pessoas->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;
     }
 
     /**
-     * localiza e retorna um pessoa pelo campo token.
+     * localiza e retorna um pessoas pelo campo token.
      *
      * @return Pessoas
      */
@@ -47,8 +47,8 @@ class Pessoas extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         if (!empty($params) && !empty($senha)) {
-            $pessoas = DB::table('pessoa');
-            $pessoas->select('id', 'pessoa_id', 'pessoa', 'token', 'email', 'celular');
+            $pessoas = DB::table('pessoas');
+            $pessoas->select('id', 'pessoas_id', 'pessoas', 'token', 'email', 'celular');
 
             foreach ($params as $campo => $param) {
                 $pessoas->where($campo, '=', $param);
@@ -63,14 +63,14 @@ class Pessoas extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * localiza e retorna um pessoa pelo campo token.
+     * localiza e retorna um pessoas pelo campo token.
      * Usado em CheckTokenMiddleware.
      *
      * @return Pessoas
      */
     public static function getUserByToken(string $token)
     {
-        $pessoas = DB::table('pessoa');
+        $pessoas = DB::table('pessoas');
         if (!empty($token)) {
             $pessoas->where('token', '=', $token);
             $result = $pessoas->get();
@@ -82,7 +82,7 @@ class Pessoas extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * Salva login na tabela pessoa_login.
+     * Salva login na tabela pessoas_login.
      *
      * @return Pessoas
      */
@@ -90,7 +90,7 @@ class Pessoas extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         if (!empty($dados)) {
-            $pessoasLogin = DB::table('pessoa_login')->insert($dados);
+            $pessoasLogin = DB::table('pessoas_login')->insert($dados);
 
             return $pessoasLogin;
         }

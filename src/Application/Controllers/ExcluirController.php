@@ -26,7 +26,7 @@ class ExcluirController
      */
     public function exclude(Request $request, Response $response, array $args)
     {
-        $nivel = $_SESSION['user']['nivel'];
+        $nivel = $_SESSION['admpassagens']['user']['nivel'];
         if ($nivel == '1') {
             return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         }
@@ -37,28 +37,27 @@ class ExcluirController
         $segments = explode('/', $uriPath);
         switch ($segments[1]) {
             case 'usuarios':
-                $tabela = 'usuario';
-                if ($segments[2] == 'pessoa') {
-                    $tabela = 'pessoa';
+                $tabela = 'usuarios';
+                if ($segments[2] == 'pessoas') {
+                    $tabela = 'pessoas';
                 }
                 break;
-            case 'veiculoss':
+            case 'veiculos':
                 $tabela = 'veiculos';
                 if ($segments[2] == 'tipo') {
                     $tabela = 'veiculos_tipo';
                 }
                 break;
-            case 'cenas':
-                $tabela = 'cena';
-                break;
+
             case 'viagens':
                 $tabela = 'viagens';
                 break;
+
             case 'enderecos':
                 $tabela = 'endereco';
                 break;
             case 'empresas':
-                $tabela = 'empreendimento';
+                $tabela = 'empresas';
                 break;
             default:
                 $tabela = false;
@@ -76,18 +75,18 @@ class ExcluirController
         $tabela->where('id', '=', $id);
         $result = $tabela->get();
         // var_dump( DB::getQueryLog());
-        // var_dump($result, $_SESSION['user']['id']);exit;
+        // var_dump($result, $_SESSION['admpassagens']['user']['id']);exit;
 
         if ($result->count() === 0) {
             return $response->withJson($result, false, 'Não foi localizado');
         } else {
             $dados = [
                 'excluido' => 'S',
-                'excluido_por' => $_SESSION['user']['id'],
-                'data_excluido' => date('Y-m-d H:i:s'),
+                'excluido_por' => $_SESSION['admpassagens']['user']['id'],
+                'excluido_data' => date('Y-m-d H:i:s'),
             ];
             $tabela->where('id', '=', $id)->update($dados);
-            $result = $tabela->select('id', 'excluido', 'excluido_por', 'data_excluido')->where('id', '=', $id)->get();
+            $result = $tabela->select('id', 'excluido', 'excluido_por', 'excluido_data')->where('id', '=', $id)->get();
 
             return $response->withJson($result, true, 'Foi excluído');
         }

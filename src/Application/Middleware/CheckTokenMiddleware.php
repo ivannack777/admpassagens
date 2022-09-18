@@ -21,9 +21,22 @@ class CheckTokenMiddleware implements Middleware
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
+        session_start();
+        $response = $handler->handle($request);
         $routeContext = RouteContext::fromRequest($request);
         $uri = $request->getUri();
         $headers = $request->getHeaders();
+
+        $_SESSION['admpassagens']['rememberuri'] = $uri;
+
+        var_dump($_SESSION, ($_SESSION['admpassagens'] ['user'] ?? false) );//exit;
+        if($_SESSION['admpassagens'] ['user'] ?? false){
+            // echo "deu bom";
+        } else {
+            // echo "deu ruim";
+            return $response->withHeader('Location', '/usuarios/login/form')->withStatus(302);
+        }
+        
 
         $bearer = $request->getHeader('Authorization');
 
@@ -33,15 +46,17 @@ class CheckTokenMiddleware implements Middleware
                 $usuarios = Usuarios::getUserByToken($bearer[1]);
                 // var_dump($bearer, $usuarios->count());
                 if ($usuarios->count() === 1) {
-                    session_start();
+      
                     $_SESSION = [
-                        'user' => [
-                            'id' => $usuarios[0]->id,
-                            'usuario' => $usuarios[0]->usuario,
-                            'email' => $usuarios[0]->email,
-                            'celular' => $usuarios[0]->celular,
-                            'token' => $usuarios[0]->token,
-                            'nivel' => $usuarios[0]->nivel,
+                        'admpassagens' =>[
+                            'user' => [
+                                'id' => $usuarios[0]->id,
+                                'usuario' => $usuarios[0]->usuario,
+                                'email' => $usuarios[0]->email,
+                                'celular' => $usuarios[0]->celular,
+                                'token' => $usuarios[0]->token,
+                                'nivel' => $usuarios[0]->nivel,
+                            ],
                         ],
                     ];
                     // $body = preg_replace('/\s+/', '', $request->getBody() ?? null);
@@ -66,7 +81,9 @@ class CheckTokenMiddleware implements Middleware
                 throw new HttpUnauthorizedException($request, 'Acesso não autorizado. Token inválido');
             }
         }
-        //  return $response->withJson($request,false, 'Acesso não autorizado', 401);
-        throw new HttpUnauthorizedException($request, 'Acesso não autorizado');
+        // var_dump($uri);exit;
+        // return $response->withHeader('Location', $uri->getPath())->withStatus(302);
+        return $handler->handle($request);
+        // throw new HttpUnauthorizedException($request, 'Acesso não autorizado');
     }
 }
