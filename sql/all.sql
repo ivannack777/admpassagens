@@ -18,6 +18,7 @@ CREATE DATABASE IF NOT EXISTS `passagens` /*!40100 DEFAULT CHARACTER SET latin1 
 USE `passagens`;
 
 -- Copiando estrutura para tabela passagens.clientes
+DROP TABLE IF EXISTS `clientes`;
 CREATE TABLE IF NOT EXISTS `clientes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(64) COLLATE latin1_general_ci NOT NULL DEFAULT (sha2(now(),256)),
@@ -33,13 +34,14 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   PRIMARY KEY (`id`,`key`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
--- Copiando dados para a tabela passagens.clientes: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela passagens.clientes: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
 INSERT INTO `clientes` (`id`, `key`, `nome`, `cpf`, `celular`, `email`, `excluido`, `excluido_data`, `excluido_por`, `data_insert`, `data_update`) VALUES
 	(1, '87817a3b2564c88715d37d8257da75b193453261a6d28c19073075bcc4611cd8', 'Ivan', '01803177926', '44999262946', 'ivan100br@yahoo.com.br', 'N', '2022-09-21 22:14:46', 1, '2022-09-14 21:23:41', '2022-09-21 22:48:01');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.empresas
+DROP TABLE IF EXISTS `empresas`;
 CREATE TABLE IF NOT EXISTS `empresas` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(64) NOT NULL DEFAULT (sha2(now(),256)),
@@ -75,6 +77,7 @@ INSERT INTO `empresas` (`id`, `key`, `usuarios_id`, `enderecos_id`, `nome`, `cnp
 /*!40000 ALTER TABLE `empresas` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.enderecos
+DROP TABLE IF EXISTS `enderecos`;
 CREATE TABLE IF NOT EXISTS `enderecos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(64) NOT NULL DEFAULT (sha2(now(),256)),
@@ -94,20 +97,21 @@ CREATE TABLE IF NOT EXISTS `enderecos` (
   PRIMARY KEY (`id`,`key`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Copiando dados para a tabela passagens.enderecos: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela passagens.enderecos: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `enderecos` DISABLE KEYS */;
 INSERT INTO `enderecos` (`id`, `key`, `cep`, `logradouro`, `numero`, `complemento`, `cidade`, `uf`, `pais`, `localizacao`, `excluido`, `excluido_data`, `excluido_por`, `data_insert`, `data_update`) VALUES
 	(1, 'ccd1ca6dd73c2ce89c38273c0ea97831716009f6851d2305d5be111ba261925b', '87033190', 'Rua araxá', '987', 'casa', 'Maringa', 'PR', 'Br', NULL, 'N', NULL, NULL, '2022-08-29 19:33:57', NULL);
 /*!40000 ALTER TABLE `enderecos` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.localidades_log
+DROP TABLE IF EXISTS `localidades_log`;
 CREATE TABLE IF NOT EXISTS `localidades_log` (
   `localidades_id` int NOT NULL,
   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `direcao` enum('1','2') COLLATE latin1_general_ci DEFAULT NULL COMMENT '1: origem; 2: destino'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
--- Copiando dados para a tabela passagens.localidades_log: ~21 rows (aproximadamente)
+-- Copiando dados para a tabela passagens.localidades_log: ~24 rows (aproximadamente)
 /*!40000 ALTER TABLE `localidades_log` DISABLE KEYS */;
 INSERT INTO `localidades_log` (`localidades_id`, `data`, `direcao`) VALUES
 	(7809, '2022-09-14 23:50:40', '1'),
@@ -137,6 +141,7 @@ INSERT INTO `localidades_log` (`localidades_id`, `data`, `direcao`) VALUES
 /*!40000 ALTER TABLE `localidades_log` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.pedidos
+DROP TABLE IF EXISTS `pedidos`;
 CREATE TABLE IF NOT EXISTS `pedidos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(64) COLLATE latin1_general_ci NOT NULL DEFAULT (sha2(now(),256)),
@@ -186,6 +191,7 @@ INSERT INTO `pedidos` (`id`, `key`, `codigo`, `clientes_id`, `viagens_id`, `nome
 /*!40000 ALTER TABLE `pedidos` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.pessoas
+DROP TABLE IF EXISTS `pessoas`;
 CREATE TABLE IF NOT EXISTS `pessoas` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(64) COLLATE latin1_general_ci NOT NULL DEFAULT (sha2(now(),256)),
@@ -205,6 +211,7 @@ CREATE TABLE IF NOT EXISTS `pessoas` (
 /*!40000 ALTER TABLE `pessoas` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.usuarios
+DROP TABLE IF EXISTS `usuarios`;
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(50) DEFAULT NULL,
@@ -225,13 +232,14 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   CONSTRAINT `fk_pessoas` FOREIGN KEY (`pessoas_id`) REFERENCES `pessoas` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Copiando dados para a tabela passagens.usuarios: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela passagens.usuarios: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
 INSERT INTO `usuarios` (`id`, `key`, `pessoas_id`, `usuario`, `senha`, `token`, `email`, `celular`, `nivel`, `excluido`, `excluido_por`, `excluido_data`, `dataInsert`, `dataUpdate`) VALUES
 	(1, NULL, NULL, 'ivan', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', '1234', 'ivan100br@yahoo.com.br', '44999262946', 3, 'N', NULL, NULL, NULL, '2022-09-17 15:19:42');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.usuarios_log
+DROP TABLE IF EXISTS `usuarios_log`;
 CREATE TABLE IF NOT EXISTS `usuarios_log` (
   `id` int NOT NULL AUTO_INCREMENT,
   `usuarios_id` int DEFAULT NULL,
@@ -241,7 +249,7 @@ CREATE TABLE IF NOT EXISTS `usuarios_log` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
--- Copiando dados para a tabela passagens.usuarios_log: ~46 rows (aproximadamente)
+-- Copiando dados para a tabela passagens.usuarios_log: ~57 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuarios_log` DISABLE KEYS */;
 INSERT INTO `usuarios_log` (`id`, `usuarios_id`, `uri`, `direcao`, `dataInsert`) VALUES
 	(1, NULL, 'https://admpassagens.americabiz/usuarios/login/ent', NULL, '2022-09-17 00:07:57'),
@@ -304,6 +312,7 @@ INSERT INTO `usuarios_log` (`id`, `usuarios_id`, `uri`, `direcao`, `dataInsert`)
 /*!40000 ALTER TABLE `usuarios_log` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.veiculos
+DROP TABLE IF EXISTS `veiculos`;
 CREATE TABLE IF NOT EXISTS `veiculos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(64) NOT NULL DEFAULT (sha2(now(),256)),
@@ -343,6 +352,7 @@ INSERT INTO `veiculos` (`id`, `key`, `veiculos_tipo_id`, `empresas_id`, `marca`,
 /*!40000 ALTER TABLE `veiculos` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.veiculos_tipo
+DROP TABLE IF EXISTS `veiculos_tipo`;
 CREATE TABLE IF NOT EXISTS `veiculos_tipo` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'sha2(now(),256)',
@@ -364,6 +374,7 @@ INSERT INTO `veiculos_tipo` (`id`, `key`, `nome`, `descricao`, `excluido`, `excl
 /*!40000 ALTER TABLE `veiculos_tipo` ENABLE KEYS */;
 
 -- Copiando estrutura para tabela passagens.viagens
+DROP TABLE IF EXISTS `viagens`;
 CREATE TABLE IF NOT EXISTS `viagens` (
   `id` int NOT NULL AUTO_INCREMENT,
   `key` varchar(64) NOT NULL DEFAULT (sha2(now(),256)),
@@ -385,7 +396,7 @@ CREATE TABLE IF NOT EXISTS `viagens` (
   CONSTRAINT `fk_viagens_veiculos` FOREIGN KEY (`veiculos_id`) REFERENCES `veiculos` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Copiando dados para a tabela passagens.viagens: ~16 rows (aproximadamente)
+-- Copiando dados para a tabela passagens.viagens: ~17 rows (aproximadamente)
 /*!40000 ALTER TABLE `viagens` DISABLE KEYS */;
 INSERT INTO `viagens` (`id`, `key`, `veiculos_id`, `descricao`, `origem_id`, `destino_id`, `data_saida`, `data_chegada`, `valor`, `detalhes`, `excluido`, `excluido_data`, `excluido_por`, `data_insert`, `data_update`) VALUES
 	(1, 'd60bd8da8a09059a7f3449cab2839e04d183f3071ed90cf237705499b0d453cd', 9, 'dafadsfadf', 7809, 7810, '2022-08-30 08:00:00', '2022-08-30 18:00:00', 95.05, 'Nenhum detalhe', 'N', NULL, NULL, '2022-08-29 20:27:51', '2022-09-21 22:39:14'),
