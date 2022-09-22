@@ -25,9 +25,11 @@
 
 
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/style.css') ?>">
-    <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/estilos.css') ?>">
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/jquery.datetimepicker.min.css') ?>">
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/select2.css') ?>">
+    <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/jquery-ui.min.css') ?>">
+
+    <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/estilos.css') ?>">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
@@ -40,6 +42,7 @@
     <script src="<?= $this->siteUrl('assets/js/moment-with-locales.js') ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/select2.full.min.js') ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/jquery.mask.min.js') ?>"></script>
+    <script src="<?= $this->siteUrl('assets/js/jquery-ui.min.js') ?>"></script>
     <script src="https://kit.fontawesome.com/8158c55e47.js" crossorigin="anonymous"></script>
 
     <script>

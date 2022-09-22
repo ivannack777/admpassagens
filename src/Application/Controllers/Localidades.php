@@ -34,20 +34,24 @@ class Localidades extends BaseController
         $nome = $requests['nome'] ?? null;
         $uf = $requests['uf'] ?? null;
         $nome_uf = $requests['nome_uf'] ?? null;
+        $sigla_uf = $requests['sigla_uf'] ?? null;
         
-        $params['codigo_categoria'] = [
+        $params['ibge_localidades.codigo_categoria'] = [
             1, //cidade
             2, //distrito
         ];
         
         if (!empty($nome)) {
-            $params['nome'] = $nome;
+            $params['ibge_localidades.nome'] = $nome;
         }
         if (!empty($uf)) {
-            $params['uf'] = $uf;
+            $params['ibge_localidades.uf'] = $uf;
         }
         if (!empty($nome_uf)) {
-            $params['nome_uf'] = $nome_uf;
+            $params['ibge_localidades.nome_uf'] = $nome_uf;
+        }
+        if (!empty($sigla_uf)) {
+            $params['ibge_localidades.sigla_uf'] = $sigla_uf;
         }
 
         if (!empty($params)) {
@@ -56,7 +60,15 @@ class Localidades extends BaseController
             $localidades = LocalidadesModel::list();
         }
 
-        return $response->withJson($localidades, true, $localidades->count().($localidades->count() > 1 ? ' localidades encontradas' : ' localidades encontrada'));
+        foreach($localidades as $localidade){
+            if($localidade->localidade == $localidade->nome_municipio){
+                $localidade->local = $localidade->nome_municipio .' - '. $localidade->sigla_uf;
+            } else {
+                $localidade->local = $localidade->localidade .'/'. $localidade->nome_municipio .' - '. $localidade->sigla_uf;
+            }
+        }
+
+        return $response->withJson($localidades, true, $localidades->count().($localidades->count() > 1 ? ' localidades encontradas' : ' localidade encontrada'));
     }
 
     /**

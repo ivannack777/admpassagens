@@ -1,3 +1,4 @@
+ </div><!-- fechamento de <div id="right-panel" class="right-panel"> aberto em right_top -->
 
  <div id="msgfloat" style="position: fixed; top: 10px; left: 749.867px; z-index: 2000; padding: 4px 12px; display: none">
      <div style="display: flex;flex-direction: row;justify-content: space-between;">
@@ -63,7 +64,7 @@
                 clearInterval(timerMensagem);
                 jQuery("#msgfloat").css('display', 'none');
                 if(redirect !== null){
-                    menuAjax(redirect);
+                    window.location.href= redirect;
                 }
             
             }
@@ -82,8 +83,9 @@
         jQuery("#progressgif").css('visibility', visible);
     }
     
-    function excluir(el,rota, msg){
-    var confirmar = confirm(msg);
+    function excluir(rota, msg, redirect){
+        var confirmar = confirm(msg);
+        var retornoExcluir = false;
 
         if(confirmar){
             jQuery.ajax({
@@ -96,10 +98,10 @@
                 },
                 success: function(retorno) {
                     if(retorno.status){
-                        el.parents('tr').css('text-decoration', 'line-through')
-                        show_message('retorno.msg', 'success', null);
+                        show_message(retorno.msg, 'success', null, redirect);
+                        retornoExcluir = true;
                     } else{
-                        show_message('retorno.msg', 'danger');
+                        show_message(retorno.msg, 'danger');
                     }
                 },
                 error: function(st) {
@@ -107,14 +109,10 @@
                 }
             });
         }
+        
     }
     </script>
-    <script src="<?= $this->siteUrl('vendors/chart.js/dist/Chart.bundle.min.js') ?>"></script>
-    <script src="<?= $this->siteUrl('assets/js/dashboard.js') ?>"></script>
-    <script src="<?= $this->siteUrl('assets/js/widgets.js') ?>"></script>
-    <script src="<?= $this->siteUrl('vendors/jqvmap/dist/jquery.vmap.min.js') ?>"></script>
-    <script src="<?= $this->siteUrl('vendors/jqvmap/examples/js/jquery.vmap.sampledata.js') ?>"></script>
-    <script src="<?= $this->siteUrl('vendors/jqvmap/dist/maps/jquery.vmap.world.js') ?>"></script>
+
     
 </body>
 </html>

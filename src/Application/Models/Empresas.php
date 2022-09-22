@@ -19,7 +19,7 @@ class Empresas extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $empresas = DB::table('empresas');
-        $empresas->select('id', 'usuarios_id', 'enderecos_id', 'nome');
+        $empresas->select('id', 'usuarios_id', 'enderecos_id', 'nome', 'cnpj', 'cep', 'logradouro', 'numero', 'bairro', 'uf', 'cidade');
         foreach ($params as $campo => $param) {
             if ($campo == 'nome') {
                 $empresas->where($campo, 'like', "%{$param}%");

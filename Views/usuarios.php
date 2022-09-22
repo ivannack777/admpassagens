@@ -251,9 +251,8 @@
                                     <td><span id="label_nivel<?= $usuario->id ?>"><?= $usuario->nivel ?></span></td>
 
                                     <td>
-                                        <i class="far fa-edit editar pointer text-info" title="Editar" style="margin-right: 8px;" data-id="<?= $usuario->id ?>" data-usuario="<?= $usuario->usuario ?>" data-email="<?= $usuario->email ?>" data-celular="<?= $usuario->celular ?>" data-pessoas_id="<?= $usuario->pessoas_id ?>" data-nivel="<?= $usuario->nivel ?>">
-                                        </i>
-                                        <span class=""><i class="fas fa-times excluir pointer text-danger" title="Excluir" style="margin-right: 8px;" data-id="<?= $usuario->id ?>"></i></span>
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $usuario->id ?>" data-usuario="<?= $usuario->usuario ?>" data-email="<?= $usuario->email ?>" data-celular="<?= $usuario->celular ?>" data-pessoas_id="<?= $usuario->pessoas_id ?>" data-nivel="<?= $usuario->nivel ?>">
+                                        </i>Editar
 
                                         <?php $session = $this->getAttributes();
                                         $usersession = $session['session']['user'] ?? false;
@@ -336,33 +335,36 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="usuario">Usuário</label>
-                        <input type="text" class="form-control" id="usuario" name="usuario" value="" />
+                        <input type="text" class="form-elements" id="usuario" name="usuario" value="" />
                         <small class="form-text text-muted">ex. 99/99/9999</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="email">E-mail</label>
-                        <input type="text" class="form-control" id="email" name="email" value="" />
+                        <input type="text" class="form-elements" id="email" name="email" value="" />
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="celular">Celular</label>
 
-                        <input type="text" class="form-control" id="celular" name="celular" value="" />
+                        <input type="text" class="form-elements" id="celular" name="celular" value="" />
                     </div>
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="nivel">Nível</label>
-                        <select class="form-control" id="nivel" name="nivel">
+                        <select class="form-elements" id="nivel" name="nivel">
                             <option value="0">Selecione...</option>
-                                <option value="1">1 - Básico</option>
-                                <option value="3">3 - Médio</option>
-                                <option value="5">5 - Super</option>
+                            <option value="1">1 - Básico</option>
+                            <option value="3">3 - Médio</option>
+                            <option value="5">5 - Super</option>
                         </select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="btnSalvar"><i class="fa fa-save salvar pointer"></i> Salvar</button>
+                <button id="btnExcluir" class="btn btn-outline-danger" title="Excluir"><i class="fas fa-times"></i> Excluir</button>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvar"><i class="fa fa-save salvar pointer"></i> Salvar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -383,14 +385,14 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="usuario">Nova senha</label>
-                        <input type="password" class="form-control" id="senha" name="senha" value="" />
+                        <input type="password" class="form-elements" id="senha" name="senha" value="" />
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="resenha">Repetir nova senha</label>
-                        <input type="password" class="form-control" id="resenha" name="resenha" value="" />
+                        <input type="password" class="form-elements" id="resenha" name="resenha" value="" />
                     </div>
                     <div class="form-group">
-                    <div class="alert" id="chpassDiag"></div>
+                        <div class="alert" id="chpassDiag"></div>
                     </div>
 
                 </form>
@@ -477,7 +479,7 @@
         var senha = jQuery("#senha").val();
         var resenha = jQuery("#resenha").val();
 
-        if(senha != resenha){
+        if (senha != resenha) {
             jQuery("#chpassDiag").html('As senhas não coincidem').removeClass().addClass('text-danger');
             return false;
         }
@@ -502,11 +504,10 @@
         });
     });
 
-    jQuery(".excluir").click(function() {
-        var este = jQuery(this);
-        var id = este.data('id');
+    jQuery("#btnExcluir").click(function() {
+        var id = jQuery("#usuario_id").val();
         var rota = '<?= $this->siteUrl('usuarios/excluir/') ?>' + id;
-
-        excluir(este, rota, 'Você realmente quer excluir este usuário?');
+        var redirect = '<?= $this->siteUrl('usuarios/listar') ?>';
+        excluir(rota, 'Você realmente quer excluir este usuário?', redirect);
     });
 </script>

@@ -85,7 +85,7 @@ return function (App $app, Request $request) {
 
     $app->group('/viagens', function (Group $group) {
         $group->map(['GET', 'POST'], '/listar[/{modo}]', [Viagens::class, 'list']);
-        $group->post('/salvar[/{id}]', [Viagens::class, 'save']);
+        $group->post('/salvar[/[{id}]]', [Viagens::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 

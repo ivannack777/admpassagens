@@ -13,20 +13,20 @@
                     <form action="/usuarios/registrar/salvar" method="post">
                         <div class="form-group">
                             <label>Usuário</label>
-                            <input type="text" class="form-control" id="usuario" name="usuarios" placeholder="Nome de usuário">
+                            <input type="text" class="form-elements" id="usuario" name="usuarios" placeholder="Nome de usuário">
                         </div>
                         <div class="form-group">
                             <label>E-mail </label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Endereço de e-mail">
+                            <input type="email" class="form-elements" id="email" name="email" placeholder="Endereço de e-mail">
                         </div>
                         <div class="form-group">
                             <label>Celular </label>
-                            <input type="text" class="form-control" id="celular" name="celular" data-mask="00 00000-0000" placeholder="__ _____-____">
+                            <input type="text" class="form-elements" id="celular" name="celular" data-mask="00 00000-0000" placeholder="__ _____-____">
                         </div>
 
                         <div class="form-group">
                             <label>Senha</label>
-                            <input type="password" class="form-control" placeholder="Senha">
+                            <input type="password" class="form-elements" placeholder="Senha">
                         </div>
                         <div class="checkbox">
                             <label>

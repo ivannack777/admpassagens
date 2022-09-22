@@ -6,6 +6,8 @@ namespace App\Application\Controllers;
 use Psr\Container\ContainerInterface;
 use Slim\Views\PhpRenderer;
 
+use function PHPUnit\Framework\isInstanceOf;
+
 class BaseController
 {
     protected $container;
@@ -30,18 +32,21 @@ class BaseController
      * @param string $separator
      * @return string $str
      */
-    public function valitorMessages(array $errorsMessage, string $separator='; '): string
+    public function valitorMessages(array $errorsMessage, string $separator='; '): array
     {
         $str = '';
+        $arr = [];
         foreach($errorsMessage as $field => $errorMessages){
             $str .= $field .": ";
+            
             foreach($errorMessages as $errorMessage){
                 $str .= $errorMessage;
                 $str .= $separator;
+                $arr[$field] = $errorMessage;
             }
 
         }
-        return trim($str);
+        return ['errors'=>$arr, 'msg'=>trim($str)];
     }
 
 
@@ -54,7 +59,7 @@ class BaseController
     {
         //retirar / repetidas, exeto as // depois do :
         $dt = \DateTime::createFromFormat($format,$date);
-        return $dt->format('Y-m-d H:i:s') ;
+        return ($dt instanceof \DateTime) ? $dt->format('Y-m-d H:i:s') : null ;
         
         return $dt;
     }

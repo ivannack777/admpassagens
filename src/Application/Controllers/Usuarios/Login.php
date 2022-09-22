@@ -155,6 +155,7 @@ class Login extends BaseController
         $identificador = $requests['identificador'] ?? false;
         $senha  = $requests['senha'] ?? false;
         // $dados['push_token'] = preg_replace('/(ExponentPushToken\[)([\d\w]+)(\])/', '$2', $requests['push_token']) ?? null;
+        $dados['field']['identificador']['value'] = $identificador;
 
         if ($usuario) {
             $params['usuario'] = $usuario;
@@ -204,16 +205,41 @@ class Login extends BaseController
                         //se exisitir faz o redirect para o endereço, senão redireciona para raiz
                         return $response->withHeader('Location', $rememberuri ? $rememberuri->getPath() : '/')->withStatus(302);
                     } else {
-                        return  $response->withJson([$usuariosLog], false, 'Falha ao salvar login');
+                        $dados['msg'] =  'Falha ao salvar login';
+                        $this->views->render($response, 'header.php', $dados);
+                        $this->views->render($response, 'login.php', $dados);
+                        return $this->views->render($response, 'footer.php', $dados);
+                        // return  $response->withJson([$usuariosLog], false, 'Falha ao salvar login');
                     }
                 } else{
-                    return  $response->withJson($params, false, 'Usuário não foi autenticado, verique sua senha!', 403);    
+                    $dados['msg'] =  'Usuário não foi autenticado, verique sua senha!';
+                    $this->views->render($response, 'header.php', $dados);
+                    $this->views->render($response, 'login.php', $dados);
+                    return $this->views->render($response, 'footer.php', $dados);
+                    // return  $response->withJson($params, false, 'Usuário não foi autenticado, verique sua senha!', 403);    
                 }
             } else {
-                return  $response->withJson($params, false, 'Usuário não foi localizado!', 401);
+                $dados['msg'] =  'Usuário não foi localizado!';
+                $this->views->render($response, 'header.php', $dados);
+                $this->views->render($response, 'login.php', $dados);
+                return $this->views->render($response, 'footer.php', $dados);
+                // return  $response->withJson($params, false, 'Usuário não foi localizado!', 401);
             }
         } else {
-            return $response->withJson(['dados' => $requests], false, 'Paramatros incorretos.', 401);
+            $dados['status'] =  false;
+            $dados['msg'] =  'Paramatros incorretos.';
+            
+            if(empty($identificador)){
+                $dados['field']['identificador']['msg'] = 'Por favor, informe uma identificação';
+            }
+            if(empty($senha)) {
+                $dados['field']['senha']['msg'] = 'Por favor, informe sua senha';
+                
+            }
+            $this->views->render($response, 'header.php', $dados);
+            $this->views->render($response, 'login.php', $dados);
+            return $this->views->render($response, 'footer.php', $dados);
+            // return $response->withJson(['dados' => $requests], false, 'Paramatros incorretos.', 401);
         }
     }
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class Viagens extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['veiculos_id', 'descricao', 'origem_id', 'destino_id', 'data_saida', 'data_chegada', 'detalhes'];
+    protected $fillable = ['veiculos_id', 'descricao', 'origem_id', 'destino_id', 'data_saida', 'data_chegada', 'detalhes','valor'];
     public $timestamps = false;
     public $table = 'viagens';
 
@@ -41,6 +41,7 @@ class Viagens extends \Illuminate\Database\Eloquent\Model
             'viagens.destino_id',
             'viagens.data_saida',
             'viagens.data_chegada',
+            'viagens.valor',
             'viagens.detalhes',
             'veiculos.marca',
             'veiculos.modelo',

@@ -247,7 +247,7 @@ class Sanitize
 					$this->input = trim($this->input);
 					break;
 				case 'clear':
-					$this->input = preg_replace('/[^\d\w]+/', '', $this->input);
+					$this->input = preg_replace('/[^\d]+/', '', $this->input);
 					
 					break;
 				case 'regex':

@@ -131,140 +131,64 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-4">
+                <div class="flex-row flex-between">
+                    <div class="">
                         <h4 class="card-title mb-0">Veículos</h4>
                         <div class="small text-muted"><?= $veiculos->count() ?> veiculos estão sendo exibidas></div>
                     </div>
-                    <!--/.col-->
-                    <div class="col-sm-8 hidden-sm-down">
-                        <button type="button" class="btn btn-primary float-right bg-flat-color-1"><i class="fa fa-cloud-download"></i></button>
-                        <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="">
+                        <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar veículo</button>
+                    </div>
+                    <div class="">
+                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
-                                <label class="control-label mb-1" class="btn btn-outline-secondary">
+                                <label class="btn btn-outline-secondary">
                                     <input type="radio" name="options" id="option1"> Day
                                 </label>
-                                <label class="control-label mb-1" class="btn btn-outline-secondary active">
+                                <label class="btn btn-outline-secondary active">
                                     <input type="radio" name="options" id="option2" checked=""> Month
                                 </label>
-                                <label class="control-label mb-1" class="btn btn-outline-secondary">
+                                <label class="btn btn-outline-secondary">
                                     <input type="radio" name="options" id="option3"> Year
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <!--/.col-->
-
-                    <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
-                        <thead>
-                            <tr>
-                                <td>Marca</td>
-                                <td>Modelo</td>
-                                <td>Ano</td>
-                                <td>Codigo</td>
-                                <td>Placa</td>
-                                <td>Empresa</td>
-                                <td>Tipo</td>
-                                <td><i class="fas fa-cog"></i></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($veiculos as $veiculo) :
-                            ?>
-                                <tr id="linha<?= $veiculo->id ?>" class="list-label">
-                                    <td><span id="label_marca<?= $veiculo->id ?>"><?= $veiculo->marca ?></span></td>
-                                    <td><span id="label_modelo<?= $veiculo->id ?>"><?= $veiculo->modelo ?></span></td>
-                                    <td><span id="label_ano<?= $veiculo->id ?>"><?= $veiculo->ano ?></span></td>
-                                    <td><span id="label_codigo<?= $veiculo->id ?>"><?= $veiculo->codigo ?></span></td>
-                                    <td><span id="label_placa<?= $veiculo->id ?>"><?= $veiculo->placa ?></span></td>
-                                    <td><span id="label_empresa<?= $veiculo->id ?>"><?= $veiculo->empresa ?></span></td>
-                                    <td><span id="label_tipo<?= $veiculo->id ?>"><?= $veiculo->tipo_nome ?> <?= $veiculo->tipo_descricao ?></span></td>
-                                    <td>
-                                        <i class="far fa-edit editar pointer text-info" title="Editar" style="margin-right: 8px;" title="editar" style="margin-right: 8px;" 
-                                        data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
-                                        </i>
-                                        <i class="fas fa-times excluir pointer text-danger" title="Excluir" style="margin-right: 8px;" data-id="<?= $veiculo->id ?>"></i>
-                                    </td>
-                                </tr>
-
-                            <?php endforeach ?>
-                        </tbody>
-                    </table>
-
-
-
-                    <div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="mediumModalLabel">Veículo</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="formveiculo">
-                                        <input type="hidden" id="veiculo_id" name="veiculo_id" value="" />
-
-                                        <div class="form-group">
-                                            <label class="control-label mb-1" for="marca">Marca</label>
-                                            <input type="text" class="form-control" id="marca" name="marca" value="" />
-                                            <small class="form-text text-muted">ex. 99/99/9999</small>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label mb-1" for="modelo">modelo</label>
-                                            <input type="text" class="form-control" id="modelo" name="modelo" value="" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label mb-1" for="ano">ano</label>
-
-                                            <input type="text" class="form-control" id="ano" name="ano" value="" />
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label mb-1" for="codigo">Data/hora saída</label>
-                                            <input type="text" class="form-control" id="codigo" name="codigo" value="" />
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label mb-1" for="placa">placa</label>
-                                            <input type="text" class="form-control" id="placa" name="placa" value="" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label mb-1" for="empresa_id">Empresa</label>
-
-                                            <select class="form-control" id="empresas_id" name="empresas_id">
-                                                <option>Selecione...</option>
-                                                <?php foreach ($empresas as $empresa) : ?>
-                                                    <option value="<?= $empresa->id ?>"><?= $empresa->nome ?></option>
-                                                <?php endforeach ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label mb-1" for="veiculos_tipo_id">Tipo</label>
-
-                                            <select class="form-control" id="veiculos_tipo_id" name="veiculos_tipo_id">
-                                                <option>Selecione...</option>
-                                                <?php foreach ($veiculos_tipo as $veiculo_tipo) : ?>
-                                                    <option value="<?= $veiculo_tipo->id ?>"><?= $veiculo_tipo->nome . " - " . $veiculo_tipo->descricao
-                                                                                                ?></option>
-                                                <?php endforeach ?>
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                    <button type="button" class="btn btn-primary" id="btnSalvar"><i class="fa fa-save salvar pointer"></i> Salvar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
                 </div>
-                <!--/.row-->
 
+                <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
+                    <thead>
+                        <tr>
+                            <td>Marca</td>
+                            <td>Modelo</td>
+                            <td>Ano</td>
+                            <td>Codigo</td>
+                            <td>Placa</td>
+                            <td>Empresa</td>
+                            <td>Tipo</td>
+                            <td><i class="fas fa-cog"></i></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($veiculos as $veiculo) :
+                        ?>
+                            <tr id="linha<?= $veiculo->id ?>" class="list-label">
+                                <td><span id="label_marca<?= $veiculo->id ?>"><?= $veiculo->marca ?></span></td>
+                                <td><span id="label_modelo<?= $veiculo->id ?>"><?= $veiculo->modelo ?></span></td>
+                                <td><span id="label_ano<?= $veiculo->id ?>"><?= $veiculo->ano ?></span></td>
+                                <td><span id="label_codigo<?= $veiculo->id ?>"><?= $veiculo->codigo ?></span></td>
+                                <td><span id="label_placa<?= $veiculo->id ?>" class="placas"><?= $veiculo->placa ?></span></td>
+                                <td><span id="label_empresa<?= $veiculo->id ?>"><?= $veiculo->empresa ?></span></td>
+                                <td><span id="label_tipo<?= $veiculo->id ?>"><?= $veiculo->tipo_nome ?> <?= $veiculo->tipo_descricao ?></span></td>
+                                <td>
+                                    <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" title="editar" style="margin-right: 8px;" data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
+                                    <i class="far fa-edit"></i> Editar</button>
+                                </td>
+                            </tr>
+
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
 
             </div>
             <div class="card-footer">
@@ -311,16 +235,83 @@
 </div> <!-- .content -->
 
 
+<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Veículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formveiculo">
+                    <input type="hidden" id="veiculo_id" name="veiculo_id" value="" />
 
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="marca">Marca</label>
+                        <input type="text" class="form-elements" id="marca" name="marca" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="modelo">Modelo</label>
+                        <input type="text" class="form-elements" id="modelo" name="modelo" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="ano">Ano</label>
+                        <input type="text" class="form-elements" id="ano" name="ano" value="" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="codigo">Código</label>
+                        <input type="text" class="form-elements" id="codigo" name="codigo" value="" />
+                        <small class="form-text text-muted">ex. 2501</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="placa">Placa</label>
+                        <input type="text" class="form-elements" id="placa" name="placa" value="" style="text-transform: uppercase;" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="empresa_id">Empresa</label>
+
+                        <select class="form-elements" id="empresas_id" name="empresas_id">
+                            <option>Selecione...</option>
+                            <?php foreach ($empresas as $empresa) : ?>
+                                <option value="<?= $empresa->id ?>"><?= $empresa->nome ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="veiculos_tipo_id">Tipo</label>
+
+                        <select class="form-elements" id="veiculos_tipo_id" name="veiculos_tipo_id">
+                            <option value="0">Selecione...</option>
+                            <?php foreach ($veiculos_tipo as $veiculo_tipo) : ?>
+                                <option value="<?= $veiculo_tipo->id ?>"><?= $veiculo_tipo->nome . " - " . $veiculo_tipo->descricao
+                                                                            ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnExcluir" class="btn btn-outline-danger" title="Excluir"><i class="fas fa-times"></i> Excluir</button>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvar"><i class="fa fa-save salvar pointer"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
+    jQuery("#placa, .placas").mask('AAA-0A00');
+    jQuery("#ano").mask('0000');
 
-    jQuery('#empresas_id').select2({
-        dropdownParent: jQuery('#formMediumModal'),
-        class:'form-control'
-    });
+
     jQuery('#veiculos_tipo_id').select2({
         dropdownParent: jQuery('#formMediumModal'),
-        class:'form-control'
+        class: 'form-elements'
     });
 
     jQuery(".editar").click(function() {
@@ -349,15 +340,16 @@
             dataType: 'json',
             beforeSend: function() {},
             success: function(retorno) {
-                jQuery("#formMediumModal").modal("hide")
                 if (retorno.status == true) {
-                    jQuery("#label_marca" + id).html(retorno.data.nome);
-                    jQuery("#label_modelo" + id).html(retorno.data.descricao);
-                    jQuery("#label_ano" + id).html(retorno.data.ano);
-                    jQuery("#label_codigo" + id).html(retorno.data.codigo);
-                    jQuery("#label_placa" + id).html(retorno.data.placa);
-                    jQuery("#label_empresa" + id).html(retorno.data.empresas_id);
-                    jQuery("#label_tipo" + id).html(retorno.data.veiculos_tipo_id);
+                    jQuery("#formMediumModal").modal("hide");
+                    show_message(retorno.msg, 'success');
+                    jQuery("#label_marca" + id).html(retorno.data[0].nome);
+                    jQuery("#label_modelo" + id).html(retorno.data[0].descricao);
+                    jQuery("#label_ano" + id).html(retorno.data[0].ano);
+                    jQuery("#label_codigo" + id).html(retorno.data[0].codigo);
+                    jQuery("#label_placa" + id).html(retorno.data[0].placa);
+                    jQuery("#label_empresa" + id).html(retorno.data[0].empresa);
+                    jQuery("#label_tipo" + id).html(retorno.data[0].tipo_descricao);
                     jQuery("#linha" + id).addClass('success-transition');
                 } else {
                     jQuery("#linha" + id).addClass('error-transition');
@@ -369,11 +361,10 @@
         });
     });
 
-    jQuery(".excluir").click(function() {
-        var este = jQuery(this);
-        var id = este.data('id');
+    jQuery("#btnExcluir").click(function() {
+        var id = jQuery("#veiculo_id").val();
         var rota = '<?= $this->siteUrl('veiculos/excluir/') ?>' + id;
-
-        excluir(este, rota, 'Você realmente quer excluir este veículo?');
+        var redirect = '<?= $this->siteUrl('veiculos/listar') ?>';
+        excluir(rota, 'Você realmente quer excluir este veículo?', redirect);
     });
 </script>

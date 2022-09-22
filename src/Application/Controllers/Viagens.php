@@ -22,10 +22,8 @@ class Viagens extends BaseController
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
-
         parent::__construct();
         $this->container = $container;
-        $this->ViagenModel = new ViagenModel();
     }
 
     /**
@@ -71,9 +69,9 @@ class Viagens extends BaseController
 
         $dados['veiculos'] = VeiculosModel::list();
         if (!empty($params)) {
-            $dados['viagens'] = $this->ViagenModel->list($params);
+            $dados['viagens'] = ViagenModel::lst($params);
         } else {
-            $dados['viagens'] = $this->ViagenModel->list();
+            $dados['viagens'] = ViagenModel::list();
         }
         //usando $this->view setado em BaseController
         if ($args['modo']??false == 'lista') {
@@ -106,10 +104,11 @@ class Viagens extends BaseController
         }
         $usuario_id = $requests['usuario_id'] ?? null;
         $descricao = $requests['descricao'] ?? null;
-        $origem = $requests['origem'] ?? null;
-        $destino = $requests['destino'] ?? null;
+        $origem_id = $requests['origem_id'] ?? null;
+        $destino_id = $requests['destino_id'] ?? null;
         $data_saida = $this->dateFormat($requests['data_saida']) ?? null;
         $data_chegada = $this->dateFormat($requests['data_chegada']) ?? null;
+        $valor = $requests['valor'] ?? null;
         $detalhes = $requests['detalhes'] ?? null;
         $veiculos_id = $requests['veiculos_id'] ?? null;
 
@@ -117,10 +116,11 @@ class Viagens extends BaseController
 
         $dados = array_filter([
             'descricao' => $descricao,
-            'origem' => $origem,
-            'destino' => $destino,
+            'origem_id' => $origem_id,
+            'destino_id' => $destino_id,
             'data_saida' => $data_saida,
             'data_chegada' => $data_chegada,
+            'valor' => str_replace(',', '.', $valor),
             'detalhes' => $detalhes,
             'veiculos_id' => $veiculos_id,
         ]);
@@ -137,8 +137,16 @@ class Viagens extends BaseController
             }
         } else {
             $v = new Validator($dados);
-            $v->rule('required', ['descricao', 'origem', 'destino', 'data_saida', 'data_chegada']);
-
+            $v->rule('required', ['descricao', 'origem_id', 'destino_id', 'data_saida', 'data_chegada']);
+            $v->labels(array(
+                'descricao' => 'Descrição', 
+                'origem' => 'Origem', 
+                'origem_id' => 'Origem', 
+                'destino' => 'Destino', 
+                'destino_id' => 'Destino', 
+                'data_saida' => 'Data saída', 
+                'data_chegada' => 'Data chegada'
+            ));
             if ($v->validate()) {
                 $viagenInsert = ViagenModel::create($dados);
                 $viagenNew = ViagenModel::list(['viagens.id' => $viagenInsert->id]);
@@ -148,60 +156,10 @@ class Viagens extends BaseController
                 // Errors
                 $Errors = $this->valitorMessages($v->errors());
 
-                return $response->withJson($dados, false, $Errors);
+                return $response->withJson($Errors['errors'], false, $Errors['msg']);
             }
         }
     }
 
-    public function execute(Request $request, Response $response, array $args)
-    {
-        $hoje = new \DateTime('today');
-        $agora = new \DateTime('now');
-        //listar todas as viagens
-        $viagens = ViagenModel::list();
 
-        foreach ($viagens as $viagen) {
-            //verificar por datas
-            if (!empty($viagen->datas)) {
-                $datasExp = explode(',', $viagen->datas);
-                foreach ($datasExp as $data) {
-                    try {
-                        $dt = new \DateTime($data);
-                        var_dump($dt);
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
-                    }
-                }
-            }
-
-            //verificar por repetições
-
-            if (!empty($viagen->repeticao_tipo) && !empty($viagen->repeticao_detalhe)) {
-                if ($viagen->repeticao_tipo == 'dia_semana') {
-                    //veriricar qual dia da semana é hoje
-                    $diaSemana = $hoje->format('w');
-                    $repeticao_detalhe = explode(',', $viagen->repeticao_detalhe);
-                    var_dump($diaSemana, $repeticao_detalhe);
-                    if (in_array($diaSemana, $repeticao_detalhe)) {
-                        echo 'Tem pra hoje, verificar horas...';
-                        //verificar horários
-                        $HorariosExp = explode(',', $viagen->horarios);
-                        var_dump($HorariosExp);
-                        foreach ($HorariosExp as $hora) {
-                            $horaMin = explode(':', $hora);
-                            $agora2 = clone $agora;
-                            $agora2->setTime((int) $horaMin[0], (int) $horaMin[1], 0);
-                            if ($agora->format('G') == $agora2->format('G') && $agora->format('i') == $agora2->format('i')) {
-                                echo 'Ta na hora';
-                                var_dump($agora, $agora2);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        exit;
-
-        return $response->withJson($viagens, true, $viagens->count() . ($viagens->count() > 1 ? ' viagens encontradas' : ' viagen encontrada'));
-    }
 }

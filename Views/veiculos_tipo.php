@@ -131,96 +131,61 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <h4 class="card-title mb-0">Veículos</h4>
+
+
+                <div class="flex-row flex-between">
+                    <div class="">
+                        <h4 class="card-title mb-0">Tipos de veículos</h4>
                         <div class="small text-muted"><?= $veiculosTipo->count() ?> tipos de veículos estão sendo exibidos></div>
                     </div>
-                    <!--/.col-->
-                    <div class="col-sm-8 hidden-sm-down">
-                        <button type="button" class="btn btn-primary float-right bg-flat-color-1"><i class="fa fa-cloud-download"></i></button>
-                        <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="">
+                        <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar tipo de veículo</button>
+                    </div>
+                    <div class="">
+                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
-                                <label class="control-label mb-1" class="btn btn-outline-secondary">
+                                <label class="btn btn-outline-secondary">
                                     <input type="radio" name="options" id="option1"> Day
                                 </label>
-                                <label class="control-label mb-1" class="btn btn-outline-secondary active">
+                                <label class="btn btn-outline-secondary active">
                                     <input type="radio" name="options" id="option2" checked=""> Month
                                 </label>
-                                <label class="control-label mb-1" class="btn btn-outline-secondary">
+                                <label class="btn btn-outline-secondary">
                                     <input type="radio" name="options" id="option3"> Year
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <!--/.col-->
-
-                    <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
-                        <thead>
-                            <tr>
-                                <td>Nome</td>
-                                <td>Descrição</td>
-                                <td><i class="fas fa-cog"></i></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            
-                            foreach ($veiculosTipo as $tipo) :
-                            ?>
-                                <tr id="linha<?= $tipo->id ?>" class="list-label">
-                                    <td><span id="label_nome<?= $tipo->id ?>"><?= $tipo->nome ?></span></td>
-                                    <td><span id="label_descricao<?= $tipo->id ?>"><?= $tipo->descricao ?></span></td>
-                                    <td>
-                                        <i class="far fa-edit editar pointer text-info" title="Editar" style="margin-right: 8px;" data-id="<?= $tipo->id ?>" data-nome="<?= $tipo->nome ?>" data-descricao="<?= $tipo->descricao ?>">
-                                        </i>
-                                        <i class="fas fa-times excluir pointer text-danger" title="Excluir" style="margin-right: 8px;" data-id="<?= $tipo->id ?>"></i>
-                                    </td>
-                                </tr>
-
-                            <?php endforeach ?>
-                        </tbody>
-                    </table>
-
-
-
-                    <div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="mediumModalLabel">Veículo</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="formtipo">
-                                        <input type="hidden" id="tipo_id" name="tipo_id" value="" />
-
-                                        <div class="form-group">
-                                            <label class="control-label mb-1" for="nome">Nome</label>
-                                            <input type="text" class="form-control" id="nome" name="nome" value="" />
-                                            <small class="form-text text-muted">Ônibus</small>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label mb-1" for="descricao">Descrição</label>
-                                            <input type="text" class="form-control" id="descricao" name="descricao" value="" />
-                                            <small class="form-text text-muted">Veículo de transmporte de passageiros</small>
-                                        </div>
-                                        
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                    <button type="button" class="btn btn-primary" id="btnSalvar"><i class="fa fa-save salvar pointer"></i> Salvar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
                 </div>
-                <!--/.row-->
+
+
+
+                <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
+                    <thead>
+                        <tr>
+                            <td>Nome</td>
+                            <td>Descrição</td>
+                            <td><i class="fas fa-cog"></i></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+
+                        foreach ($veiculosTipo as $tipo) :
+                        ?>
+                            <tr id="linha<?= $tipo->id ?>" class="list-label">
+                                <td><span id="label_nome<?= $tipo->id ?>"><?= $tipo->nome ?></span></td>
+                                <td><span id="label_descricao<?= $tipo->id ?>"><?= $tipo->descricao ?></span></td>
+                                <td>
+                                    <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $tipo->id ?>" data-nome="<?= $tipo->nome ?>" data-descricao="<?= $tipo->descricao ?>">
+                                    <i class="far fa-edit"></i> Editar</button>
+                                </td>
+                            </tr>
+
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+
 
 
             </div>
@@ -267,6 +232,42 @@
     </div>
 </div> <!-- .content -->
 
+<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Tipo de veículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formtipo">
+                    <input type="hidden" id="tipo_id" name="tipo_id" value="" />
+
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="nome">Nome</label>
+                        <input type="text" class="form-elements" id="nome" name="nome" value="" />
+                        <small class="form-text text-muted">Ex: Ônibus</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="descricao">Descrição</label>
+                        <input type="text" class="form-elements" id="descricao" name="descricao" value="" />
+                        <small class="form-text text-muted">Ex: Veículo de transmporte de passageiros</small>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnExcluir" class="btn btn-outline-danger" title="Excluir"><i class="fas fa-times"></i> Excluir</button>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvar"><i class="fa fa-save salvar pointer"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -289,8 +290,10 @@
             dataType: 'json',
             beforeSend: function() {},
             success: function(retorno) {
-                jQuery("#formMediumModal").modal("hide")
                 if (retorno.status == true) {
+                    jQuery("#formMediumModal").modal("hide");
+                    show_message(retorno.msg, 'success');
+                    
                     jQuery("#label_nome" + id).html(retorno.data.nome);
                     jQuery("#label_descricao" + id).html(retorno.data.descricao);
                     jQuery("#linha" + id).addClass('success-transition');
@@ -304,11 +307,10 @@
         });
     });
 
-    jQuery(".excluir").click(function() {
-        var este = jQuery(this);
-        var id = este.data('id');
+    jQuery("#btnExcluir").click(function() {
+        var id = jQuery("#tipo_id").val();
         var rota = '<?= $this->siteUrl('veiculos/tipo/excluir/') ?>' + id;
-
-        excluir(este, rota, 'Você realmente quer excluir este tipo de veículo?');
+        var redirect = '<?= $this->siteUrl('veiculos/tipo/listar') ?>';
+        excluir(rota, 'Você realmente quer excluir este tipo de veículo?', redirect);
     });
 </script>

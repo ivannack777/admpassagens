@@ -19,6 +19,7 @@ class Clientes extends BaseController
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct();
         $this->container = $container;
     }
 
@@ -49,12 +50,23 @@ class Clientes extends BaseController
         }
 
         if (!empty($params)) {
-            $clientes = ClientesModel::list($params);
+            $dados['clientes'] = ClientesModel::list($params);
         } else {
-            $clientes = ClientesModel::list();
+            $dados['clientes'] = ClientesModel::list();
         }
 
-        return $response->withJson($clientes, true, $clientes->count().($clientes->count() > 1 ? ' clientes encontrados' : ' cliente encontrado'));
+                //usando $this->view setado em BaseController
+                if ($args['modo']??false == 'lista') {
+                    sleep(1);
+                    return $this->views->render($response, 'clientes.php', $dados);
+                } else {
+                    $this->views->render($response, 'header.php', $dados);
+                    $this->views->render($response, 'left.php', $dados);
+                    $this->views->render($response, 'right_top.php', $dados);
+                    $this->views->render($response, 'clientes.php', $dados);
+                    return $this->views->render($response, 'footer.php', $dados);
+                }
+        
     }
 
     /**

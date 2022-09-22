@@ -98,11 +98,25 @@ class Empresas extends BaseController
         $usuarios_id = $requests['usuarios_id'] ?? null;
         $enderecos_id = $requests['enderecos_id'] ?? null;
         $nome = $requests['nome'] ?? null;
+        $cnpj = $requests['cnpj'] ?? null;
+        $cep = $requests['cep'] ?? null;
+        $logradouro = $requests['logradouro'] ?? null;
+        $numero = $requests['numero'] ?? null;
+        $bairro = $requests['bairro'] ?? null;
+        $uf = $requests['uf'] ?? null;
+        $cidade = $requests['cidade'] ?? null;
 
         $dados = [
             // 'usuarios_id' => $usuarios_id,
             // 'enderecos_id' => $enderecos_id,
             'nome' => $sanitize->string($nome)->doubles()->firstUp()->get(),
+            'cnpj' => $sanitize->number($cnpj, 'clear')->get(),
+            'cep' => $sanitize->number($cep, 'clear')->get(),
+            'logradouro' => $sanitize->string($logradouro)->doubles()->firstUp()->get(),
+            'numero' => $sanitize->string($numero)->doubles()->outer()->get(),
+            'bairro' => $sanitize->string($bairro)->doubles()->firstUp()->get(),
+            'uf' => $sanitize->string($uf)->doubles()->outer()->get(),
+            'cidade' => $sanitize->string($cidade)->doubles()->firstUp()->get(),
         ];
 
         if (!empty($id)) {

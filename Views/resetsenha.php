@@ -12,7 +12,7 @@
                     <form>
                         <div class="form-group">
                             <label>Email address</label>
-                            <input type="email" class="form-control" placeholder="Email">
+                            <input type="email" class="form-elements" placeholder="Email">
                         </div>
                             <button type="submit" class="btn btn-primary btn-flat m-b-15">Enviar</button>
                             <div class="register-link m-t-15 text-center">

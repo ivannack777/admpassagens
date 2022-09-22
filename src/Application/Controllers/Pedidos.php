@@ -7,6 +7,7 @@ namespace App\Application\Controllers;
 use App\Application\Helpers\Sanitize;
 use App\Application\Models\Pedidos as PedidosModel;
 use App\Application\Models\Viagens as ViagensModel;
+use App\Application\Models\Clientes as ClientesModel;
 use App\Application\Models\Localidades as LocalidadesModel;
 use App\Application\Models\LocalidadesLog as LocalidadesLogModel;
 // use Psr\Http\Message\ResponseInterface as Response;
@@ -22,6 +23,7 @@ class Pedidos extends BaseController
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct();
         $this->container = $container;
     }
 
@@ -53,12 +55,24 @@ class Pedidos extends BaseController
         
 
         if (!empty($params)) {
-            $pedidos = PedidosModel::list($params);
+            $dados['pedidos'] = PedidosModel::list($params);
         } else {
-            $pedidos = PedidosModel::list();
+            $dados['pedidos'] = PedidosModel::list();
         }
+        $dados['clientes'] = ClientesModel::list();
+        $dados['viagens'] = ViagensModel::list();
 
-        return $response->withJson($pedidos, true, $pedidos->count().($pedidos->count() > 1 ? ' pedidos encontrados' : ' pedido encontrado'));
+        //usando $this->view setado em BaseController
+        if ($args['modo']??false == 'lista') {
+            sleep(1);
+            return $this->views->render($response, 'viagens_list.php', $dados);
+        } else {
+            $this->views->render($response, 'header.php', $dados);
+            $this->views->render($response, 'left.php', $dados);
+            $this->views->render($response, 'right_top.php', $dados);
+            $this->views->render($response, 'pedidos.php', $dados);
+            return $this->views->render($response, 'footer.php', $dados);
+        }
     }
 
     /**
@@ -75,14 +89,19 @@ class Pedidos extends BaseController
         }
         $clientes_id = $requests['clientes_id'] ?? null;
         $viagens_id = $requests['viagens_id'] ?? null;
+        $cpf = $requests['cpf'] ?? null;
         $valor = $requests['valor'] ?? null;
+        $status = $requests['status'] ?? null;
         
         $sanitize = new Sanitize();
 
         $dados = [
             'clientes_id' => $clientes_id,
             'viagens_id' => $viagens_id,
+            'cpf' => $sanitize->number($cpf, 'clear')->get(),
             'valor' => $sanitize->decimal($valor, 2)->get(),
+            'status' => $status,
+
         ];
 
         if (!empty($id)) {
@@ -116,13 +135,7 @@ class Pedidos extends BaseController
                     'localidades_id' => $viagens->origem_id,
                     'direcao' => '1'
                 ];
-                //salvar log e rank das localidades usadas no pedido
-                LocalidadesLogModel::create(['localidades_id' => $viagens->origem_id,'direcao' => '1']);
-                LocalidadesModel::where('id',$viagens->origem_id)->update(['rank'=>  LocalidadesModel::raw('`rank` + 1')]);
-
-                LocalidadesLogModel::create(['localidades_id' => $viagens->destino_id,'direcao' => '2']);
-                LocalidadesModel::where('id',$viagens->destino_id)->update(['rank'=> LocalidadesModel::raw('`rank` + 1')]);
-
+   
                 return $response->withJson($pedidosNew, true, 'Pedido foi adicionado');
             } else {
                 // Errors

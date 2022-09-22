@@ -52,7 +52,12 @@ class ExcluirController
             case 'viagens':
                 $tabela = 'viagens';
                 break;
-
+            case 'clientes':
+                $tabela = 'clientes';
+                break;
+            case 'pedidos':
+                $tabela = 'pedidos';
+                break;
             case 'enderecos':
                 $tabela = 'endereco';
                 break;
