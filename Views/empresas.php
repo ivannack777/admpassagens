@@ -137,7 +137,11 @@
                         <div class="small text-muted"><?= $empresas->count() ?> empresas estão sendo exibidas</div>
                     </div>
                     <div class="">
+                    <?php $session = $this->getAttributes();
+                                    $usersession = $session['session']['user'] ?? false;
+                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
                         <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar empresa</button>
+                        <?php endif ?>
                     </div>
                     <div class="">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -173,8 +177,12 @@
                                 <td><span id="cnpj<?= $empresa->id ?>" class="label_cnpj"><?= $empresa->cnpj ?></span></td>
                                 <td><span id="cidade<?= $empresa->id ?>"><?= $empresa->cidade . ' - ' . $empresa->uf ?></span></td>
                                 <td>
-                                    <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $empresa->id ?>" data-nome="<?= $empresa->nome ?>" data-cnpj="<?= $empresa->cnpj ?>" data-cep="<?= $empresa->cep ?>" data-logradouro="<?= $empresa->logradouro ?>" data-numero="<?= $empresa->numero ?>" data-bairro="<?= $empresa->bairro ?>" data-uf="<?= $empresa->uf ?>" data-cidade="<?= $empresa->cidade ?>">
-                                    <i class="far fa-edit"></i> Editar</button>
+                                    <?php $session = $this->getAttributes();
+                                    $usersession = $session['session']['user'] ?? false;
+                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $empresa->id ?>" data-nome="<?= $empresa->nome ?>" data-cnpj="<?= $empresa->cnpj ?>" data-cep="<?= $empresa->cep ?>" data-logradouro="<?= $empresa->logradouro ?>" data-numero="<?= $empresa->numero ?>" data-bairro="<?= $empresa->bairro ?>" data-uf="<?= $empresa->uf ?>" data-cidade="<?= $empresa->cidade ?>">
+                                            <i class="far fa-edit"></i> Editar</button>
+                                    <?php endif ?>
                                 </td>
                             </tr>
 
@@ -353,7 +361,7 @@
                 if (retorno.status == true) {
                     jQuery("#formMediumModal").modal("hide");
                     show_message(retorno.msg, 'success');
-                    
+
                     jQuery("#label_nome" + id).html(retorno.data[0].nome);
                     jQuery("#label_cnpj" + id).html(retorno.data[0].cnpj);
                     jQuery("#label_cidade" + id).html(retorno.data[0].cidade + ' - ' + retorno.data[0].uf);

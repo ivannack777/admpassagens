@@ -139,7 +139,11 @@
                         <div class="small text-muted"><?= $veiculosTipo->count() ?> tipos de veículos estão sendo exibidos></div>
                     </div>
                     <div class="">
-                        <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar tipo de veículo</button>
+                        <?php $session = $this->getAttributes();
+                        $usersession = $session['session']['user'] ?? false;
+                        if ($usersession && $usersession['nivel'] >= 3) : ?>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar tipo de veículo</button>
+                        <?php endif ?>
                     </div>
                     <div class="">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -177,8 +181,12 @@
                                 <td><span id="label_nome<?= $tipo->id ?>"><?= $tipo->nome ?></span></td>
                                 <td><span id="label_descricao<?= $tipo->id ?>"><?= $tipo->descricao ?></span></td>
                                 <td>
-                                    <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $tipo->id ?>" data-nome="<?= $tipo->nome ?>" data-descricao="<?= $tipo->descricao ?>">
-                                    <i class="far fa-edit"></i> Editar</button>
+                                    <?php $session = $this->getAttributes();
+                                    $usersession = $session['session']['user'] ?? false;
+                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $tipo->id ?>" data-nome="<?= $tipo->nome ?>" data-descricao="<?= $tipo->descricao ?>">
+                                            <i class="far fa-edit"></i> Editar</button>
+                                    <?php endif ?>
                                 </td>
                             </tr>
 
@@ -293,7 +301,7 @@
                 if (retorno.status == true) {
                     jQuery("#formMediumModal").modal("hide");
                     show_message(retorno.msg, 'success');
-                    
+
                     jQuery("#label_nome" + id).html(retorno.data.nome);
                     jQuery("#label_descricao" + id).html(retorno.data.descricao);
                     jQuery("#linha" + id).addClass('success-transition');

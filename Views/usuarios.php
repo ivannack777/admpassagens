@@ -205,78 +205,75 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <h4 class="card-title mb-0">Viagens</h4>
-                        <div class="small text-muted"><?= $usuarios->count() ?> usuarios estão sendo exibidas></div>
+                <div class="flex-row flex-between">
+                    <div class="">
+                        <h4 class="card-title mb-0">Usuários</h4>
+                        <div class="small text-muted"><?= $usuarios->count() ?> usuarios estão sendo exibidos></div>
                     </div>
-                    <!--/.col-->
-                    <div class="col-sm-8 hidden-sm-down">
-                        <button type="button" class="btn btn-primary float-right bg-flat-color-1"><i class="fa fa-cloud-download"></i></button>
-                        <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="">
+                        <?php $session = $this->getAttributes();
+                        $usersession = $session['session']['user'] ?? false;
+                        if ($usersession && $usersession['nivel'] >= 3) : ?>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar usuário</button>
+                        <?php endif ?>
+                    </div>
+                    <div class="">
+                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
-                                <label class="control-label mb-1" class="btn btn-outline-secondary">
+                                <label class="btn btn-outline-secondary">
                                     <input type="radio" name="options" id="option1"> Day
                                 </label>
-                                <label class="control-label mb-1" class="btn btn-outline-secondary active">
+                                <label class="btn btn-outline-secondary active">
                                     <input type="radio" name="options" id="option2" checked=""> Month
                                 </label>
-                                <label class="control-label mb-1" class="btn btn-outline-secondary">
+                                <label class="btn btn-outline-secondary">
                                     <input type="radio" name="options" id="option3"> Year
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <!--/.col-->
-
-                    <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
-                        <thead>
-                            <tr>
-                                <td>Usuário</td>
-                                <td>E-mail</td>
-                                <td>Celular</td>
-                                <td>Pessoa</td>
-                                <td>Nível</td>
-                                <td><i class="fas fa-cog"></i></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($usuarios as $usuario) :
-                            ?>
-                                <tr id="linha<?= $usuario->id ?>" class="list-label">
-                                    <td><span id="label_usuario<?= $usuario->id ?>"><?= $usuario->usuario ?></span></td>
-                                    <td><span id="label_email<?= $usuario->id ?>"><?= $usuario->email ?> </span></td>
-                                    <td><span id="label_celular<?= $usuario->id ?>"><?= $usuario->celular ?> </span></td>
-                                    <td><span id="label_pessoas_id<?= $usuario->id ?>"><?= $usuario->pessoas_id ?></span></td>
-                                    <td><span id="label_nivel<?= $usuario->id ?>"><?= $usuario->nivel ?></span></td>
-
-                                    <td>
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $usuario->id ?>" data-usuario="<?= $usuario->usuario ?>" data-email="<?= $usuario->email ?>" data-celular="<?= $usuario->celular ?>" data-pessoas_id="<?= $usuario->pessoas_id ?>" data-nivel="<?= $usuario->nivel ?>">
-                                        </i>Editar
-
-                                        <?php $session = $this->getAttributes();
-                                        $usersession = $session['session']['user'] ?? false;
-                                        if ($usersession && $usersession['nivel'] >= 5) : ?>
-                                            <span class=""><i class="fas fa-lock chpass pointer text-warning" title="Alterar senha" style="margin-right: 8px;" data-id="<?= $usuario->id ?>"></i></span>
-                                        <?php endif ?>
-                                    </td>
-                                </tr>
-
-                            <?php endforeach ?>
-                        </tbody>
-                    </table>
-
-
-
-
-
-
-
                 </div>
-                <!--/.row-->
 
+                <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
+                    <thead>
+                        <tr>
+                            <td>Usuário</td>
+                            <td>E-mail</td>
+                            <td>Celular</td>
+                            <td>Pessoa</td>
+                            <td>Nível</td>
+                            <td><i class="fas fa-cog"></i></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($usuarios as $usuario) :
+                        ?>
+                            <tr id="linha<?= $usuario->id ?>" class="list-label">
+                                <td><span id="label_usuario<?= $usuario->id ?>"><?= $usuario->usuario ?></span></td>
+                                <td><span id="label_email<?= $usuario->id ?>"><?= $usuario->email ?> </span></td>
+                                <td><span id="label_celular<?= $usuario->id ?>"><?= $usuario->celular ?> </span></td>
+                                <td><span id="label_pessoas_id<?= $usuario->id ?>"><?= $usuario->pessoas_id ?></span></td>
+                                <td><span id="label_nivel<?= $usuario->id ?>"><?= $usuario->nivel ?></span></td>
+                                <td>
+                                    <?php $session = $this->getAttributes();
+                                    $usersession = $session['session']['user'] ?? false;
+                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $usuario->id ?>" data-usuario="<?= $usuario->usuario ?>" data-email="<?= $usuario->email ?>" data-celular="<?= $usuario->celular ?>" data-pessoas_id="<?= $usuario->pessoas_id ?>" data-nivel="<?= $usuario->nivel ?>">
+                                            </i>Editar</button>
+                                    <?php endif ?>
+                                    <?php $session = $this->getAttributes();
+                                    $usersession = $session['session']['user'] ?? false;
+                                    if ($usersession && $usersession['nivel'] >= 5) : ?>
+                                        <span class=""><i class="fas fa-lock chpass pointer text-warning" title="Alterar senha" style="margin-right: 8px;" data-id="<?= $usuario->id ?>"></i></span>
+                                    <?php endif ?>
+                                </td>
+                            </tr>
 
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
             </div>
+
             <div class="card-footer">
                 <ul>
                     <li>

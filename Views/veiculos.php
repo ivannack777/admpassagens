@@ -137,7 +137,11 @@
                         <div class="small text-muted"><?= $veiculos->count() ?> veiculos estão sendo exibidas></div>
                     </div>
                     <div class="">
-                        <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar veículo</button>
+                        <?php $session = $this->getAttributes();
+                        $usersession = $session['session']['user'] ?? false;
+                        if ($usersession && $usersession['nivel'] >= 3) : ?>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar veículo</button>
+                        <?php endif ?>
                     </div>
                     <div class="">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -181,8 +185,12 @@
                                 <td><span id="label_empresa<?= $veiculo->id ?>"><?= $veiculo->empresa ?></span></td>
                                 <td><span id="label_tipo<?= $veiculo->id ?>"><?= $veiculo->tipo_nome ?> <?= $veiculo->tipo_descricao ?></span></td>
                                 <td>
-                                    <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" title="editar" style="margin-right: 8px;" data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
-                                    <i class="far fa-edit"></i> Editar</button>
+                                    <?php $session = $this->getAttributes();
+                                    $usersession = $session['session']['user'] ?? false;
+                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" title="editar" style="margin-right: 8px;" data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
+                                            <i class="far fa-edit"></i> Editar</button>
+                                    <?php endif ?>
                                 </td>
                             </tr>
 

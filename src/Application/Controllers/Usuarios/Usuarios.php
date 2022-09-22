@@ -46,7 +46,12 @@ class Usuarios extends BaseController
 
         //se o nivel do Usuarios for 1: cliente, sempre faz filtro pelo id
         if ($this->getUserSession('nivel') < '3') {
-            return $response->withJson([], false, 'Acesso não autorizado',403);  
+            // return $response->withJson([], false, 'Acesso não autorizado',403);  
+            $this->views->render($response, 'header.php');
+            $this->views->render($response, 'left.php');
+            $this->views->render($response, 'right_top.php');
+            $this->views->render($response, "403.php");
+            return $this->views->render($response, 'footer.php');
         } 
 
         if ($this->getUserSession('id')) {
@@ -129,8 +134,6 @@ class Usuarios extends BaseController
             'pessoas_id' => $pessoas_id,
             'nivel' => $nivel,
         ]);
-
-        var_dump($dados);exit;
 
         if (!empty($pessoas_id)) {
             $pessoas = PessoasModel::list(['id'=>$pessoas_id]);

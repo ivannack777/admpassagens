@@ -158,7 +158,11 @@
                         <div class="small text-muted"><?= $pedidos->count() ?> pedidos estão sendo exibidas</div>
                     </div>
                     <div class="">
-                        <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar pedido</button>
+                        <?php $session = $this->getAttributes();
+                        $usersession = $session['session']['user'] ?? false;
+                        if ($usersession && $usersession['nivel'] >= 3) : ?>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar pedido</button>
+                        <?php endif ?>
                     </div>
                     <div class="">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -190,7 +194,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($pedidos as $pedido) : 
+                        <?php foreach ($pedidos as $pedido) :
                         ?>
                             <tr id="linha<?= $pedido->id ?>" class="list-label">
                                 <td><span id="label_codigo<?= $pedido->id ?>"><?= $pedido->codigo ?></span></td>
@@ -200,19 +204,13 @@
                                 <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor) ?></span></td>
                                 <td><span id="label_status<?= $pedido->id ?>"><?= $pedido->status ?></span></td>
                                 <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
-
                                 <td>
-                                    <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" 
-                                        data-id="<?= $pedido->id ?>" 
-                                        data-codigo="<?= $pedido->codigo ?>" 
-                                        data-clientes_id="<?= $pedido->clientes_id ?>" 
-                                        data-viagens_id="<?= $pedido->viagens_id ?>" 
-                                        data-cpf="<?= $pedido->cpf ?>" 
-                                        data-valor="<?= str_replace('.', ',', $pedido->valor) ?>" 
-                                        data-status="<?= $pedido->status ?>" 
-                                        data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>"
-                                    >
-                                    <i class="far fa-edit"></i> Editar</button>
+                                    <?php $session = $this->getAttributes();
+                                    $usersession = $session['session']['user'] ?? false;
+                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-cpf="<?= $pedido->cpf ?>" data-valor="<?= str_replace('.', ',', $pedido->valor) ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
+                                            <i class="far fa-edit"></i> Editar</button>
+                                    <?php endif ?>
                                 </td>
                             </tr>
 
@@ -282,7 +280,7 @@
                         <span class="text-danger error-label"></span>
                         <select class="form-elements" id="clientes_id" name="clientes_id">
                             <option value="0">Selecione...</option>
-                            <?php foreach($clientes as $cliente): ?>
+                            <?php foreach ($clientes as $cliente) : ?>
                                 <option value="<?= $cliente->id ?>"><?= $cliente->nome ?></option>
                             <?php endforeach ?>
                         </select>
@@ -290,10 +288,10 @@
                     <div class="form-group">
                         <label class="control-label mb-1" for="viagens_id">Viagem</label>
                         <span class="text-danger error-label"></span>
-                        
+
                         <select class="form-elements" id="viagens_id" name="viagens_id">
                             <option value="0">Selecione...</option>
-                            <?php foreach($viagens as $viagem): ?>
+                            <?php foreach ($viagens as $viagem) : ?>
                                 <option value="<?= $viagem->id ?>"><?= $viagem->descricao ?></option>
                             <?php endforeach ?>
                         </select>
@@ -376,7 +374,9 @@
         jQuery("#clientes_id").val(este.data('clientes_id'));
         jQuery("#viagens_id").val(este.data('viagens_id'));
         jQuery("#cpf").val(este.data('cpf')).mask("000.000.000-00");
-        jQuery("#valor").val(este.data('valor')?.replace('.', ',')).mask("#.##0,00", {reverse: true});
+        jQuery("#valor").val(este.data('valor')?.replace('.', ',')).mask("#.##0,00", {
+            reverse: true
+        });
         jQuery("#status").val(este.data('status'));
 
         jQuery("#formMediumModal").modal("show")

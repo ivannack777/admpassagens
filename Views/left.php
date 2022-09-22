@@ -16,17 +16,13 @@
                 <li class="active">
                     <a href="<?= $this->siteUrl() ?>index.html"> <i class="menu-icon fa fa-dashboard"></i>Dashboard </a>
                 </li>
-
-
                 <h3 class="menu-title">Partes</h3><!-- /.menu-title -->
-
-
                 <li>
                     <a href="<?= $this->siteUrl('viagens/listar') ?>"> <i class="menu-icon fas fa-road"></i> Viagens </a>
                     <a href="<?= $this->siteUrl('empresas/listar') ?>"> <i class="menu-icon far fa-building"></i> Empresas</a>
                     <a href="<?= $this->siteUrl('clientes/listar') ?>"> <i class="menu-icon fas fa-user-tag"></i> Clientes</a>
                     <a href="<?= $this->siteUrl('pedidos/listar') ?>"> <i class="menu-icon fas fa-file-invoice-dollar"></i> Pedidos</a>
-
+                    <a href="<?= $this->siteUrl('usuarios/listar') ?>"><i class="menu-icon fas fa-file-invoice-dollar"></i> Usuarios</a>
                     <li class="menu-item-has-children dropdown show">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="menu-icon fas fa-bus"></i>Viculos</a>
                         <ul class="sub-menu children dropdown-menu show">
@@ -34,14 +30,7 @@
                             <li><i class="menu-icon fas fa-list"></i><a href="<?= $this->siteUrl('veiculos/listar') ?>">Lista </a></li>
                         </ul>
                     </li>
-
                 </li>
-
-
-                <li class="menu-item-has-children dropdown">
-                    <li><i class="menu-icon fa fa-line-chart"></i><a href="<?= $this->siteUrl('usuarios/listar') ?>">Cadastro</a></li>
-                </li>
-
             </ul>
         </div><!-- /.navbar-collapse -->
     </nav>

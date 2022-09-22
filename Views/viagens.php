@@ -158,7 +158,11 @@
                         <div class="small text-muted"><?= $viagens->count() ?> viagens estão sendo exibidas</div>
                     </div>
                     <div class="">
-                        <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar viagem</button>
+                        <?php $session = $this->getAttributes();
+                        $usersession = $session['session']['user'] ?? false;
+                        if ($usersession && $usersession['nivel'] >= 3) : ?>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar viagem</button>
+                        <?php endif ?>
                     </div>
                     <div class="">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -211,8 +215,12 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $viagem->id ?>" data-veiculos_id="<?= $viagem->veiculos_id ?>" data-descricao="<?= $viagem->descricao ?>" data-origem_id="<?= $viagem->origem_id ?>" data-destino_id="<?= $viagem->destino_id ?>" data-valor="<?= str_replace('.', ',', $viagem->valor) ?>" data-data_saida="<?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?>" data-data_chegada="<?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?>" data-detalhes="<?= $viagem->detalhes ?>">
-                                    <i class="far fa-edit"></i> Editar</button>
+                                    <?php $session = $this->getAttributes();
+                                    $usersession = $session['session']['user'] ?? false;
+                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $viagem->id ?>" data-veiculos_id="<?= $viagem->veiculos_id ?>" data-descricao="<?= $viagem->descricao ?>" data-origem_id="<?= $viagem->origem_id ?>" data-destino_id="<?= $viagem->destino_id ?>" data-valor="<?= str_replace('.', ',', $viagem->valor) ?>" data-data_saida="<?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?>" data-data_chegada="<?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?>" data-detalhes="<?= $viagem->detalhes ?>">
+                                            <i class="far fa-edit"></i> Editar</button>
+                                    <?php endif ?>
                                 </td>
                             </tr>
 
@@ -389,8 +397,8 @@
                 }
             });
         },
-        select: function( event, ui ) {
-            jQuery("#origem_id").val(ui.item.id) 
+        select: function(event, ui) {
+            jQuery("#origem_id").val(ui.item.id)
         }
     });
 
@@ -418,8 +426,8 @@
                 }
             });
         },
-        select: function( event, ui ) {
-            jQuery("#destino_id").val(ui.item.id) 
+        select: function(event, ui) {
+            jQuery("#destino_id").val(ui.item.id)
         }
     });
 
@@ -462,7 +470,7 @@
                 if (retorno.status == true) {
                     jQuery("#formMediumModal").modal("hide");
                     show_message(retorno.msg, 'success');
-                    
+
                     let data_saida = new moment(retorno.data[0].data_saida);
                     let data_chegada = new moment(retorno.data[0].data_chegada);
                     jQuery("#label_descricao" + id).html(retorno.data[0].descricao);

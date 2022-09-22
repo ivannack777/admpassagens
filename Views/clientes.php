@@ -158,7 +158,11 @@
                         <div class="small text-muted"><?= $clientes->count() ?> clientes estão sendo exibidas</div>
                     </div>
                     <div class="">
-                        <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar cliente</button>
+                        <?php $session = $this->getAttributes();
+                        $usersession = $session['session']['user'] ?? false;
+                        if ($usersession && $usersession['nivel'] >= 3) : ?>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar cliente</button>
+                        <?php endif ?>
                     </div>
                     <div class="">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -194,16 +198,14 @@
                                 <td><span id="label_cpf<?= $cliente->id ?>" class="label_cpf"><?= $cliente->cpf ?></span></td>
                                 <td><span id="label_celular<?= $cliente->id ?>" class="label_celular"><?= $cliente->celular ?></span></td>
                                 <td><span id="label_email<?= $cliente->id ?>"><?= $cliente->email ?></span></td>
-                                
+
                                 <td>
-                                    <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" 
-                                        data-id="<?= $cliente->id ?>" 
-                                        data-nome="<?= $cliente->nome ?>" 
-                                        data-cpf="<?= $cliente->cpf ?>" 
-                                        data-celular="<?= $cliente->celular ?>" 
-                                        data-email="<?= $cliente->email ?>" 
-                                    >
-                                    <i class="far fa-edit"></i> Editar</button>
+                                    <?php $session = $this->getAttributes();
+                                    $usersession = $session['session']['user'] ?? false;
+                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $cliente->id ?>" data-nome="<?= $cliente->nome ?>" data-cpf="<?= $cliente->cpf ?>" data-celular="<?= $cliente->celular ?>" data-email="<?= $cliente->email ?>">
+                                            <i class="far fa-edit"></i> Editar</button>
+                                    <?php endif ?>
                                 </td>
                             </tr>
 
@@ -308,7 +310,7 @@
 
     jQuery(".editar").click(function() {
         var este = jQuery(this);
-        
+
         jQuery("#cliente_id").val(este.data('id'));
         jQuery("#nome").val(este.data('nome'));
         jQuery("#cpf").val(este.data('cpf')).mask("000.000.000-00");
@@ -334,7 +336,7 @@
                 if (retorno.status == true) {
                     jQuery("#formMediumModal").modal("hide");
                     show_message(retorno.msg, 'success');
-                    
+
                     let data = new moment(retorno.data[0].dataInsret);
 
                     jQuery("#label_nome" + id).html(retorno.data[0].descricao);
