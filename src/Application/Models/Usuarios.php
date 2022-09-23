@@ -27,24 +27,23 @@ class Usuarios extends \Illuminate\Database\Eloquent\Model
             'usuarios.email',
             'usuarios.celular',
             'usuarios.nivel',
-            // 'pessoa.nome',
-            // 'pessoa.cpf_cnpj',
-            // 'pessoa.documento',
+            'pessoas.nome',
+            'pessoas.cpf_cnpj',
+            'pessoas.documento',
         );
+        $usuarios->join('pessoas', 'pessoas.id', '=', 'usuarios.pessoas_id', 'left');
         foreach($params as $campo => $param){
-
             if ($campo == 'identificador') {
                 $usuarios->where('usuarios.usuario', $param);
                 $usuarios->orWhere('usuarios.email', $param);
                 $usuarios->orWhere('usuarios.celular', $param);
             } else {
-                $usuarios->where($campo, $param);    
+                $usuarios->where('usuarios.'.$campo, $param);    
             }
         }
         
         
         $usuarios->where('usuarios.excluido', 'N');
-        // $usuarios->join('pessoa', 'usuarios.pessoas_id', '=', 'pessoa.id', 'left');
         $result = $usuarios->get();
         // var_dump( DB::getQueryLog(), $params);exit;
         return $result;

@@ -18,16 +18,16 @@
                 </li>
                 <h3 class="menu-title">Partes</h3><!-- /.menu-title -->
                 <li>
-                    <a href="<?= $this->siteUrl('viagens/listar') ?>"> <i class="menu-icon fas fa-road"></i> Viagens </a>
-                    <a href="<?= $this->siteUrl('empresas/listar') ?>"> <i class="menu-icon far fa-building"></i> Empresas</a>
-                    <a href="<?= $this->siteUrl('clientes/listar') ?>"> <i class="menu-icon fas fa-user-tag"></i> Clientes</a>
-                    <a href="<?= $this->siteUrl('pedidos/listar') ?>"> <i class="menu-icon fas fa-file-invoice-dollar"></i> Pedidos</a>
-                    <a href="<?= $this->siteUrl('usuarios/listar') ?>"><i class="menu-icon fas fa-file-invoice-dollar"></i> Usuarios</a>
+                    <a href="<?= $this->siteUrl('viagens') ?>"> <i class="menu-icon fas fa-road"></i> Viagens </a>
+                    <a href="<?= $this->siteUrl('empresas') ?>"> <i class="menu-icon far fa-building"></i> Empresas</a>
+                    <a href="<?= $this->siteUrl('clientes') ?>"> <i class="menu-icon fas fa-user-tag"></i> Clientes</a>
+                    <a href="<?= $this->siteUrl('pedidos') ?>"> <i class="menu-icon fas fa-file-invoice-dollar"></i> Pedidos</a>
+                    <a href="<?= $this->siteUrl('usuarios') ?>"><i class="menu-icon fas fa-file-invoice-dollar"></i> Usuarios</a>
                     <li class="menu-item-has-children dropdown show">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="menu-icon fas fa-bus"></i>Viculos</a>
                         <ul class="sub-menu children dropdown-menu show">
-                            <li><i class="menu-icon fas fa-tasks active"></i><a href="<?= $this->siteUrl('veiculos/tipo/listar') ?>">Tipos </a></li>
-                            <li><i class="menu-icon fas fa-list"></i><a href="<?= $this->siteUrl('veiculos/listar') ?>">Lista </a></li>
+                            <li><i class="menu-icon fas fa-tasks active"></i><a href="<?= $this->siteUrl('veiculos/tipo') ?>">Tipos </a></li>
+                            <li><i class="menu-icon fas fa-list"></i><a href="<?= $this->siteUrl('veiculos') ?>">Lista </a></li>
                         </ul>
                     </li>
                 </li>

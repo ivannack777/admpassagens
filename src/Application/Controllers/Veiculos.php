@@ -195,7 +195,7 @@ class Veiculos extends BaseController
                 // Errors
                 $Errors = $this->valitorMessages($v->errors());
 
-                return $response->withJson($dados, false, $Errors);
+                return $response->withJson($dados, false, $Errors['msg']);
             }
         }
     }

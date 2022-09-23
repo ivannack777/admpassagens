@@ -10,198 +10,6 @@
     </div>
 
 
-    <div class="col-sm-6 col-lg-3">
-        <div class="card text-white bg-flat-color-1">
-            <div class="card-body pb-0">
-                <div class="dropdown float-right">
-                    <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton1" data-toggle="dropdown">
-                        <i class="fa fa-cog"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <div class="dropdown-menu-content">
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Action</a>
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Another action</a>
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Something else here</a>
-                        </div>
-                    </div>
-                </div>
-                <h4 class="mb-0">
-                    <span class="count">10468</span>
-                </h4>
-                <p class="text-light">Members online</p>
-
-                <div class="chart-wrapper px-0" style="height:70px;" height="70">
-                    <canvas id="widgetChart1"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-    <!--/.col-->
-
-    <div class="col-sm-6 col-lg-3">
-        <div class="card text-white bg-flat-color-2">
-            <div class="card-body pb-0">
-                <div class="dropdown float-right">
-                    <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton2" data-toggle="dropdown">
-                        <i class="fa fa-cog"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                        <div class="dropdown-menu-content">
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Action</a>
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Another action</a>
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Something else here</a>
-                        </div>
-                    </div>
-                </div>
-                <h4 class="mb-0">
-                    <span class="count">10468</span>
-                </h4>
-                <p class="text-light">Members online</p>
-
-                <div class="chart-wrapper px-0" style="height:70px;" height="70">
-                    <canvas id="widgetChart2"></canvas>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!--/.col-->
-
-    <div class="col-sm-6 col-lg-3">
-        <div class="card text-white bg-flat-color-3">
-            <div class="card-body pb-0">
-                <div class="dropdown float-right">
-                    <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton3" data-toggle="dropdown">
-                        <i class="fa fa-cog"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                        <div class="dropdown-menu-content">
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Action</a>
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Another action</a>
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Something else here</a>
-                        </div>
-                    </div>
-                </div>
-                <h4 class="mb-0">
-                    <span class="count">10468</span>
-                </h4>
-                <p class="text-light">Members online</p>
-
-            </div>
-
-            <div class="chart-wrapper px-0" style="height:70px;" height="70">
-                <canvas id="widgetChart3"></canvas>
-            </div>
-        </div>
-    </div>
-    <!--/.col-->
-
-    <div class="col-sm-6 col-lg-3">
-        <div class="card text-white bg-flat-color-4">
-            <div class="card-body pb-0">
-                <div class="dropdown float-right">
-                    <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton4" data-toggle="dropdown">
-                        <i class="fa fa-cog"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
-                        <div class="dropdown-menu-content">
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Action</a>
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Another action</a>
-                            <a class="dropdown-item" href="<?= $this->siteUrl() ?>#">Something else here</a>
-                        </div>
-                    </div>
-                </div>
-                <h4 class="mb-0">
-                    <span class="count">10468</span>
-                </h4>
-                <p class="text-light">Members online</p>
-
-                <div class="chart-wrapper px-3" style="height:70px;" height="70">
-                    <canvas id="widgetChart4"></canvas>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!--/.col-->
-
-    <div class="col-lg-3 col-md-6">
-        <div class="social-box facebook">
-            <i class="fa fa-facebook"></i>
-            <ul>
-                <li>
-                    <span class="count">40</span> k
-                    <span>friends</span>
-                </li>
-                <li>
-                    <span class="count">450</span>
-                    <span>feeds</span>
-                </li>
-            </ul>
-        </div>
-        <!--/social-box-->
-    </div>
-    <!--/.col-->
-
-
-    <div class="col-lg-3 col-md-6">
-        <div class="social-box twitter">
-            <i class="fa fa-twitter"></i>
-            <ul>
-                <li>
-                    <span class="count">30</span> k
-                    <span>friends</span>
-                </li>
-                <li>
-                    <span class="count">450</span>
-                    <span>tweets</span>
-                </li>
-            </ul>
-        </div>
-        <!--/social-box-->
-    </div>
-    <!--/.col-->
-
-
-    <div class="col-lg-3 col-md-6">
-        <div class="social-box linkedin">
-            <i class="fa fa-linkedin"></i>
-            <ul>
-                <li>
-                    <span class="count">40</span> +
-                    <span>contacts</span>
-                </li>
-                <li>
-                    <span class="count">250</span>
-                    <span>feeds</span>
-                </li>
-            </ul>
-        </div>
-        <!--/social-box-->
-    </div>
-    <!--/.col-->
-
-
-    <div class="col-lg-3 col-md-6">
-        <div class="social-box google-plus">
-            <i class="fa fa-google-plus"></i>
-            <ul>
-                <li>
-                    <span class="count">94</span> k
-                    <span>followers</span>
-                </li>
-                <li>
-                    <span class="count">92</span>
-                    <span>circles</span>
-                </li>
-            </ul>
-        </div>
-        <!--/social-box-->
-    </div>
-    <!--/.col-->
-
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
@@ -251,7 +59,7 @@
                             <tr id="linha<?= $usuario->id ?>" class="list-label">
                                 <td><span id="label_usuario<?= $usuario->id ?>"><?= $usuario->usuario ?></span></td>
                                 <td><span id="label_email<?= $usuario->id ?>"><?= $usuario->email ?> </span></td>
-                                <td><span id="label_celular<?= $usuario->id ?>"><?= $usuario->celular ?> </span></td>
+                                <td><span id="label_celular<?= $usuario->id ?>" class="label_celular"><?= $usuario->celular ?> </span></td>
                                 <td><span id="label_pessoas_id<?= $usuario->id ?>"><?= $usuario->pessoas_id ?></span></td>
                                 <td><span id="label_nivel<?= $usuario->id ?>"><?= $usuario->nivel ?></span></td>
                                 <td>
@@ -261,11 +69,7 @@
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $usuario->id ?>" data-usuario="<?= $usuario->usuario ?>" data-email="<?= $usuario->email ?>" data-celular="<?= $usuario->celular ?>" data-pessoas_id="<?= $usuario->pessoas_id ?>" data-nivel="<?= $usuario->nivel ?>">
                                             </i>Editar</button>
                                     <?php endif ?>
-                                    <?php $session = $this->getAttributes();
-                                    $usersession = $session['session']['user'] ?? false;
-                                    if ($usersession && $usersession['nivel'] >= 5) : ?>
-                                        <span class=""><i class="fas fa-lock chpass pointer text-warning" title="Alterar senha" style="margin-right: 8px;" data-id="<?= $usuario->id ?>"></i></span>
-                                    <?php endif ?>
+
                                 </td>
                             </tr>
 
@@ -357,7 +161,14 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="btnExcluir" class="btn btn-outline-danger" title="Excluir"><i class="fas fa-times"></i> Excluir</button>
+                <div>
+                    <?php $session = $this->getAttributes();
+                    $usersession = $session['session']['user'] ?? false;
+                    if ($usersession && $usersession['nivel'] >= 5) : ?>
+                        <button id="btnExcluir" class="btn btn-outline-danger" title="Excluir"><i class="fas fa-times"></i> Excluir</button>
+                        <button class="btn btn-outline-warning chpass" title="Alterar senha" style="margin-right: 8px;" data-id="<?= $usuario->id ?>"><i class="fas fa-lock"></i> Alterar senha</button>
+                    <?php endif ?>
+                </div>
                 <div>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" id="btnSalvar"><i class="fa fa-save salvar pointer"></i> Salvar</button>
@@ -402,6 +213,7 @@
     </div>
 </div>
 <script>
+    jQuery('.label_celular').mask('00 00000-0000');
     jQuery(".datas").datetimepicker({
         format: "d/m/Y H:i"
     });
@@ -423,7 +235,7 @@
 
         jQuery("#usuario").val(este.data('usuario'));
         jQuery("#email").val(este.data('email'));
-        jQuery("#celular").val(este.data('celular'));
+        jQuery("#celular").val(este.data('celular')).mask('00 00000-0000');
 
         jQuery("#formMediumModal").modal("show")
     });
@@ -449,14 +261,10 @@
                 jQuery("#formMediumModal").modal("hide")
                 if (retorno.status == true) {
                     show_message(retorno.msg, 'success');
-                    let data_saida = new moment(retorno.data.data_saida);
-                    let data_chegada = new moment(retorno.data.data_chegada);
-                    jQuery("#label_usuario" + id).html(retorno.data.usuario);
-                    jQuery("#label_celular" + id).html(retorno.data.celular);
-                    jQuery("#label_data_saida" + id).html(data_saida.format('DD/MM/YYYY HH:mm'));
-                    jQuery("#label_data_chegada" + id).html(data_chegada.format('DD/MM/YYYY HH:mm'));
-                    jQuery("#label_pessoas_id" + id).html(retorno.data.pessoas_id);
-                    jQuery("#label_veiculos_id" + id).html(retorno.data.marca + ' ' + retorno.data.modelo + ' ' + retorno.data.ano + ' ' + retorno.data.codigo + ' ' + retorno.data.placa);
+                    jQuery("#label_usuario" + id).html(retorno.data[0].usuario);
+                    jQuery("#label_celular" + id).html(retorno.data[0].celular);
+                    jQuery("#label_email" + id).html(retorno.data[0].email);
+                    jQuery("#label_pessoas_id" + id).html(retorno.data[0].pessoas_id);
                     jQuery("#linha" + id).addClass('success-transition');
                 } else {
                     jQuery("#linha" + id).addClass('error-transition');
@@ -504,7 +312,7 @@
     jQuery("#btnExcluir").click(function() {
         var id = jQuery("#usuario_id").val();
         var rota = '<?= $this->siteUrl('usuarios/excluir/') ?>' + id;
-        var redirect = '<?= $this->siteUrl('usuarios/listar') ?>';
+        var redirect = '<?= $this->siteUrl('usuarios') ?>';
         excluir(rota, 'Você realmente quer excluir este usuário?', redirect);
     });
 </script>

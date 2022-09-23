@@ -117,23 +117,29 @@ class Usuarios extends BaseController
         $nivel = $sanitize->integer($requests['nivel']??null)->get();
         
         if (!empty($senha)) {
+
             if ($this->getUserSession('nivel') < '5') {
                 return $response->withJson([], false, 'Acesso não autorizado',403);  
             } 
             if ($senha != $resenha) {
                 return $response->withJson([], false, 'As senhas não coincidem');
             }
-
+            $dados = ['senha' => hash('sha256', $senha)];
+        } else {
+            //percorre todos os campos substituido vazios por null
+            $dados = array_map(function($v){
+                return empty($v)? null:$v;
+            },[
+                'usuario' => $usuario,
+                'email' => $email,
+                'celular' => $celular,
+                'senha' => !empty($senha)?hash('sha256', $senha):null,
+                'pessoas_id' => $pessoas_id,
+                'nivel' => $nivel,
+            ]);
         }
 
-        $dados = array_filter([
-            'usuario' => $usuario,
-            'email' => $email,
-            'celular' => $celular,
-            'senha' => !empty($senha)?hash('sha256', $senha):null,
-            'pessoas_id' => $pessoas_id,
-            'nivel' => $nivel,
-        ]);
+
 
         if (!empty($pessoas_id)) {
             $pessoas = PessoasModel::list(['id'=>$pessoas_id]);
@@ -147,7 +153,7 @@ class Usuarios extends BaseController
             if ($Usuarios->count()) {
                 UsuariosModel::where(['id' => $id])->update($dados);
                 $Usuarios = UsuariosModel::list(['id' => $id]);
-                return $response->withJson($dados, true, 'Usuario foi salvo');
+                return $response->withJson($Usuarios, true, 'Usuario foi salvo');
             } else {
                 return $response->withJson($requests, false, 'Usuario não foi localizado');
             }
