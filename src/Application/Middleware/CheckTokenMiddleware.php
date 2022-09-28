@@ -27,16 +27,16 @@ class CheckTokenMiddleware implements Middleware
         $uri = $request->getUri();
         $headers = $request->getHeaders();
 
-        $_SESSION['admpassagens']['rememberuri'] = $uri;
+        $sessUser = $_SESSION['user'] ?? false;
 
-        var_dump($_SESSION, ($_SESSION['admpassagens'] ['user'] ?? false) );//exit;
-        if($_SESSION['admpassagens'] ['user'] ?? false){
+        if($sessUser){
             // echo "deu bom";
         } else {
             // echo "deu ruim";
+            $_SESSION["rememberuri"] = $uri->getPath();
+            setcookie("rememberuri", $uri->getPath(), time()+3600*10000, "/", $_ENV['SITE_URL'], true);
             return $response->withHeader('Location', '/usuarios/login/form')->withStatus(302);
         }
-        
 
         $bearer = $request->getHeader('Authorization');
 
@@ -47,18 +47,10 @@ class CheckTokenMiddleware implements Middleware
                 // var_dump($bearer, $usuarios->count());
                 if ($usuarios->count() === 1) {
       
-                    $_SESSION = [
-                        'admpassagens' =>[
-                            'user' => [
-                                'id' => $usuarios[0]->id,
-                                'usuario' => $usuarios[0]->usuario,
-                                'email' => $usuarios[0]->email,
-                                'celular' => $usuarios[0]->celular,
-                                'token' => $usuarios[0]->token,
-                                'nivel' => $usuarios[0]->nivel,
-                            ],
-                        ],
-                    ];
+                    /**TODO
+                     * setcookie
+                     */
+
                     // $body = preg_replace('/\s+/', '', $request->getBody() ?? null);
                     // $caminho = '';
 

@@ -36,12 +36,12 @@
             <div class="card-body">
                 <div class="flex-row flex-between">
                     <div class="">
-                        <h4 class="card-title mb-0">Pedidos</h4>
+                        <h4 class="card-title mb-0">Clientes</h4>
                         <div class="small text-muted"><?= $clientes->count() ?> clientes estão sendo exibidas</div>
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
-                        $usersession = $session['session']['user'] ?? false;
+                        $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                             <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar cliente</button>
                         <?php endif ?>
@@ -83,7 +83,7 @@
 
                                 <td>
                                     <?php $session = $this->getAttributes();
-                                    $usersession = $session['session']['user'] ?? false;
+                                    $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $cliente->id ?>" data-nome="<?= $cliente->nome ?>" data-cpf="<?= $cliente->cpf ?>" data-celular="<?= $cliente->celular ?>" data-email="<?= $cliente->email ?>">
                                             <i class="far fa-edit"></i> Editar</button>
@@ -143,7 +143,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mediumModalLabel">Viagem</h5>
+                <h5 class="modal-title" id="mediumModalLabel">Clientes</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -198,6 +198,8 @@
         jQuery("#cpf").val(este.data('cpf')).mask("000.000.000-00");
         jQuery("#celular").val(este.data('celular')).mask("00 00000-0000");
         jQuery("#email").val(este.data('email'));
+        jQuery("#mediumModalLabel").append(' '+este.data('nome'));
+        jQuery("#mediumModalLabel").html('Cliente '+(este.data('nome')?este.data('nome'):''));
         jQuery("#formMediumModal").modal("show")
     });
 

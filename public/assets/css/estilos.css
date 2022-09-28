@@ -1,3 +1,18 @@
+#logo-box{
+    background-color: aliceblue;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    margin: 12px;
+}
+
+#logo-box-mini{
+    background-color: aliceblue;
+    border: 1px solid #ced4da;
+    border-radius: 48px;
+    max-width: 40px;
+    margin: 0;
+}
+
 .pointer{
     cursor: pointer;
 }
@@ -50,6 +65,10 @@
     box-shadow: 2px 2px 6px #699bce66 !important;
 }
 
+.form-group label{
+    font-size: 12px;
+    color:rgb(114, 114, 114)
+}
 
 .form-elements{
     border-top:0; 

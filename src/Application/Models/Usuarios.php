@@ -21,6 +21,7 @@ class Usuarios extends \Illuminate\Database\Eloquent\Model
         $usuarios = DB::table('usuarios');
         $usuarios->select(
             'usuarios.id',
+            'usuarios.key',
             'usuarios.pessoas_id',
             'usuarios.usuario',
             'usuarios.token',

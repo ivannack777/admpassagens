@@ -16,14 +16,14 @@ use Valitron\Validator;
 
 class Viagens extends BaseController
 {
-    protected $container;
-    protected $ViagenModel;
+    // protected $container;
+    // protected $ViagenModel;
 
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
         parent::__construct();
-        $this->container = $container;
+        // $this->container = $container;
     }
 
     /**
@@ -110,6 +110,8 @@ class Viagens extends BaseController
         $data_chegada = $this->dateFormat($requests['data_chegada']) ?? null;
         $valor = $requests['valor'] ?? null;
         $detalhes = $requests['detalhes'] ?? null;
+        $assentos = $requests['assentos'] ?? null;
+        $assentos_tipo = $requests['assentos_tipo'] ?? null;
         $veiculos_id = $requests['veiculos_id'] ?? null;
 
         $sanitize = new Sanitize();
@@ -122,6 +124,8 @@ class Viagens extends BaseController
             'data_chegada' => $data_chegada,
             'valor' => str_replace(',', '.', $valor),
             'detalhes' => $detalhes,
+            'assentos' => $assentos,
+            'assentos_tipo' => $assentos_tipo,
             'veiculos_id' => $veiculos_id,
         ]);
 
@@ -150,7 +154,8 @@ class Viagens extends BaseController
             if ($v->validate()) {
                 $viagenInsert = ViagenModel::create($dados);
                 $viagenNew = ViagenModel::list(['viagens.id' => $viagenInsert->id]);
-
+                // var_dump($viagenNew);
+       
                 return $response->withJson($viagenNew, true, 'Viagem foi adicionada');
             } else {
                 // Errors

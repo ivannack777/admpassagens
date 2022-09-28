@@ -181,27 +181,32 @@ class Login extends BaseController
                 $usuariosAuth = Usuarios::auth($paramsAuth);
 
                 if ($usuariosAuth->count()) {
-                    $_SESSION['admpassagens']['user'] = [
-                                'id' => $usuarios[0]->id,
-                                'usuario' => $usuarios[0]->usuario,
-                                'email' => $usuarios[0]->email,
-                                'celular' => $usuarios[0]->celular,
-                                'token' => $usuarios[0]->token,
-                                'nivel' => $usuarios[0]->nivel,
-                    ];
+                    
 
+                    $_SESSION['user'] = [
+                        'id' => (string)$usuarios[0]->id,
+                        'usuario' => (string)$usuarios[0]->usuario,
+                        'email' =>(string) $usuarios[0]->email,
+                        'celular' =>(string) $usuarios[0]->celular,
+                        'token' =>(string) $usuarios[0]->token,
+                        'nivel' =>(string) $usuarios[0]->nivel,
+                    ];
+                    
+                    setcookie("user[key]", $usuarios[0]->key, time()+$_ENV['COOKIE_EXPIRE'], "/", $_ENV['SITE_URL'], true);
                     //gravar log do login ;)
                     $usuariosDadosLog = [
                         'usuarios_id' => $usuarios[0]->id,
                         'uri' =>  $request->getUri(),
                         'direcao' => 'E', //Entrada
                     ];
+
                     
                     $usuariosLog = Usuarios::log($usuariosDadosLog);
                     
                     if ($usuariosLog) {
                         //verifica se 'rememberuri' existe na sessão 
-                        $rememberuri = $_SESSION['admpassagens']['rememberuri'] ?? false;
+                        $rememberuri = $_SESSION['rememberuri'] ?? false;
+                        
                         //se exisitir faz o redirect para o endereço, senão redireciona para raiz
                         return $response->withHeader('Location', $rememberuri ? $rememberuri->getPath() : '/')->withStatus(302);
                     } else {
@@ -251,15 +256,14 @@ class Login extends BaseController
      */
     public function logout(Request $request, Response $response): Response
     {
-        session_start();
-        var_dump($_SESSION);
-        if($_SESSION['admpassagens'] ?? false && $_SESSION['admpassagens'] ['user'] ?? false){
+        // session_start();
+        if($_SESSION['user'] ?? false){
             $usuariosDadosLog = [
-                'usuarios_id' => $_SESSION['admpassagens'] ['user']['id'],
+                'usuarios_id' => $_SESSION['user']['id'],
                 'uri' =>  $request->getUri(),
                 'direcao' => 'S', //Saída
             ];
-            unset($_SESSION['admpassagens'] ['user']);
+            unset($_SESSION['user']);
             // session_destroy();
              //gravar log do logout ;)
             Usuarios::log($usuariosDadosLog);

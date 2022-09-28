@@ -30,7 +30,7 @@ class Empresas extends BaseController
      */
     public function list(Request $request, Response $response)
     {
-        // $nivel = $_SESSION['admpassagens']['user']['nivel'];
+        // $nivel = $_SESSION['user']['nivel'];
         // if ($nivel == '1') {
         //     return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         // }
@@ -41,7 +41,7 @@ class Empresas extends BaseController
         $nome = $requests['nome'] ?? null;
 
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuarios_id
-        // $userSession = $_SESSION['admpassagens']['user'];
+        // $userSession = $_SESSION['user'];
         // if ($userSession['nivel'] == '1') {
         //     $params['usuarios_id'] = $userSession['id'];
         // } else {
@@ -83,7 +83,7 @@ class Empresas extends BaseController
      */
     public function save(Request $request, Response $response, array $args)
     {
-        // $nivel = $_SESSION['admpassagens']['user']['nivel'];
+        // $nivel = $_SESSION['user']['nivel'];
         // if ($nivel == '1') {
         //     return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         // }

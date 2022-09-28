@@ -42,7 +42,7 @@
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
-                        $usersession = $session['session']['user'] ?? false;
+                        $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                             <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar pedido</button>
                         <?php endif ?>
@@ -89,7 +89,7 @@
                                 <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
-                                    $usersession = $session['session']['user'] ?? false;
+                                    $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-cpf="<?= $pedido->cpf ?>" data-valor="<?= str_replace('.', ',', $pedido->valor) ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
                                             <i class="far fa-edit"></i> Editar</button>
@@ -261,6 +261,7 @@
             reverse: true
         });
         jQuery("#status").val(este.data('status'));
+        jQuery("#mediumModalLabel").html('Pedido '+(este.data('codigo')?este.data('codigo'):''));
 
         jQuery("#formMediumModal").modal("show")
     });

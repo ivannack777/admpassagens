@@ -26,7 +26,7 @@ class ExcluirController
      */
     public function exclude(Request $request, Response $response, array $args)
     {
-        $nivel = $_SESSION['admpassagens']['user']['nivel'];
+        $nivel = $_SESSION['user']['nivel'];
         if ($nivel == '1') {
             return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         }
@@ -80,14 +80,14 @@ class ExcluirController
         $tabela->where('id', '=', $id);
         $result = $tabela->get();
         // var_dump( DB::getQueryLog());
-        // var_dump($result, $_SESSION['admpassagens']['user']['id']);exit;
+        // var_dump($result, $_SESSION['user']['id']);exit;
 
         if ($result->count() === 0) {
             return $response->withJson($result, false, 'Não foi localizado');
         } else {
             $dados = [
                 'excluido' => 'S',
-                'excluido_por' => $_SESSION['admpassagens']['user']['id'],
+                'excluido_por' => $_SESSION['user']['id'],
                 'excluido_data' => date('Y-m-d H:i:s'),
             ];
             $tabela->where('id', '=', $id)->update($dados);

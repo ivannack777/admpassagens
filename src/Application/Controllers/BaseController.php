@@ -21,9 +21,9 @@ class BaseController
     {
         $this->container = $container;
         $this->views = new PhpRenderer('../Views');
-        $session = $_SESSION['admpassagens'] ?? false;
-        $this->views->setAttributes(['session'=> $session] );
-        $this->usersession = $session;
+        $userSession = $_SESSION['user'] ?? false;
+        $this->views->setAttributes(['userSession'=> $userSession] );
+        $this->usersession = $userSession;
     }
 
     /**
@@ -65,7 +65,8 @@ class BaseController
     }
 
     public function getUserSession($idx=false){
-        $userSession = $_SESSION['admpassagens']['user'] ?? false;
+
+        $userSession = $_SESSION['user'] ?? false;
         if($userSession){
             return $idx ? $userSession[$idx]??null : $userSession;
         }

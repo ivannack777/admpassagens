@@ -42,7 +42,7 @@
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
-                        $usersession = $session['session']['user'] ?? false;
+                        $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                             <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar tipo de veículo</button>
                         <?php endif ?>
@@ -84,7 +84,7 @@
                                 <td><span id="label_descricao<?= $tipo->id ?>"><?= $tipo->descricao ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
-                                    $usersession = $session['session']['user'] ?? false;
+                                    $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $tipo->id ?>" data-nome="<?= $tipo->nome ?>" data-descricao="<?= $tipo->descricao ?>">
                                             <i class="far fa-edit"></i> Editar</button>
@@ -186,6 +186,7 @@
         var id = jQuery("#tipo_id").val(este.data('id'));
         jQuery("#nome").val(este.data('nome'));
         jQuery("#descricao").val(este.data('descricao'));
+        jQuery("#mediumModalLabel").html('Tipo de veículo '+(este.data('nome')?este.data('nome'):''));
         jQuery("#formMediumModal").modal("show")
     });
 

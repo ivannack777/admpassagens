@@ -20,7 +20,7 @@
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
-                        $usersession = $session['session']['user'] ?? false;
+                        $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                             <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar usuário</button>
                         <?php endif ?>
@@ -64,7 +64,7 @@
                                 <td><span id="label_nivel<?= $usuario->id ?>"><?= $usuario->nivel ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
-                                    $usersession = $session['session']['user'] ?? false;
+                                    $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $usuario->id ?>" data-usuario="<?= $usuario->usuario ?>" data-email="<?= $usuario->email ?>" data-celular="<?= $usuario->celular ?>" data-pessoas_id="<?= $usuario->pessoas_id ?>" data-nivel="<?= $usuario->nivel ?>">
                                             </i>Editar</button>
@@ -163,7 +163,7 @@
             <div class="modal-footer">
                 <div>
                     <?php $session = $this->getAttributes();
-                    $usersession = $session['session']['user'] ?? false;
+                    $usersession = $session['userSession'] ?? false;
                     if ($usersession && $usersession['nivel'] >= 5) : ?>
                         <button id="btnExcluir" class="btn btn-outline-danger" title="Excluir"><i class="fas fa-times"></i> Excluir</button>
                         <button class="btn btn-outline-warning chpass" title="Alterar senha" style="margin-right: 8px;" data-id="<?= $usuario->id ?>"><i class="fas fa-lock"></i> Alterar senha</button>
@@ -236,7 +236,7 @@
         jQuery("#usuario").val(este.data('usuario'));
         jQuery("#email").val(este.data('email'));
         jQuery("#celular").val(este.data('celular')).mask('00 00000-0000');
-
+        jQuery("#mediumModalLabel").html('Usuário '+(este.data('usuario')?este.data('usuario'):''));
         jQuery("#formMediumModal").modal("show")
     });
 

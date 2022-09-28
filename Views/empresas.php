@@ -41,7 +41,7 @@
                     </div>
                     <div class="">
                     <?php $session = $this->getAttributes();
-                                    $usersession = $session['session']['user'] ?? false;
+                                    $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                         <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar empresa</button>
                         <?php endif ?>
@@ -81,7 +81,7 @@
                                 <td><span id="cidade<?= $empresa->id ?>"><?= $empresa->cidade . ' - ' . $empresa->uf ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
-                                    $usersession = $session['session']['user'] ?? false;
+                                    $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $empresa->id ?>" data-nome="<?= $empresa->nome ?>" data-cnpj="<?= $empresa->cnpj ?>" data-cep="<?= $empresa->cep ?>" data-logradouro="<?= $empresa->logradouro ?>" data-numero="<?= $empresa->numero ?>" data-bairro="<?= $empresa->bairro ?>" data-uf="<?= $empresa->uf ?>" data-cidade="<?= $empresa->cidade ?>">
                                             <i class="far fa-edit"></i> Editar</button>
@@ -201,7 +201,7 @@
                         <small class="form-text text-muted">ex. Rincão</small>
                     </div>
                     <?php $session = $this->getAttributes();
-                    $usersession = $session['session']['user'] ?? false;
+                    $usersession = $session['userSession'] ?? false;
                     if ($usersession && $usersession['nivel'] >= 5) : ?>
                         <div class="form-group">
                             <label class="control-label mb-1" for="usuarios_id">Usuário</label>
@@ -247,6 +247,7 @@
             }
         });
         jQuery("#cidade").val(este.data('cidade'));
+        jQuery("#mediumModalLabel").html('Empresa '+(este.data('nome')?este.data('nome'):''));
         jQuery("#formMediumModal").modal("show")
     });
 

@@ -40,7 +40,7 @@
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
-                        $usersession = $session['session']['user'] ?? false;
+                        $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                             <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar veículo</button>
                         <?php endif ?>
@@ -88,7 +88,7 @@
                                 <td><span id="label_tipo<?= $veiculo->id ?>"><?= $veiculo->tipo_nome ?> <?= $veiculo->tipo_descricao ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
-                                    $usersession = $session['session']['user'] ?? false;
+                                    $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" title="editar" style="margin-right: 8px;" data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
                                             <i class="far fa-edit"></i> Editar</button>
@@ -235,7 +235,7 @@
         jQuery("#ano").val(este.data('ano'));
         jQuery("#codigo").val(este.data('codigo'));
         jQuery("#placa").val(este.data('placa'));
-
+        jQuery("#mediumModalLabel").html('Veículo '+(este.data('marca')?este.data('marca'):'')+' '+(este.data('modelo')?este.data('modelo'):''));
         jQuery("#formMediumModal").modal("show")
     });
 

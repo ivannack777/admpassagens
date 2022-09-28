@@ -37,11 +37,11 @@
                 <div class="flex-row flex-between">
                     <div class="">
                         <h4 class="card-title mb-0">Viagens</h4>
-                        <div class="small text-muted"><?= $viagens->count() ?> viagens estão sendo exibidas</div>
+                        <div class="small text-muted"><?= $viagens->count() ?> viagens</div>
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
-                        $usersession = $session['session']['user'] ?? false;
+                        $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                             <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar viagem</button>
                         <?php endif ?>
@@ -98,10 +98,21 @@
                                 </td>
                                 <td>
                                     <?php $session = $this->getAttributes();
-                                    $usersession = $session['session']['user'] ?? false;
+                                    $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $viagem->id ?>" data-veiculos_id="<?= $viagem->veiculos_id ?>" data-descricao="<?= $viagem->descricao ?>" data-origem_id="<?= $viagem->origem_id ?>" data-destino_id="<?= $viagem->destino_id ?>" data-valor="<?= str_replace('.', ',', $viagem->valor) ?>" data-data_saida="<?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?>" data-data_chegada="<?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?>" data-detalhes="<?= $viagem->detalhes ?>">
-                                            <i class="far fa-edit"></i> Editar</button>
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $viagem->id ?>" data-veiculos_id="<?= $viagem->veiculos_id ?>" data-descricao="<?= $viagem->descricao ?>" 
+                                            data-origem="<?= $viagem->localidade_origem ?>" 
+                                            data-origem_id="<?= $viagem->origem_id ?>" 
+                                            data-destino="<?= $viagem->localidade_destino ?>" 
+                                            data-destino_id="<?= $viagem->destino_id ?>" 
+                                            data-valor="<?= str_replace('.', ',', $viagem->valor) ?>" 
+                                            data-data_saida="<?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?>" 
+                                            data-data_chegada="<?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?>" 
+                                            data-assentos="<?= $viagem->assentos ?>"
+                                            data-assentos_tipo="<?= $viagem->assentos_tipo ?>"
+                                            data-detalhes="<?= $viagem->detalhes ?>"
+                                        >
+                                        <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                 </td>
                             </tr>
@@ -201,7 +212,23 @@
                     <div class="form-group">
                         <label class="control-label mb-1" for="valor">Valor</label>
                         <span class="text-danger error-label"></span>
-                        <input type="text" class="form-elements" id="valor" name="valor" value="" placeholder="0,00" />
+                        <input type="text" class="form-elements valores" id="valor" name="valor" value="" placeholder="0,00" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="assentos">Assentos</label>
+                        <span class="text-danger error-label"></span>
+                        <input type="text" class="form-elements assentos" id="assentos" name="assentos" value="" placeholder="Quantidade de assentos" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="assentos_tipo">Tipos de assentos</label>
+                        <span class="text-danger error-label"></span>
+                        <select type="text" class="form-elements" id="assentos_tipo" name="assentos_tipo">
+                            <option value="0">Selecione...</option>
+                            <option value="Comum">Comum</option>
+                            <option value="Leito">Leito</option>
+                            <option value="Leito-cama">Leito-cama</option>
+                            <option value="Semi-leito">Semi-leito</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="detalhes">Detalhes</label>
@@ -240,11 +267,12 @@
 </div>
 
 <script>
-    jQuery('#valor').mask("#.##0,00", {
+    jQuery('.valores').mask("#.##0,00", {
         reverse: true
     });
 
     jQuery(".datas").mask('00/00/0000 00:00');
+    jQuery(".assentos").mask('0#');
 
     jQuery(".datas").datetimepicker({
         format: "d/m/Y H:i"
@@ -323,15 +351,26 @@
         } else {
             jQuery('#veiculos_id option[value="0"]').prop('selected', true);
         }
+        if (este.data('assentos_tipo')) {
+            jQuery('#assentos_tipo option[value="' + este.data('assentos_tipo') + '"]').prop('selected', true);
+        } else {
+            jQuery('#assentos_tipo option[value="0"]').prop('selected', true);
+        }
 
         jQuery("#descricao").val(este.data('descricao'));
+        jQuery("#origem").val(este.data('origem'));
         jQuery("#origem_id").val(este.data('origem_id'));
+        jQuery("#destino").val(este.data('destino'));
         jQuery("#destino_id").val(este.data('destino_id'));
         jQuery("#data_saida").val(este.data('data_saida'));
         jQuery("#data_chegada").val(este.data('data_chegada'));
         jQuery("#valor").val(este.data('valor'));
+        jQuery("#assentos").val(este.data('assentos'));
+        jQuery("#assentos_tipo").val(este.data('assentos_tipo'));
         jQuery("#detalhes").val(este.data('detalhes'));
 
+        jQuery("#mediumModalLabel").html('Viagem '+(este.data('descricao')?este.data('descricao'):''));
+        
         jQuery("#formMediumModal").modal("show")
     });
 
@@ -350,8 +389,8 @@
             },
             success: function(retorno) {
                 if (retorno.status == true) {
-                    jQuery("#formMediumModal").modal("hide");
-                    show_message(retorno.msg, 'success');
+                    
+                    show_message(retorno.msg, 'success', null, '/viagens');
 
                     let data_saida = new moment(retorno.data[0].data_saida);
                     let data_chegada = new moment(retorno.data[0].data_chegada);

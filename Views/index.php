@@ -5,7 +5,7 @@
       <h2>Painel administrativo</h2>
     </div>
   </div>
-  <?php if (isset($_SESSION['admpassagens']['user'])) : ?>
+  <?php if (isset($_SESSION['user'])) : ?>
   <div class="col-sm-6 col-lg-3">
         <div class="card text-white bg-flat-color-1">
             <div class="card-body pb-0">

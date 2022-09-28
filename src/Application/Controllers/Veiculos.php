@@ -44,7 +44,7 @@ class Veiculos extends BaseController
         $placa = $requests['placa'] ?? null;
 
         //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuarios_id
-        // $userSession = $_SESSION['admpassagens']['user'];
+        // $userSession = $_SESSION['user'];
 
         if (!empty($id)) {
             $params['veiculos.id'] = $id;
@@ -207,7 +207,7 @@ class Veiculos extends BaseController
      */
     public function tipo_save(Request $request, Response $response, array $args)
     {
-        // $nivel = $_SESSION['admpassagens']['user']['nivel'];
+        // $nivel = $_SESSION['user']['nivel'];
         // if ($nivel == '1') {
         //     return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         // }

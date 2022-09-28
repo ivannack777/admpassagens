@@ -21,7 +21,6 @@ class Home extends BaseController
     {
         parent::__construct();
         $this->container = $container;
-        session_start();
     }
 
     /**

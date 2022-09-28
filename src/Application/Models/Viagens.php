@@ -6,7 +6,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class Viagens extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['veiculos_id', 'descricao', 'origem_id', 'destino_id', 'data_saida', 'data_chegada', 'detalhes','valor'];
+    protected $fillable = ['veiculos_id', 'descricao', 'origem_id', 'destino_id', 'data_saida', 'data_chegada', 'detalhes','valor','assentos','assentos_tipo'];
     public $timestamps = false;
     public $table = 'viagens';
 
@@ -43,6 +43,8 @@ class Viagens extends \Illuminate\Database\Eloquent\Model
             'viagens.data_chegada',
             'viagens.valor',
             'viagens.detalhes',
+            'viagens.assentos',
+            'viagens.assentos_tipo',
             'veiculos.marca',
             'veiculos.modelo',
             'veiculos.ano',
@@ -63,4 +65,6 @@ class Viagens extends \Illuminate\Database\Eloquent\Model
 
         return $result;
     }
+
+
 }

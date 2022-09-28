@@ -3,7 +3,7 @@
     <header id="header" class="header">
 
         <div class="header-menu">
-            <?php if (isset($_SESSION['admpassagens']['user'])) : ?>
+            <?php if (isset($_SESSION['user'])) : ?>
                 <div class="col-sm-7">
                     <a id="menuToggle" class="menutoggle pull-left"><i class="fas fa-bars"></i></a>
                     <div class="header-left">
