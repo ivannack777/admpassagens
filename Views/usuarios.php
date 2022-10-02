@@ -66,10 +66,20 @@
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                    <!-- Editar -->
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $usuario->id ?>" data-usuario="<?= $usuario->usuario ?>" data-email="<?= $usuario->email ?>" data-celular="<?= $usuario->celular ?>" data-pessoas_id="<?= $usuario->pessoas_id ?>" data-nivel="<?= $usuario->nivel ?>">
                                             </i>Editar</button>
                                     <?php endif ?>
-
+                                    <!-- Favoritar -->
+                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" 
+                                    data-item="usuarios" data-item_id="<?= $usuario->id ?>" 
+                                        >
+                                        <?php if(isset($usuario->favoritos_id) && !empty($usuario->favoritos_id)): ?>
+                                            <i class="fas fa-heart"></i> 
+                                        <?php else: ?>
+                                            <i class="far fa-heart"></i>
+                                        <?php endif ?>
+                                    </button>
                                 </td>
                             </tr>
 

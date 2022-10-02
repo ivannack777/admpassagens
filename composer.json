@@ -26,6 +26,7 @@
         "ext-json": "*",
         "erusev/parsedown": "^1.7",
         "illuminate/database": "^8.83",
+        "mercadopago/dx-php": "2.5.1",
         "monolog/monolog": "^2.6",
         "php-di/php-di": "^6.4",
         "slim/http": "^1.2",

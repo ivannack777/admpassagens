@@ -65,7 +65,6 @@ class Empresas extends BaseController
 
         
         if ($args['modo']??false == 'lista') {
-            sleep(1);
             return $this->views->render($response, 'veiculos_list.php', $dados);
         } else {
             $this->views->render($response, 'header.php', $dados);

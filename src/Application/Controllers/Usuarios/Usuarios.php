@@ -80,7 +80,6 @@ class Usuarios extends BaseController
 
         //return $response->withJson($Usuarios, true, $Usuarios->count() . ($Usuarios->count()>1?' usuários encontrados':' usuário encontrado'));
         if ($args['modo']??false == 'lista') {
-            sleep(1);
             return $this->views->render($response, 'veiculos_list.php', $dados);
         } else {
             $this->views->render($response, 'header.php', $dados);

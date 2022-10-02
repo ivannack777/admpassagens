@@ -64,6 +64,9 @@ class ExcluirController
             case 'empresas':
                 $tabela = 'empresas';
                 break;
+            case 'comentarios':
+                $tabela = 'comentarios';
+                break;
             default:
                 $tabela = false;
                 break;

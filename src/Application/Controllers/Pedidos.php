@@ -64,7 +64,6 @@ class Pedidos extends BaseController
 
         //usando $this->view setado em BaseController
         if ($args['modo']??false == 'lista') {
-            sleep(1);
             return $this->views->render($response, 'viagens_list.php', $dados);
         } else {
             $this->views->render($response, 'header.php', $dados);
@@ -127,7 +126,7 @@ class Pedidos extends BaseController
                 $dados['codigo'] = date('ymd') . sprintf('%05s', $clientes_id) . sprintf('%05s', $pedidoMax) ;
                 // var_dump($dados);exit;
                 $pedidosInsert = PedidosModel::create($dados);
-                $pedidosNew = PedidosModel::list(['id' => $pedidosInsert->id]);
+                $pedidosNew = PedidosModel::list(['pedidos.id' => $pedidosInsert->id]);
 
                 $viagens = ViagensModel::where('id',$viagens_id)->first();
                 // var_dump($viagens->origem_id, $viagens->destino_id);exit;

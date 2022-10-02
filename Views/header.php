@@ -16,7 +16,10 @@
     <link rel="apple-touch-icon" href="<?= $this->siteUrl('apple-icon.png') ?>">
     <link rel="shortcut icon" href="<?= $this->siteUrl('favicon.ico') ?>">
 
-    <link rel="stylesheet" href="<?= $this->siteUrl('vendors/bootstrap/dist/css/bootstrap.min.css') ?>">
+    <!-- <link rel="stylesheet" href="<?= $this->siteUrl('vendors/bootstrap/dist/css/bootstrap.min.css') ?>"> -->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
     <!-- <link rel="stylesheet" href="<?= $this->siteUrl('vendors/font-awesome/css/font-awesome.min.css') ?>"> -->
     <link rel="stylesheet" href="<?= $this->siteUrl('vendors/themify-icons/css/themify-icons.css') ?>">
     <link rel="stylesheet" href="<?= $this->siteUrl('vendors/flag-icon-css/css/flag-icon.min.css') ?>">

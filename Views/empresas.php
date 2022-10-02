@@ -40,10 +40,10 @@
                         <div class="small text-muted"><?= $empresas->count() ?> empresas estão sendo exibidas</div>
                     </div>
                     <div class="">
-                    <?php $session = $this->getAttributes();
-                                    $usersession = $session['userSession'] ?? false;
-                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
-                        <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar empresa</button>
+                        <?php $session = $this->getAttributes();
+                        $usersession = $session['userSession'] ?? false;
+                        if ($usersession && $usersession['nivel'] >= 3) : ?>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar empresa</button>
                         <?php endif ?>
                     </div>
                     <div class="">
@@ -83,9 +83,20 @@
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <!-- Editar -->
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $empresa->id ?>" data-nome="<?= $empresa->nome ?>" data-cnpj="<?= $empresa->cnpj ?>" data-cep="<?= $empresa->cep ?>" data-logradouro="<?= $empresa->logradouro ?>" data-numero="<?= $empresa->numero ?>" data-bairro="<?= $empresa->bairro ?>" data-uf="<?= $empresa->uf ?>" data-cidade="<?= $empresa->cidade ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
+                                    <!-- Favoritar -->
+                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" 
+                                    data-item="empresas"
+                                    data-item_id="<?= $empresa->id ?>">
+                                        <?php if (isset($empresa->favoritos_id) && !empty($empresa->favoritos_id)) : ?>
+                                            <i class="fas fa-heart"></i>
+                                        <?php else : ?>
+                                            <i class="far fa-heart"></i>
+                                        <?php endif ?>
+                                    </button>
                                 </td>
                             </tr>
 
@@ -247,7 +258,7 @@
             }
         });
         jQuery("#cidade").val(este.data('cidade'));
-        jQuery("#mediumModalLabel").html('Empresa '+(este.data('nome')?este.data('nome'):''));
+        jQuery("#mediumModalLabel").html('Empresa ' + (este.data('nome') ? este.data('nome') : ''));
         jQuery("#formMediumModal").modal("show")
     });
 

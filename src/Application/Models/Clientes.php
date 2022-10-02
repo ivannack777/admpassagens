@@ -19,16 +19,31 @@ class Clientes extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $clientes = DB::table('clientes');
-        $clientes->select(
+        $selectArr = [
             'clientes.id',
             'clientes.nome',
             'clientes.cpf',
             'clientes.celular',
             'clientes.email'
-        );
+        ];
+
         foreach ($params as $campo => $param) {
             $clientes->where($campo, '=' , $param);
         }
+
+        
+        if(isset($_SESSION['user'])){
+            array_push($selectArr, 'favoritos.id as favoritos_id');
+            $clientes->join('favoritos', function($join){
+
+                $join->on("favoritos.item_id", '=', "clientes.id")
+                ->where('favoritos.item', '=', 'clientes')
+                ->where('favoritos.usuario_id', '=', $_SESSION['user']['id']);
+            }, null,  null,'left');
+        }
+
+        $clientes->select($selectArr);
+
         $clientes->where('clientes.excluido', 'N');
         $result = $clientes->get();
         

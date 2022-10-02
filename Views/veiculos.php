@@ -90,9 +90,18 @@
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <!-- Editar -->
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" title="editar" style="margin-right: 8px;" data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
+                                    <!-- Favoritar -->
+                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="veiculos" data-item_id="<?= $veiculo->id ?>">
+                                        <?php if (isset($veiculo->favoritos_id) && !empty($veiculo->favoritos_id)) : ?>
+                                            <i class="fas fa-heart"></i>
+                                        <?php else : ?>
+                                            <i class="far fa-heart"></i>
+                                        <?php endif ?>
+                                    </button>
                                 </td>
                             </tr>
 
@@ -235,7 +244,7 @@
         jQuery("#ano").val(este.data('ano'));
         jQuery("#codigo").val(este.data('codigo'));
         jQuery("#placa").val(este.data('placa'));
-        jQuery("#mediumModalLabel").html('Veículo '+(este.data('marca')?este.data('marca'):'')+' '+(este.data('modelo')?este.data('modelo'):''));
+        jQuery("#mediumModalLabel").html('Veículo ' + (este.data('marca') ? este.data('marca') : '') + ' ' + (este.data('modelo') ? este.data('modelo') : ''));
         jQuery("#formMediumModal").modal("show")
     });
 
@@ -252,7 +261,7 @@
             success: function(retorno) {
                 if (retorno.status == true) {
                     jQuery("#formMediumModal").modal("hide");
-                    show_message(retorno.msg, 'success',null, '/veiculos');
+                    show_message(retorno.msg, 'success', null, '/veiculos');
                     jQuery("#label_marca" + id).html(retorno.data[0].nome);
                     jQuery("#label_modelo" + id).html(retorno.data[0].descricao);
                     jQuery("#label_ano" + id).html(retorno.data[0].ano);

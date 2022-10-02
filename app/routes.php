@@ -10,6 +10,8 @@ use App\Application\Controllers\Localidades;
 use App\Application\Controllers\Usuarios\Login;
 use App\Application\Controllers\Usuarios\Pessoas;
 use App\Application\Controllers\Usuarios\Usuarios;
+use App\Application\Controllers\Usuarios\Favoritos;
+use App\Application\Controllers\Usuarios\Comentarios;
 use App\Application\Controllers\Veiculos;
 use App\Application\Controllers\Viagens;
 use App\Application\Controllers\Clientes;
@@ -102,10 +104,10 @@ return function (App $app, Request $request) {
 
     $app->group('/pedidos', function (Group $group) {
         $group->map(['GET', 'POST'], '', [Pedidos::class, 'list']);
-        $group->post('/salvar[/[{id}]]', [Pedidos::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
-
+    $app->post('/pedidos/salvar[/[{id}]]', [Pedidos::class, 'save']);
+    
     $app->group('/enderecos', function (Group $group) {
         $group->map(['GET', 'POST'], '', [Enderecos::class, 'list']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
@@ -124,4 +126,33 @@ return function (App $app, Request $request) {
         });
     })->add(CheckTokenMiddleware::class);
     $app->post('/empresas/salvar[/[{id}]]', [Empresas::class, 'save']);
+
+
+    $app->group('/favoritos', function (Group $group) {
+        $group->map(['GET', 'POST'], '', [Favoritos::class, 'list']);
+        $group->post('/excluir/{id}', [ExcluirController::class, 'exclude'])->add(function (Request $request, RequestHandler $handler) {
+            // passando dados extras para o controller
+            $request = $request->withAttribute('tablename', 'empreendimento');
+            // no controller, o dado é pego assim:
+            // $dadoExtra = $request->getAttribute('tablename');
+            
+            return $handler->handle($request);
+        });
+    })->add(CheckTokenMiddleware::class);
+    $app->post('/favoritos/salvar[/]', [Favoritos::class, 'save']);//->add(CheckTokenMiddleware::class);
+
+
+    $app->group('/comentarios', function (Group $group) {
+        $group->map(['GET', 'POST'], '/ver', [Comentarios::class, 'list']);
+        $group->post('/excluir/{id}', [ExcluirController::class, 'exclude'])->add(function (Request $request, RequestHandler $handler) {
+            // passando dados extras para o controller
+            $request = $request->withAttribute('tablename', 'empreendimento');
+            // no controller, o dado é pego assim:
+            // $dadoExtra = $request->getAttribute('tablename');
+            
+            return $handler->handle($request);
+        });
+    })->add(CheckTokenMiddleware::class);
+    $app->post('/comentarios/salvar[/[{id}]]', [Comentarios::class, 'save']);//->add(CheckTokenMiddleware::class);
+
 };

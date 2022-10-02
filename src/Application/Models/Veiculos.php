@@ -19,7 +19,7 @@ class Veiculos extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $veiculos = DB::table('veiculos');
-        $veiculos->select(
+        $selectArr = [
             'veiculos.id',
             'veiculos.empresas_id',
             'veiculos.veiculos_tipo_id',
@@ -31,15 +31,29 @@ class Veiculos extends \Illuminate\Database\Eloquent\Model
             'veiculos_tipo.nome as tipo_nome',
             'veiculos_tipo.descricao as tipo_descricao',
             'empresas.nome as empresa',
-        );
+        ];
         // $veiculos->selectRaw("'' as icone");
         // $veiculos->selectRaw("'' as icone_power");
         foreach ($params as $campo => $param) {
             $veiculos->where($campo, '=', $param);
         }
-        $veiculos->where('veiculos.excluido', 'N');
+
         $veiculos->join('veiculos_tipo', 'veiculos.veiculos_tipo_id', '=', 'veiculos_tipo.id', 'left');
         $veiculos->join('empresas', 'veiculos.empresas_id', '=', 'empresas.id', 'left');
+
+        if(isset($_SESSION['user'])){
+            array_push($selectArr, 'favoritos.id as favoritos_id');
+            $veiculos->join('favoritos', function($join){
+
+                $join->on("favoritos.item_id", '=', "veiculos.id")
+                ->where('favoritos.item', '=', 'veiculos')
+                ->where('favoritos.usuario_id', '=', $_SESSION['user']['id']);
+            }, null,  null,'left');
+        }
+
+        $veiculos->select($selectArr);
+
+        $veiculos->where('veiculos.excluido', 'N');
         $result = $veiculos->get();
         // print_r( DB::getQueryLog());  var_dump( $params);exit;
 

@@ -57,7 +57,6 @@ class Clientes extends BaseController
 
                 //usando $this->view setado em BaseController
                 if ($args['modo']??false == 'lista') {
-                    sleep(1);
                     return $this->views->render($response, 'clientes.php', $dados);
                 } else {
                     $this->views->render($response, 'header.php', $dados);

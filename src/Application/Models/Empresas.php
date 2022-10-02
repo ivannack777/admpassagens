@@ -19,7 +19,7 @@ class Empresas extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $empresas = DB::table('empresas');
-        $empresas->select('id', 'usuarios_id', 'enderecos_id', 'nome', 'cnpj', 'cep', 'logradouro', 'numero', 'bairro', 'uf', 'cidade');
+        $selectArr = ['empresas.id', 'empresas.usuarios_id', 'empresas.enderecos_id', 'empresas.nome', 'empresas.cnpj', 'empresas.cep', 'empresas.logradouro', 'empresas.numero', 'empresas.bairro', 'empresas.uf', 'empresas.cidade'];
         foreach ($params as $campo => $param) {
             if ($campo == 'nome') {
                 $empresas->where($campo, 'like', "%{$param}%");
@@ -27,6 +27,19 @@ class Empresas extends \Illuminate\Database\Eloquent\Model
                 $empresas->where($campo, '=', $param);
             }
         }
+
+        if(isset($_SESSION['user'])){
+            array_push($selectArr, 'favoritos.id as favoritos_id');
+            $empresas->join('favoritos', function($join){
+
+                $join->on("favoritos.item_id", '=', "empresas.id")
+                ->where('favoritos.item', '=', 'empresas')
+                ->where('favoritos.usuario_id', '=', $_SESSION['user']['id']);
+            }, null,  null,'left');
+        }
+
+        $empresas->select($selectArr);
+
         $empresas->where('empresas.excluido', 'N');
         $result = $empresas->get();
         // var_dump( DB::getQueryLog(), $params);exit;

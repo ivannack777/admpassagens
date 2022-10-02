@@ -85,9 +85,18 @@
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                    <!-- Editar -->
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $cliente->id ?>" data-nome="<?= $cliente->nome ?>" data-cpf="<?= $cliente->cpf ?>" data-celular="<?= $cliente->celular ?>" data-email="<?= $cliente->email ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
+                                    <!-- Favoritar -->
+                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="clientes" data-item_id="<?= $cliente->id ?>">
+                                        <?php if (isset($cliente->favoritos_id) && !empty($cliente->favoritos_id)) : ?>
+                                            <i class="fas fa-heart"></i>
+                                        <?php else : ?>
+                                            <i class="far fa-heart"></i>
+                                        <?php endif ?>
+                                    </button>
                                 </td>
                             </tr>
 
@@ -198,8 +207,8 @@
         jQuery("#cpf").val(este.data('cpf')).mask("000.000.000-00");
         jQuery("#celular").val(este.data('celular')).mask("00 00000-0000");
         jQuery("#email").val(este.data('email'));
-        jQuery("#mediumModalLabel").append(' '+este.data('nome'));
-        jQuery("#mediumModalLabel").html('Cliente '+(este.data('nome')?este.data('nome'):''));
+        jQuery("#mediumModalLabel").append(' ' + este.data('nome'));
+        jQuery("#mediumModalLabel").html('Cliente ' + (este.data('nome') ? este.data('nome') : ''));
         jQuery("#formMediumModal").modal("show")
     });
 

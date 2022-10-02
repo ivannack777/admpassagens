@@ -206,9 +206,9 @@ class Login extends BaseController
                     if ($usuariosLog) {
                         //verifica se 'rememberuri' existe na sessão 
                         $rememberuri = $_SESSION['rememberuri'] ?? false;
-                        
+
                         //se exisitir faz o redirect para o endereço, senão redireciona para raiz
-                        return $response->withHeader('Location', $rememberuri ? $rememberuri->getPath() : '/')->withStatus(302);
+                        return $response->withHeader('Location', $rememberuri ? $rememberuri : '/')->withStatus(302);
                     } else {
                         $dados['msg'] =  'Falha ao salvar login';
                         $this->views->render($response, 'header.php', $dados);

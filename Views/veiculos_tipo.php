@@ -86,9 +86,18 @@
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <!-- Editar -->
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $tipo->id ?>" data-nome="<?= $tipo->nome ?>" data-descricao="<?= $tipo->descricao ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
+                                    <!-- Favoritar -->
+                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="veiculos_tipo" data-item_id="<?= $tipo->id ?>">
+                                        <?php if (isset($tipo->favoritos_id) && !empty($tipo->favoritos_id)) : ?>
+                                            <i class="fas fa-heart"></i>
+                                        <?php else : ?>
+                                            <i class="far fa-heart"></i>
+                                        <?php endif ?>
+                                    </button>
                                 </td>
                             </tr>
 
@@ -186,7 +195,7 @@
         var id = jQuery("#tipo_id").val(este.data('id'));
         jQuery("#nome").val(este.data('nome'));
         jQuery("#descricao").val(este.data('descricao'));
-        jQuery("#mediumModalLabel").html('Tipo de veículo '+(este.data('nome')?este.data('nome'):''));
+        jQuery("#mediumModalLabel").html('Tipo de veículo ' + (este.data('nome') ? este.data('nome') : ''));
         jQuery("#formMediumModal").modal("show")
     });
 

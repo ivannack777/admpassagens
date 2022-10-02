@@ -18,8 +18,9 @@ class Viagens extends \Illuminate\Database\Eloquent\Model
     public static function list(array $params = [])
     {
         // DB::enableQueryLog();
+        // var_dump($_SESSION);exit;
         $viagens = DB::table('viagens');
-        $viagens->select(
+        $selectArr = [
             'viagens.id',
             'viagens.key',
             'viagens.veiculos_id',
@@ -50,17 +51,34 @@ class Viagens extends \Illuminate\Database\Eloquent\Model
             'veiculos.ano',
             'veiculos.codigo',
             'veiculos.placa',
-    );
+        ];
+        
         foreach ($params as $campo => $param) {
             $viagens->where($campo, '=', $param);
         }
         $viagens->join('veiculos', 'veiculos.id', '=', 'viagens.veiculos_id', 'left');
         $viagens->join(DB::raw('ibge_localidades localidades_origem'), 'localidades_origem.id', '=', 'viagens.origem_id', 'left');
         $viagens->join(DB::raw('ibge_localidades localidades_destino'), 'localidades_destino.id', '=', 'viagens.destino_id', 'left');
+
+        if(isset($_SESSION['user'])){
+            array_push($selectArr, 'favoritos.id as favoritos_id');
+            $viagens->join('favoritos', function($join){
+
+                $join->on("favoritos.item_id", '=', "viagens.id")
+                ->where('favoritos.item', '=', 'viagens')
+                ->where('favoritos.usuario_id', '=', $_SESSION['user']['id']);
+            }, null,  null,'left');
+        }
+
+        $viagens->select($selectArr);
+
         $viagens->where('viagens.excluido', '=', 'N');
 
         $result = $viagens->get();
-        // var_dump(DB::getQueryLog(), $params);
+        // echo "<pre>";
+        // var_export(DB::getQueryLog());
+        // var_export($params);
+        // echo "</pre>";
         // exit;
 
         return $result;

@@ -100,6 +100,7 @@
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                    <!-- Editar -->
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $viagem->id ?>" data-veiculos_id="<?= $viagem->veiculos_id ?>" data-descricao="<?= $viagem->descricao ?>" 
                                             data-origem="<?= $viagem->localidade_origem ?>" 
                                             data-origem_id="<?= $viagem->origem_id ?>" 
@@ -114,6 +115,23 @@
                                         >
                                         <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
+                                    <!-- Favoritar -->
+                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" 
+                                    data-item="viagens" data-item_id="<?= $viagem->id ?>" 
+                                        >
+                                        <?php if(isset($viagem->favoritos_id) && !empty($viagem->favoritos_id)): ?>
+                                            <i class="fas fa-heart"></i> 
+                                        <?php else: ?>
+                                            <i class="far fa-heart"></i>
+                                        <?php endif ?>
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm btnComentario" title="Comentarios" style="margin-right: 8px;" 
+                                        data-item="viagens" 
+                                        data-item_id="<?= $viagem->id ?>" 
+                                        data-title="<?= $viagem->descricao ?>" 
+                                        >
+                                        <i class="far fa-comment"></i> 
+                                    </button>
                                 </td>
                             </tr>
 
@@ -425,4 +443,8 @@
         var redirect = '<?= $this->siteUrl('viagens') ?>';
         excluir(rota, 'Você realmente quer excluir esta viagem?', redirect);
     });
+
+
+
+
 </script>

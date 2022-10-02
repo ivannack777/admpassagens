@@ -19,7 +19,7 @@ class Usuarios extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         $usuarios = DB::table('usuarios');
-        $usuarios->select(
+        $selectArr = [
             'usuarios.id',
             'usuarios.key',
             'usuarios.pessoas_id',
@@ -31,7 +31,8 @@ class Usuarios extends \Illuminate\Database\Eloquent\Model
             'pessoas.nome',
             'pessoas.cpf_cnpj',
             'pessoas.documento',
-        );
+        ];
+
         $usuarios->join('pessoas', 'pessoas.id', '=', 'usuarios.pessoas_id', 'left');
         foreach($params as $campo => $param){
             if ($campo == 'identificador') {
@@ -42,7 +43,18 @@ class Usuarios extends \Illuminate\Database\Eloquent\Model
                 $usuarios->where('usuarios.'.$campo, $param);    
             }
         }
-        
+
+        if(isset($_SESSION['user'])){
+            array_push($selectArr, 'favoritos.id as favoritos_id');
+            $usuarios->join('favoritos', function($join){
+
+                $join->on("favoritos.item_id", '=', "usuarios.id")
+                ->where('favoritos.item', '=', 'usuarios')
+                ->where('favoritos.usuario_id', '=', $_SESSION['user']['id']);
+            }, null,  null,'left');
+        }
+
+        $usuarios->select($selectArr);
         
         $usuarios->where('usuarios.excluido', 'N');
         $result = $usuarios->get();

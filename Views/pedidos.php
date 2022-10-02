@@ -91,9 +91,18 @@
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                        <!-- Editar -->
                                         <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-cpf="<?= $pedido->cpf ?>" data-valor="<?= str_replace('.', ',', $pedido->valor) ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
+                                    <!-- Favoritar -->
+                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="pedidos" data-item_id="<?= $pedido->id ?>">
+                                        <?php if (isset($pedido->favoritos_id) && !empty($pedido->favoritos_id)) : ?>
+                                            <i class="fas fa-heart"></i>
+                                        <?php else : ?>
+                                            <i class="far fa-heart"></i>
+                                        <?php endif ?>
+                                    </button>
                                 </td>
                             </tr>
 
@@ -261,7 +270,7 @@
             reverse: true
         });
         jQuery("#status").val(este.data('status'));
-        jQuery("#mediumModalLabel").html('Pedido '+(este.data('codigo')?este.data('codigo'):''));
+        jQuery("#mediumModalLabel").html('Pedido ' + (este.data('codigo') ? este.data('codigo') : ''));
 
         jQuery("#formMediumModal").modal("show")
     });
@@ -281,8 +290,8 @@
             },
             success: function(retorno) {
                 if (retorno.status == true) {
-                    jQuery("#formMediumModal").modal("hide");
-                    show_message(retorno.msg, 'success');
+                    
+                    show_message(retorno.msg, 'success', null, 'pedidos');
 
                     let data = new moment(retorno.data[0].dataInsret);
 
