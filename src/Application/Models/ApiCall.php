@@ -76,7 +76,7 @@ class ApiCall
         }else{
             curl_close($ch); 
             if(!empty($result)) $retorno = json_decode($result);
-            if(preg_match('/true/i', $_ENV['DEBUG']) && !$retorno ){
+            if(preg_match('/true/i', $_ENV['DEBUG']??'') && !$retorno ){
                 
                 echo "<pre>";
                 var_dump($retorno);

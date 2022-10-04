@@ -200,18 +200,20 @@ class Response implements ResponseInterface
      * This method prepares the response object to return an HTTP Json
      * response to the client.
      *
-     * @param  mixed     $data   The data
-     * @param  int|null  $status The HTTP status code
+     * @param  array|object $data   The data
+     * @param bool          $status o status para o retorno
+     * @param  int|null     $msg a mensagem do retorno
+     * @param  int|null     $statusCode The HTTP status code
      * @param  int       $options Json encoding options
      * @param  int       $depth Json encoding max depth
      * @return static
      */
-    public function withJson($data, ?int $status = null, int $options = 0, int $depth = 512): ResponseInterface
+    public function withJson($data, bool $status, string $msg=null,  ?int $statusCode = null, int $options = 0, int $depth = 512): ResponseInterface
     {
         $padrao = [
             'status' => $status,
             'msg' => $msg,
-            // 'count' => count($data),
+            'count' => count($data),
             'data' => $data,
         ];
     
@@ -225,9 +227,11 @@ class Response implements ResponseInterface
             ->withHeader('Content-Type', 'application/json')
             ->withBody($this->streamFactory->createStream($json));
 
-        if ($status !== null) {
-            $response = $response->withStatus($status);
-        }
+            
+            if ($statusCode !== null) {
+                $response = $response->withStatus($statusCode);
+            }
+            
 
         return new static($response, $this->streamFactory);
     }
