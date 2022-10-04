@@ -8,6 +8,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
+use App\Application\Models\ApiCall;
 
 class ExcluirController
 {
@@ -26,12 +27,23 @@ class ExcluirController
      */
     public function exclude(Request $request, Response $response, array $args)
     {
-        $nivel = $_SESSION['user']['nivel'];
-        if ($nivel == '1') {
+
+        $nivel = $_SESSION['user']['nivel']??0;
+        if ($nivel < '3') {
             return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         }
-
+        
         $id = $args['id'] ?? null;
+
+        $api = new ApiCall();
+        $apiResult = $api->post('comentarios/excluir/'.$id);
+
+        // var_dump($apiResult->data);exit;
+        
+        return $response->withJson($apiResult->data, true, ($apiResult->msg) );
+
+
+        
         $tabela = null;
         $uriPath = $request->getUri()->getPath();
         $segments = explode('/', $uriPath);
@@ -77,6 +89,7 @@ class ExcluirController
         if (empty($id)) {
             return $response->withJson($id, false, 'ID inválido');
         }
+
 
         //  DB::enableQueryLog();
         $tabela = DB::table($tabela);

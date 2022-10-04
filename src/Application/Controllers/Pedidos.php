@@ -35,32 +35,14 @@ class Pedidos extends BaseController
     public function list(Request $request, Response $response)
     {
         $requests = $request->getParsedBody();
-        $codigo = $requests['codigo'] ?? null;
-        $clientes_id = $requests['clientes_id'] ?? null;
-        $viagens_id = $requests['viagens_id'] ?? null;
-        $cpf = $requests['cpf'] ?? null;
-        
-        if (!empty($codigo)) {
-            $params['pedidos.codigo'] = $codigo;
-        }
-        if (!empty($clientes_id)) {
-            $params['pedidos.clientes_id'] = $clientes_id;
-        }
-        if (!empty($viagens_id)) {
-            $params['pedidos.viagens_id'] = $viagens_id;
-        }
-        if (!empty($cpf)) {
-            $params['pedidos.cpf'] = $cpf;
-        }
-        
+        $apiResult = $this->api->post('pedidos/listar', $requests);
+        $dados['pedidos'] = $apiResult;
 
-        if (!empty($params)) {
-            $dados['pedidos'] = PedidosModel::list($params);
-        } else {
-            $dados['pedidos'] = PedidosModel::list();
-        }
-        $dados['clientes'] = ClientesModel::list();
-        $dados['viagens'] = ViagensModel::list();
+        $apiResult = $this->api->post('clientes/listar', $requests);
+        $dados['clientes'] = $apiResult;
+
+        $apiResult = $this->api->post('viagens/listar', $requests);
+        $dados['viagens'] = $apiResult;
 
         //usando $this->view setado em BaseController
         if ($args['modo']??false == 'lista') {

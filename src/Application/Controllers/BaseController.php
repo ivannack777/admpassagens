@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Application\Controllers;
 use Psr\Container\ContainerInterface;
 use Slim\Views\PhpRenderer;
+use App\Application\Models\ApiCall;
 
-use function PHPUnit\Framework\isInstanceOf;
 
 class BaseController
 {
     protected $container;
     protected $views;
     protected $session;
-    
+    protected $api;
     
 
     // constructor receives container instance
@@ -24,6 +24,7 @@ class BaseController
         $userSession = $_SESSION['user'] ?? false;
         $this->views->setAttributes(['userSession'=> $userSession] );
         $this->usersession = $userSession;
+        $this->api = new ApiCall();
     }
 
     /**

@@ -33,51 +33,15 @@ class Veiculos extends BaseController
     public function list(Request $request, Response $response, $args)
     {
         $requests = $request->getParsedBody();
-        $id = $requests['id'] ?? null;
-        $usuarios_id = $requests['usuarios_id'] ?? null;
-        $veiculos_tipo_id = $requests['veiculos_tipo_id'] ?? null;
-        $empresas_id = $requests['empresas_id'] ?? null;
-        $marca = $requests['marca'] ?? null;
-        $modelo = $requests['modelo'] ?? null;
-        $ano = $requests['ano'] ?? null;
-        $codigo = $requests['codigo'] ?? null;
-        $placa = $requests['placa'] ?? null;
+        $apiResult = $this->api->post('veiculos/listar', $requests);
+        $dados['veiculos'] = $apiResult;
 
-        //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuarios_id
-        // $userSession = $_SESSION['user'];
+        $apiResult = $this->api->post('empresas/listar', $requests);
+        $dados['empresas'] = $apiResult;
 
-        if (!empty($id)) {
-            $params['veiculos.id'] = $id;
-        }
-        if (!empty($veiculos_tipo_id)) {
-            $params['veiculos.veiculos_tipo_id'] = $veiculos_tipo_id;
-        }
-        if (!empty($empresas_id)) {
-            $params['veiculos.empresas_id'] = $empresas_id;
-        }
-        if (!empty($marca)) {
-            $params['veiculos.marca'] = $marca;
-        }
-        if (!empty($modelo)) {
-            $params['veiculos.modelo'] = $modelo;
-        }
-        if (!empty($ano)) {
-            $params['veiculos.ano'] = $ano;
-        }
-        if (!empty($codigo)) {
-            $params['veiculos.codigo'] = $codigo;
-        }
-        if (!empty($placa)) {
-            $params['veiculos.placa'] = $placa;
-        }
+        $apiResult = $this->api->post('veiculos/tipo/listar', $requests);
+        $dados['veiculos_tipo'] = $apiResult;
 
-        if (!empty($params)) {
-            $dados['veiculos'] = VeiculosModel::list($params);
-        } else {
-            $dados['veiculos'] = VeiculosModel::list();
-        }
-        $dados['empresas'] = EmpresasModel::list();
-        $dados['veiculos_tipo'] = Veiculos_tipoModel::list();
         
         if ($args['modo']??false == 'lista') {
             return $this->views->render($response, 'veiculos_list.php', $dados);
@@ -99,26 +63,8 @@ class Veiculos extends BaseController
     public function tipo_list(Request $request, Response $response)
     {
         $requests = $request->getParsedBody();
-        $id = $requests['id'] ?? null;
-        $nome = $requests['nome'] ?? null;
-        $descricao = $requests['descricao'] ?? null;
-
-        if (!empty($id)) {
-            $params['id'] = $id;
-        }
-
-        if (!empty($nome)) {
-            $params['nome'] = $nome;
-        }
-        if (!empty($descricao)) {
-            $params['descricao'] = $descricao;
-        }
-
-        if (!empty($params)) {
-            $dados['veiculosTipo'] = Veiculos_tipoModel::list($params);
-        } else {
-            $dados['veiculosTipo'] = Veiculos_tipoModel::list();
-        }
+        $apiResult = $this->api->post('veiculos/tipo/listar', $requests);
+        $dados['veiculosTipo'] = $apiResult;
 
         if ($args['modo']??false == 'lista') {
             return $this->views->render($response, 'veiculos_list.php', $dados);

@@ -23,16 +23,16 @@ class CheckTokenMiddleware implements Middleware
     {
         session_start();
         $response = $handler->handle($request);
-        $routeContext = RouteContext::fromRequest($request);
+        // $routeContext = RouteContext::fromRequest($request);
         $uri = $request->getUri();
-        $headers = $request->getHeaders();
+        // $headers = $request->getHeaders();
 
         $sessUser = $_SESSION['user'] ?? false;
 
         if($sessUser){
-            // echo "deu bom";
+            echo "deu bom";
         } else {
-            // echo "deu ruim";
+            echo "deu ruim";
             $_SESSION["rememberuri"] = $uri->getPath();
             setcookie("rememberuri", $uri->getPath(), time()+3600*10000, "/", $_ENV['SITE_URL'], true);
             return $response->withHeader('Location', '/usuarios/login/form')->withStatus(302);

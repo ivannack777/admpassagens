@@ -31,41 +31,21 @@ class Clientes extends BaseController
     public function list(Request $request, Response $response)
     {
         $requests = $request->getParsedBody();
-        $nome = $requests['nome'] ?? null;
-        $cpf = $requests['cpf'] ?? null;
-        $celular = $requests['celular'] ?? null;
-        $email = $requests['sigla_uf'] ?? null;
-        
-        if (!empty($nome)) {
-            $params['clientes.nome'] = $nome;
-        }
-        if (!empty($cpf)) {
-            $params['clientes.cpf'] = $cpf;
-        }
-        if (!empty($celular)) {
-            $params['clientes.celular'] = $celular;
-        }
-        if (!empty($email)) {
-            $params['clientes.email'] = $email;
-        }
+        $apiResult = $this->api->post('clientes/listar', $requests);
+        $dados['clientes'] = $apiResult;
 
-        if (!empty($params)) {
-            $dados['clientes'] = ClientesModel::list($params);
+        //usando $this->view setado em BaseController
+        if ($args['modo']??false == 'lista') {
+            return $this->views->render($response, 'clientes.php', $dados);
         } else {
-            $dados['clientes'] = ClientesModel::list();
+            $this->views->render($response, 'header.php', $dados);
+            $this->views->render($response, 'left.php', $dados);
+            $this->views->render($response, 'right_top.php', $dados);
+            $this->views->render($response, 'clientes.php', $dados);
+            return $this->views->render($response, 'footer.php', $dados);
         }
-
-                //usando $this->view setado em BaseController
-                if ($args['modo']??false == 'lista') {
-                    return $this->views->render($response, 'clientes.php', $dados);
-                } else {
-                    $this->views->render($response, 'header.php', $dados);
-                    $this->views->render($response, 'left.php', $dados);
-                    $this->views->render($response, 'right_top.php', $dados);
-                    $this->views->render($response, 'clientes.php', $dados);
-                    return $this->views->render($response, 'footer.php', $dados);
-                }
         
+
     }
 
     /**

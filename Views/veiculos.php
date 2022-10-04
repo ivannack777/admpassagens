@@ -36,7 +36,7 @@
                 <div class="flex-row flex-between">
                     <div class="">
                         <h4 class="card-title mb-0">Veículos</h4>
-                        <div class="small text-muted"><?= $veiculos->count() ?> veiculos estão sendo exibidas></div>
+                        <div class="small text-muted"><?= $veiculos->count ?> veiculos estão sendo exibidas></div>
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
@@ -76,7 +76,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($veiculos as $veiculo) :
+                        <?php foreach ($veiculos->data as $veiculo) :
                         ?>
                             <tr id="linha<?= $veiculo->id ?>" class="list-label">
                                 <td><span id="label_marca<?= $veiculo->id ?>"><?= $veiculo->marca ?></span></td>
@@ -91,7 +91,7 @@
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" title="editar" style="margin-right: 8px;" data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $veiculo->id ?>" data-empresas_id="<?= $veiculo->empresas_id ?>" data-veiculos_tipo_id="<?= $veiculo->veiculos_tipo_id ?>" data-marca="<?= $veiculo->marca ?>" data-modelo="<?= $veiculo->modelo ?>" data-ano="<?= $veiculo->ano ?>" data-codigo="<?= $veiculo->codigo ?>" data-placa="<?= $veiculo->placa ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                     <!-- Favoritar -->
@@ -195,7 +195,7 @@
 
                         <select class="form-elements" id="empresas_id" name="empresas_id">
                             <option>Selecione...</option>
-                            <?php foreach ($empresas as $empresa) : ?>
+                            <?php foreach ($empresas->data as $empresa) : ?>
                                 <option value="<?= $empresa->id ?>"><?= $empresa->nome ?></option>
                             <?php endforeach ?>
                         </select>
@@ -205,7 +205,7 @@
 
                         <select class="form-elements" id="veiculos_tipo_id" name="veiculos_tipo_id">
                             <option value="0">Selecione...</option>
-                            <?php foreach ($veiculos_tipo as $veiculo_tipo) : ?>
+                            <?php foreach ($veiculos_tipo->data as $veiculo_tipo) : ?>
                                 <option value="<?= $veiculo_tipo->id ?>"><?= $veiculo_tipo->nome . " - " . $veiculo_tipo->descricao
                                                                             ?></option>
                             <?php endforeach ?>

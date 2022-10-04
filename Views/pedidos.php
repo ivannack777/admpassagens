@@ -31,14 +31,13 @@
     </div>
 
 
-
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
                 <div class="flex-row flex-between">
                     <div class="">
                         <h4 class="card-title mb-0">Pedidos</h4>
-                        <div class="small text-muted"><?= $pedidos->count() ?> pedidos estão sendo exibidas</div>
+                        <div class="small text-muted"><?= $pedidos->count ?> pedidos estão sendo exibidos</div>
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
@@ -77,7 +76,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($pedidos as $pedido) :
+                        <?php foreach ($pedidos->data as $pedido) :
                         ?>
                             <tr id="linha<?= $pedido->id ?>" class="list-label">
                                 <td><span id="label_codigo<?= $pedido->id ?>"><?= $pedido->codigo ?></span></td>
@@ -172,7 +171,7 @@
                         <span class="text-danger error-label"></span>
                         <select class="form-elements" id="clientes_id" name="clientes_id">
                             <option value="0">Selecione...</option>
-                            <?php foreach ($clientes as $cliente) : ?>
+                            <?php foreach ($clientes->data as $cliente) : ?>
                                 <option value="<?= $cliente->id ?>"><?= $cliente->nome ?></option>
                             <?php endforeach ?>
                         </select>
@@ -183,7 +182,7 @@
 
                         <select class="form-elements" id="viagens_id" name="viagens_id">
                             <option value="0">Selecione...</option>
-                            <?php foreach ($viagens as $viagem) : ?>
+                            <?php foreach ($viagens->data as $viagem) : ?>
                                 <option value="<?= $viagem->id ?>"><?= $viagem->descricao ?></option>
                             <?php endforeach ?>
                         </select>

@@ -14,6 +14,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
 use Valitron\Validator;
 
+
 class Viagens extends BaseController
 {
     // protected $container;
@@ -35,44 +36,13 @@ class Viagens extends BaseController
     {
         $dados = [];
         $requests = $request->getQueryParams();
+        
+        $apiResult = $this->api->post('veiculos/listar', $requests);
+        $dados['veiculos'] = $apiResult;
 
-
-        // $descricao = $requests['descricao'] ?? null;
-        // $origem = $requests['origem'] ?? null;
-        // $destino = $requests['destino'] ?? null;
-        // $data_saida = $requests['data_saida'] ?? null;
-        // $data_chegada = $requests['data_chegada'] ?? null;
-
-        //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuario_id
-
-
-        // var_dump($this->views);
-        // var_dump($request->getMethod());
-        // var_dump($request->getUri()->getQuery());
-        // var_dump($request->getQueryParams());
-        // exit;
-        if (!empty($descricao)) {
-            $params['descricao'] = $descricao;
-        }
-        if (!empty($origem)) {
-            $params['origem'] = $origem;
-        }
-        if (!empty($destino)) {
-            $params['destino'] = $destino;
-        }
-        if (!empty($data_saida)) {
-            $params['data_saida'] = $data_saida;
-        }
-        if (!empty($data_chegada)) {
-            $params['data_chegada'] = $data_chegada;
-        }
-
-        $dados['veiculos'] = VeiculosModel::list();
-        if (!empty($params)) {
-            $dados['viagens'] = ViagenModel::lst($params);
-        } else {
-            $dados['viagens'] = ViagenModel::list();
-        }
+        $apiResult = $this->api->post('viagens/listar', $requests);
+        $dados['viagens'] = $apiResult;
+        
         //usando $this->view setado em BaseController
         if ($args['modo']??false == 'lista') {
             return $this->views->render($response, 'viagens_list.php', $dados);
@@ -95,12 +65,18 @@ class Viagens extends BaseController
      * @return string json
      */
     public function save(Request $request, Response $response, array $args)
-    {
+    { 
+        session_start();
         $id = $args['id'] ?? null;
         $requests = $request->getParsedBody();
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }
+
+        $apiResult = $this->api->post('viagens/salvar/'.$id, $requests);
+        return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
+
+        /*
         $usuario_id = $requests['usuario_id'] ?? null;
         $descricao = $requests['descricao'] ?? null;
         $origem_id = $requests['origem_id'] ?? null;
@@ -163,6 +139,7 @@ class Viagens extends BaseController
                 return $response->withJson($Errors['errors'], false, $Errors['msg']);
             }
         }
+        */
     }
 
 

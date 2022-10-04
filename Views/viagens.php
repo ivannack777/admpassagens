@@ -29,7 +29,9 @@
             </button>
         </div>
     </div>
-
+<?php 
+// var_dump($viagens->data); exit; 
+?>
 
     <div class="col-xl-12">
         <div class="card">
@@ -37,7 +39,7 @@
                 <div class="flex-row flex-between">
                     <div class="">
                         <h4 class="card-title mb-0">Viagens</h4>
-                        <div class="small text-muted"><?= $viagens->count() ?> viagens</div>
+                        <div class="small text-muted"><?= $viagens->count ?> viagens</div>
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
@@ -77,7 +79,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($viagens as $viagem) :
+                        <?php foreach ($viagens->data as $viagem) :
                         ?>
                             <tr id="linha<?= $viagem->id ?>" class="list-label">
                                 <td><span id="label_descricao<?= $viagem->id ?>"><?= $viagem->descricao ?></span></td>
@@ -258,7 +260,7 @@
                         <span class="text-danger error-label"></span>
                         <select class="form-elements" id="veiculos_id" name="veiculos_id">
                             <option value="0">Selecione...</option>
-                            <?php foreach ($veiculos as $veiculo) : ?>
+                            <?php foreach ($veiculos->data as $veiculo) : ?>
                                 <option value="<?= $veiculo->id ?>"><?=
                                                                     $veiculo->marca . " " .
                                                                         $veiculo->modelo . " " .

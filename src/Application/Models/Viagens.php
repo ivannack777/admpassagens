@@ -3,8 +3,9 @@
 namespace App\Application\Models;
 
 use Illuminate\Database\Capsule\Manager as DB;
+use App\Application\Models\ApiCall;
 
-class Viagens extends \Illuminate\Database\Eloquent\Model
+class Viagens extends \Illuminate\Database\Eloquent\Model 
 {
     protected $fillable = ['veiculos_id', 'descricao', 'origem_id', 'destino_id', 'data_saida', 'data_chegada', 'detalhes','valor','assentos','assentos_tipo'];
     public $timestamps = false;
@@ -19,6 +20,12 @@ class Viagens extends \Illuminate\Database\Eloquent\Model
     {
         // DB::enableQueryLog();
         // var_dump($_SESSION);exit;
+
+        $api = new ApiCall();
+        $apiResult = $api->post('viagens/listar');
+        return $apiResult;
+
+
         $viagens = DB::table('viagens');
         $selectArr = [
             'viagens.id',
