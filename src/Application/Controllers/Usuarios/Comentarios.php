@@ -15,6 +15,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\PhpRenderer;
 use Valitron\Validator;
+use App\Application\Models\ApiCall;
 
 class Comentarios extends BaseController
 {
@@ -40,11 +41,14 @@ class Comentarios extends BaseController
 
         $requests = $request->getParsedBody();
 
+        $usuario_id = $_SESSION['user']['id']??0;
+        if ($usuario_id < '1') {
+            return $response->withJson([], true, 'Sessão encerrada', 403);
+        }
+        
         $item = $requests['item'] ?? null;
         $item_id = $requests['item_id'] ?? null;
-        $usuario_id = $_SESSION['user']['id'];
-
-
+ 
         if (!empty($item)) {
             $params['item'] = $item;
         }
@@ -61,6 +65,13 @@ class Comentarios extends BaseController
         } else {
             $dados['comentarios'] = ComentariosModel::list();
         }
+
+        $api = new ApiCall();
+        $apiResult = $api->post('comentarios/listar', $params);
+        // return $apiResult;
+        $dados['comentarios'] = $apiResult;
+
+
         return $this->views->render($response, 'comentarios_list.php', $dados);
         // return $response->withJson($pessoas, true, $pessoas->count() . ($pessoas->count() > 1 ? ' pessoas encontradas' : ' pessoa encontrada'));
     }
@@ -95,6 +106,12 @@ class Comentarios extends BaseController
                 'texto' => $texto,
                 'usuario_id' => $usuario_id,
             ];
+            $api = new ApiCall();
+            $apiResult = $api->post('comentarios/salvar', $dados);
+
+            // var_dump($apiResult->data);exit;
+            
+            return $response->withJson($apiResult->data, true, ($apiResult->msg) );
 
             # definindo linguagem do validador
             Validator::lang('pt-br');

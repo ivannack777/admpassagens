@@ -30,14 +30,13 @@
         </div>
     </div>
 
-
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
                 <div class="flex-row flex-between">
                     <div class="">
                         <h4 class="card-title mb-0">Clientes</h4>
-                        <div class="small text-muted"><?= $clientes->count() ?> clientes estão sendo exibidas</div>
+                        <div class="small text-muted"><?= $clientes->count ?> clientes estão sendo exibidas</div>
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
@@ -73,7 +72,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($clientes as $cliente) :
+                        <?php foreach ($clientes->data as $cliente) :
                         ?>
                             <tr id="linha<?= $cliente->id ?>" class="list-label">
                                 <td><span id="label_nome<?= $cliente->id ?>"><?= $cliente->nome ?></span></td>

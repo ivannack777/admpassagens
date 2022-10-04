@@ -156,6 +156,8 @@
          var item = element.data('item');
          var item_id = element.data('item_id');
 
+console.log('btn/fav', element,item,  item_id)
+
          jQuery.ajax({
              type: 'POST',
              url: '<?= $this->siteUrl('favoritos/salvar') ?>',
@@ -204,7 +206,7 @@
      });
 
      function showComentarios(item, item_id) {
-        console.log('item item_id',item, item_id);
+        // jQuery("#comentariosModalBody").html('');
          jQuery.ajax({
              type: 'POST',
              url: '<?= $this->siteUrl('comentarios/ver') ?>',
@@ -214,10 +216,9 @@
              },
              dataType: 'html',
              beforeSend: function() {
-                //  element.html('<i class="fas fa-spinner fa-spin"></i>');
+                jQuery(document.getElementById("comentariosModatextoPostitle")).html('<i class="fas fa-spinner fa-spin"></i>');
              },
              success: function(retorno) {
-                console.log(jQuery("#comentariosModalBody"));
                  jQuery("#comentariosModalBody").html(retorno);
              },
              error: function(st) {
@@ -266,6 +267,19 @@
          });
      });
 
+     jQuery("body").on("click", ".comentariosExcluir" , function() {
+        var id = jQuery(this).data('codigo');
+        var item = jQuery("#comentariosModalitem").val();
+        var item_id = jQuery("#comentariosModalitem_id").val();
+        var rota = '<?= $this->siteUrl('comentarios/excluir/') ?>' + id;
+        var redirect = '<?= $this->siteUrl('viagens') ?>';
+        excluir(rota, 'Você realmente quer excluir este comentário?', null);
+        jQuery("#comentarioId"+id).hide('shlow');
+        setTimeout(function(){
+            showComentarios(item, item_id);
+        }, 600);
+        
+    });
 
 
  </script>

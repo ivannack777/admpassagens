@@ -17,6 +17,9 @@ class Comentarios extends \Illuminate\Database\Eloquent\Model
      */
     public static function list(array $params = [])
     {
+
+
+        
         // DB::enableQueryLog();
         $comentarios = DB::table('comentarios');
         $comentarios->select(

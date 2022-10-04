@@ -38,7 +38,7 @@
                 <div class="flex-row flex-between">
                     <div class="">
                         <h4 class="card-title mb-0">Tipos de veículos</h4>
-                        <div class="small text-muted"><?= $veiculosTipo->count() ?> tipos de veículos estão sendo exibidos></div>
+                        <div class="small text-muted"><?= $veiculosTipo->count ?> tipos de veículos estão sendo exibidos></div>
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
@@ -77,7 +77,7 @@
                     <tbody>
                         <?php
 
-                        foreach ($veiculosTipo as $tipo) :
+                        foreach ($veiculosTipo->data as $tipo) :
                         ?>
                             <tr id="linha<?= $tipo->id ?>" class="list-label">
                                 <td><span id="label_nome<?= $tipo->id ?>"><?= $tipo->nome ?></span></td>

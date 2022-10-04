@@ -15,6 +15,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response as Response;
 use Slim\Views\PhpRenderer;
 use Valitron\Validator;
+use App\Application\Models\ApiCall;
 
 class Favoritos extends BaseController
 {
@@ -92,6 +93,14 @@ class Favoritos extends BaseController
                 'usuario_id' => $usuario_id,
             ];
 
+            $api = new ApiCall();
+            $apiResult = $api->post('favoritos/salvar', $dados);
+
+            // var_dump($apiResult->data);exit;
+            
+            return $response->withJson($apiResult->data, true, ($apiResult->data->resultado ? 'Favorito foi salvo' : 'Favorito foi excluído') );
+
+            var_export($apiResult);exit;
             # definindo linguagem do validador
             Validator::lang('pt-br');
             $v = new Validator($dados);

@@ -1,9 +1,15 @@
-<div style="margin:12px 8px;">
-    <h5><?= count($comentarios) . (count($comentarios) > 1 ? ' comentários' : ' comentário') ?> deste item</h5>
+<div style="display: flex;">
+
+    <div style="margin:12px 8px;">
+        <h5><?=  ($comentarios->count < 1 ? 'Nenhum comentários' : ($comentarios->count > 1 ? $comentarios->count . ' comentários': '1 comentário')) ?> deste item</h5>
+    </div>
+    <div id="comentariosModatextoPostitle" style="margin:12px 8px;">
+    <!-- aqui vai aparece o spinner -->
+    </div>
 </div>
 <div>
     <div class="d-grid gap-3">
-        <?php foreach ($comentarios as $comentario) : ?>
+        <?php foreach ($comentarios->data as $comentario) : ?>
             <div class="d-grid gap-3">
 
                 <div class="p-2 bg-light border" id="comentarioId<?= $comentario->id ?>">
@@ -17,19 +23,3 @@
 
     </div>
 </div>
-<script>
-        jQuery(".comentariosExcluir").click(function() {
-        var id = jQuery(this).data('codigo');
-        var item = jQuery("#comentariosModalitem").val();
-        var item_id = jQuery("#comentariosModalitem_id").val();
-        var rota = '<?= $this->siteUrl('comentarios/excluir/') ?>' + id;
-        var redirect = '<?= $this->siteUrl('viagens') ?>';
-        excluir(rota, 'Você realmente quer excluir este comentário?', null);
-        jQuery("#comentarioId"+id).hide('shlow');
-        setTimeout(function(){
-            showComentarios(item, item_id);
-        }, 600);
-        
-    });
-
-</script>

@@ -30,38 +30,11 @@ class Empresas extends BaseController
      */
     public function list(Request $request, Response $response)
     {
-        // $nivel = $_SESSION['user']['nivel'];
-        // if ($nivel == '1') {
-        //     return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
-        // }
+
 
         $requests = $request->getParsedBody();
-        $usuarios_id = $requests['usuarios_id'] ?? null;
-        $enderecos_id = $requests['enderecos_id'] ?? null;
-        $nome = $requests['nome'] ?? null;
-
-        //se o nivel do usuario for 1: cliente, sempre faz filtro pelo usuarios_id
-        // $userSession = $_SESSION['user'];
-        // if ($userSession['nivel'] == '1') {
-        //     $params['usuarios_id'] = $userSession['id'];
-        // } else {
-        //     if (!empty($usuarios_id)) {
-        //         $params['usuarios_id'] = $usuarios_id;
-        //     }
-        // }
-
-        if (!empty($enderecos_id)) {
-            $params['enderecos_id'] = $enderecos_id;
-        }
-        if (!empty($nome)) {
-            $params['nome'] = $nome;
-        }
-
-        if (!empty($params)) {
-            $dados['empresas'] = EmpresasModel::list($params);
-        } else {
-            $dados['empresas'] = EmpresasModel::list();
-        }
+        $apiResult = $this->api->post('empresas/listar', $requests);
+        $dados['empresas'] = $apiResult;
 
         
         if ($args['modo']??false == 'lista') {
