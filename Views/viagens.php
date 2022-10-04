@@ -108,7 +108,7 @@
                                             data-origem_id="<?= $viagem->origem_id ?>" 
                                             data-destino="<?= $viagem->localidade_destino ?>" 
                                             data-destino_id="<?= $viagem->destino_id ?>" 
-                                            data-valor="<?= str_replace('.', ',', $viagem->valor)??'' ?>" 
+                                            data-valor="<?= str_replace('.', ',', $viagem->valor??'') ?>" 
                                             data-data_saida="<?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?>" 
                                             data-data_chegada="<?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?>" 
                                             data-assentos="<?= $viagem->assentos ?>"
