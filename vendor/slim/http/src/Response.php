@@ -213,7 +213,7 @@ class Response implements ResponseInterface
         $padrao = [
             'status' => $status,
             'msg' => $msg,
-            'count' => count($data),
+            // 'count' => count($data),
             'data' => $data,
         ];
     
