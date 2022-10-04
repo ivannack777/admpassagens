@@ -83,7 +83,7 @@
                                 <td><span id="label_cliente_nome<?= $pedido->id ?>"><?= $pedido->cliente_nome ?></span></td>
                                 <td><span id="label_viagem_descricao<?= $pedido->id ?>"><?= $pedido->viagem_descricao ?></span></td>
                                 <td><span id="label_cpf<?= $pedido->id ?>" class="label_cpf"><?= $pedido->cpf ?></span></td>
-                                <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor) ?></span></td>
+                                <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor??'') ?></span></td>
                                 <td><span id="label_status<?= $pedido->id ?>"><?= $pedido->status ?></span></td>
                                 <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
                                 <td>
@@ -91,7 +91,7 @@
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-cpf="<?= $pedido->cpf ?>" data-valor="<?= str_replace('.', ',', $pedido->valor) ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-cpf="<?= $pedido->cpf ?>" data-valor="<?= str_replace('.', ',', $pedido->valor??'') ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                     <!-- Favoritar -->

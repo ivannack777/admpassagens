@@ -87,7 +87,7 @@
                                 <td><span id="label_destino_id<?= $viagem->id ?>"><?= $viagem->destino_id ?> <?= $viagem->localidade_destino ?></span></td>
                                 <td><span id="label_data_saida<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?></span></td>
                                 <td><span id="label_data_chegada<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?></span></td>
-                                <td><span id="label_valor<?= $viagem->id ?>"><?= str_replace('.', ',', $viagem->valor) ?></span></td>
+                                <td><span id="label_valor<?= $viagem->id ?>"><?= str_replace('.', ',', $viagem->valor??'') ?></span></td>
                                 <td><span id="label_veiculos_id<?= $viagem->id ?>">
                                         <?=
                                         $viagem->marca . " " .

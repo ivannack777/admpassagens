@@ -132,15 +132,15 @@ class Sanitize
 				case 'ucwords': //todos os primeiro caracteres de cada palavra em maíusculo
 					$this->input = strtolower($this->input);
 					$this->input = ucwords($this->input);
-					$this->input = str_replace(' E ', ' e ', $this->input);
-					$this->input = str_replace(' Da ', ' da ', $this->input);
-					$this->input = str_replace(' Das ', ' das ', $this->input);
-					$this->input = str_replace(' De ', ' de ', $this->input);
-					$this->input = str_replace(' Do ', ' do ', $this->input);
-					$this->input = str_replace(' Dos ', ' dos ', $this->input);
-					$this->input = str_replace(' Of ', ' of ', $this->input);
-					$this->input = str_replace(' Von ', ' von ', $this->input);
-					$this->input = str_replace(' Del ', ' del ', $this->input);
+					$this->input = str_replace(' E ', ' e ', $this->input??'');
+					$this->input = str_replace(' Da ', ' da ', $this->input??'');
+					$this->input = str_replace(' Das ', ' das ', $this->input??'');
+					$this->input = str_replace(' De ', ' de ', $this->input??'');
+					$this->input = str_replace(' Do ', ' do ', $this->input??'');
+					$this->input = str_replace(' Dos ', ' dos ', $this->input??'');
+					$this->input = str_replace(' Of ', ' of ', $this->input??'');
+					$this->input = str_replace(' Von ', ' von ', $this->input??'');
+					$this->input = str_replace(' Del ', ' del ', $this->input??'');
 					break;
 				default:
 					$this->input = $this->input;
@@ -169,7 +169,7 @@ class Sanitize
 			else{
 				$this->input = preg_replace('/[^\d]+/', '-', $this->input);
 			}
-			// $this->input = str_replace(['/','.',' '], '-', $this->input);
+			// $this->input = str_replace(['/','.',' '], '-', $this->input?'');
 		}
 		return $this;
 	}
@@ -265,7 +265,7 @@ class Sanitize
 	public function decimal($str, $round=false, $toString=false){
 		$this->set($str)->outer()->trimInner();
 		if(!empty($this->input)){
-			$this->input = str_replace(',', '.', $this->input);
+			$this->input = str_replace(',', '.', $this->input??'');
 			$this->input = preg_replace('/[^0-9.]+/', '', $this->input);
 			if($round && is_numeric($round)){
 				$this->input = round($this->input, intval($round) );
