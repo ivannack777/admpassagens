@@ -22,22 +22,25 @@ class CheckTokenMiddleware implements Middleware
     public function process(Request $request, RequestHandler $handler): Response
     {
         session_start();
-        $response = $handler->handle($request);
         // $routeContext = RouteContext::fromRequest($request);
-        $uri = $request->getUri();
         // $headers = $request->getHeaders();
-
+        
         $sessUser = $_SESSION['user'] ?? false;
-
+        // var_dump($_SESSION);exit;
+        
+        $uri = $request->getUri();
+        
         if($sessUser){
-            echo "deu bom";
+            // echo "deu bom";
         } else {
-            echo "deu ruim";
+            // echo "deu ruim";
             $_SESSION["rememberuri"] = $uri->getPath();
-            setcookie("rememberuri", $uri->getPath(), time()+3600*10000, "/", $_ENV['SITE_URL'], true);
+            // setcookie("rememberuri", $uri->getPath(), time()+3600*10000, "/", $_ENV['SITE_URL'], true);
+            $response = $handler->handle($request);
             return $response->withHeader('Location', '/usuarios/login/form')->withStatus(302);
         }
-
+        
+        /*
         $bearer = $request->getHeader('Authorization');
 
         if (isset($bearer[0]) && !empty($bearer[0]) && strpos($bearer[0], 'Bearer') !== false) {
@@ -46,11 +49,6 @@ class CheckTokenMiddleware implements Middleware
                 $usuarios = Usuarios::getUserByToken($bearer[1]);
                 // var_dump($bearer, $usuarios->count());
                 if ($usuarios->count() === 1) {
-      
-                    /**TODO
-                     * setcookie
-                     */
-
                     // $body = preg_replace('/\s+/', '', $request->getBody() ?? null);
                     // $caminho = '';
 
@@ -73,6 +71,7 @@ class CheckTokenMiddleware implements Middleware
                 throw new HttpUnauthorizedException($request, 'Acesso não autorizado. Token inválido');
             }
         }
+        */
         // var_dump($uri);exit;
         // return $response->withHeader('Location', $uri->getPath())->withStatus(302);
         return $handler->handle($request);

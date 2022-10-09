@@ -56,13 +56,11 @@ class BaseController
      * @param string $date
      * @return string $format
      */
-    public function dateFormat($date, $format='d/m/Y H:i')
+    public function dateFormat($date, $formatIn='d/m/Y H:i',  $formatOut=null)
     {
         //retirar / repetidas, exeto as // depois do :
-        $dt = \DateTime::createFromFormat($format,$date);
-        return ($dt instanceof \DateTime) ? $dt->format('Y-m-d H:i:s') : null ;
-        
-        return $dt;
+        $dt = \DateTime::createFromFormat($formatIn, $date);
+        return ($dt instanceof \DateTime) ? $dt->format($formatOut??'Y-m-d H:i:s') : null ;
     }
 
     public function getUserSession($idx=false){

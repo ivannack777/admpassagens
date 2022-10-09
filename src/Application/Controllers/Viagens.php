@@ -57,6 +57,23 @@ class Viagens extends BaseController
         // return $response->withJson($viagens, true, $viagens->count().($viagens->count() > 1 ? ' viagens encontradas' : ' viagen encontrada'));
     }
 
+        /**
+     * Localiza e retorna um viagenss passando 'viagens' por json request.
+     *
+     * @return string json
+     */
+    public function listPoints(Request $request, Response $response, $args)
+    {
+        $dados = [];
+        $requests = $request->getQueryParams();
+        
+        $apiResult = $this->api->post('viagens/pontos/listar', $requests);
+        if(property_exists($apiResult, 'data')){
+            return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
+        }
+        return $response->withJson([$apiResult], false, 'Erro na consulta', 500);
+    }
+
 
 
     /**
@@ -66,7 +83,7 @@ class Viagens extends BaseController
      */
     public function save(Request $request, Response $response, array $args)
     { 
-        session_start();
+        // session_start();
         $id = $args['id'] ?? null;
         $requests = $request->getParsedBody();
         if (empty($requests)) {

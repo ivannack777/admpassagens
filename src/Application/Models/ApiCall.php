@@ -66,8 +66,10 @@ class ApiCall
 
         $info = curl_getinfo($ch);
 
+        // var_export($_SESSION);
+        // var_export($this->header);
         // var_export($info);
-        // var_export($result);
+        // var_export($result);exit;
 
         if(curl_errno($ch) > 0 || $result === false){
             $info = curl_getinfo($ch);
@@ -78,9 +80,10 @@ class ApiCall
             if(!empty($result)) $retorno = json_decode($result);
             if(preg_match('/true/i', $_ENV['DEBUG']??'') && !$retorno ){
                 
-                echo "<pre>";
-                var_dump($retorno);
-                echo "</pre>";exit;
+                // echo "<pre>";
+                // var_export($result);
+                // echo "</pre>";
+                $retorno = $result;
             }
             $this->retorno = $retorno;
         }

@@ -35,7 +35,7 @@
             <div class="card-body">
 
 
-                <div class="flex-row flex-between">
+                <div class="layout-flex flex-row flex-between">
                     <div class="">
                         <h4 class="card-title mb-0">Tipos de veículos</h4>
                         <div class="small text-muted"><?= $veiculosTipo->count ?> tipos de veículos estão sendo exibidos></div>

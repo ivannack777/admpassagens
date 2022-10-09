@@ -4,7 +4,7 @@
     <div class="sufee-login d-flex align-content-center flex-wrap">
         <div class="container">
             <div class="login-content">
-                <div class="login-logo">
+                <div class="login-logo logo-box">
                     <a href="/">
                         <img class="align-content" src="/images/logo.png" alt="" style="width: 250px;">
                     </a>

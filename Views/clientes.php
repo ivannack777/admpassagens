@@ -33,7 +33,7 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <div class="flex-row flex-between">
+                <div class="layout-flex flex-row flex-between">
                     <div class="">
                         <h4 class="card-title mb-0">Clientes</h4>
                         <div class="small text-muted"><?= $clientes->count ?> clientes estão sendo exibidas</div>

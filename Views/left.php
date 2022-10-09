@@ -7,10 +7,10 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fa fa-bars"></i>
             </button>
-            <div id="logo-box">
+            <div id="logo-box" class="logo-box" style="margin: 12px;">
                 <a class="navbar-brand" href="<?= $this->siteUrl() ?>"><img src="<?= $this->siteUrl('images/logo.png') ?>" alt="Logo"></a>
             </div>
-            <div id="logo-box-mini" class="navbar-brand hidden" >
+            <div id="logo-box-mini" class="navbar-brand hidden logo-box-mini ">
                 <a href="<?= $this->siteUrl() ?>"><img src="<?= $this->siteUrl('images/logo-img.png') ?>" alt="Logo"></a>
             </div>
         </div>
@@ -22,6 +22,7 @@
                 </li>
                 <h3 class="menu-title">Partes</h3><!-- /.menu-title -->
                 <li>
+                    <a href="<?= $this->siteUrl('linhas') ?>"> <i class="menu-icon fas fa-bus-alt"></i> Linhas </a>
                     <a href="<?= $this->siteUrl('viagens') ?>"> <i class="menu-icon fas fa-road"></i> Viagens </a>
                     <a href="<?= $this->siteUrl('clientes') ?>"> <i class="menu-icon fas fa-user-tag"></i> Clientes</a>
                     <a href="<?= $this->siteUrl('pedidos') ?>"> <i class="menu-icon fas fa-file-invoice-dollar"></i> Pedidos</a>

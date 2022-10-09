@@ -88,30 +88,32 @@ $app->addBodyParsingMiddleware();
 // Add Error Middleware
 // comentado para exibir erro padrão
 // Define Custom Error Handler
-// $customErrorHandler = function (
-//     ServerRequest $request,
-//     Throwable $exception,
-//     bool $displayErrorDetails,
-//     bool $logErrors,
-//     bool $logErrorDetails,
-//     ?LoggerInterface $logger = null
-// ) use ($app) {
-//     // $logger->error($exception->getMessage());
+$customErrorHandler = function (
+    ServerRequest $request,
+    Throwable $exception,
+    bool $displayErrorDetails,
+    bool $logErrors,
+    bool $logErrorDetails,
+    ?LoggerInterface $logger = null
+) use ($app) {
+    // $logger->error($exception->getMessage());
 
-//     $payload = ['error' => $exception->getMessage()];
+    $payload = ['error' => $exception->getMessage()];
 
-//     $response = $app->getResponseFactory()->createResponse();
-//     $response->getBody()->write(
-//         json_encode($payload, JSON_UNESCAPED_UNICODE)
-//     );
+    $response = $app->getResponseFactory()->createResponse();
+    $response->getBody()->write(
+        json_encode($payload, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
+    );
 
-//     return $response;
-// };
+    return $response;
+};
 
 // Add Error Middleware
-$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+// $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 // $errorMiddleware->setDefaultErrorHandler($customErrorHandler);
 // Run App & Emit Response
 $response = $app->handle($request);
 $responseEmitter = new ResponseEmitter();
 $responseEmitter->emit($response);
+
+// $app->run();

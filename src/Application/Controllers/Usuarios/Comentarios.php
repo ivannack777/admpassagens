@@ -85,7 +85,7 @@ class Comentarios extends BaseController
      */
     public function save(Request $request, Response $response): Response
     {
-        session_start();
+        // session_start();
 
         if ($_SESSION['user'] ?? false) {
 
