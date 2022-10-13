@@ -46,6 +46,7 @@
                         $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                             <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar viagem</button>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar2"><i class="fas fa-plus"></i> Adicionar viagem de linha</button>
                         <?php endif ?>
                     </div>
                     <div class="">
@@ -162,6 +163,12 @@
             </div>
         </div>
     </div>
+    <div class="input-group log-event" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
+        <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1" />
+        <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
+            <i class="fas fa-calendar"></i>
+        </span>
+    </div>
 </div> <!-- .content -->
 
 <div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
@@ -261,6 +268,108 @@
     </div>
 </div>
 
+<div class="modal fade" id="formMediumModal2" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel2">Adicionar viagem para uma linha</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formViagemLinha">
+                    <input type="hidden" id="viagens_id" name="viagens_id" value="0" />
+
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="descricao">Descrição</label>
+                        <span class="text-danger error-label"></span>
+                        <input type="text" class="form-elements" id="descricao" name="descricao" value="" />
+                        <small class="form-text text-muted">São Paulo x Rio de janeiro</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="linha">Linha</label>
+                        <span class="text-danger error-label"></span>
+                        <select class="form-elements" id="linha" name="linha">
+                            <option value="0">Selecione...</option>
+                            <?php foreach ($linhas->data as $linha) :
+                                $dia = explode(',', $linha->dia);
+                                $dia = $this->diasSemana($dia, true);
+                            ?>
+                                <option value="<?= $linha->id ?>"><?= $linha->descricao . " (" . implode(', ', $dia) . ")" ?></option>
+                            <?php endforeach ?>
+                        </select>
+
+                        <button class="btn btn-secondary" id="addLinhas">+ Adicionar uma linha</button>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="linha">Período</label>
+                        <span class="text-danger error-label"></span>
+                        <div class="form-elements-group">
+                            <input type="text" class="form-elements" id="dataIni" name="dataIni" />
+                            <span class="">a</span>
+                            <input type="text" class="form-elements" id="dataFim" name="dataFim" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="valor">Valor</label>
+                        <span class="text-danger error-label"></span>
+                        <input type="text" class="form-elements valores" id="valor" name="valor" value="" placeholder="0,00" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="assentos">Assentos</label>
+                        <span class="text-danger error-label"></span>
+                        <input type="text" class="form-elements assentos" id="assentos" name="assentos" value="" placeholder="Quantidade de assentos" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="assentos_tipo">Tipos de assentos</label>
+                        <span class="text-danger error-label"></span>
+                        <select type="text" class="form-elements" id="assentos_tipo" name="assentos_tipo">
+                            <option value="0">Selecione...</option>
+                            <option value="Comum">Comum</option>
+                            <option value="Leito">Leito</option>
+                            <option value="Leito-cama">Leito-cama</option>
+                            <option value="Semi-leito">Semi-leito</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="detalhes">Detalhes</label>
+                        <span class="text-danger error-label"></span>
+                        <textarea type="text" class="form-elements" id="detalhes" name="detalhes"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="veiculo_id">Veículo</label>
+                        <span class="text-danger error-label"></span>
+                        <select class="form-elements" id="veiculos_id" name="veiculos_id">
+                            <option value="0">Selecione...</option>
+                            <?php foreach ($veiculos->data as $veiculo) : ?>
+                                <option value="<?= $veiculo->id ?>"><?=
+                                                                    $veiculo->marca . " " .
+                                                                        $veiculo->modelo . " " .
+                                                                        $veiculo->ano . " " .
+                                                                        $veiculo->codigo . " " .
+                                                                        $veiculo->placa . " "
+                                                                    ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                </form>
+                <div id="retornomsg"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnExcluir" class="btn btn-outline-danger" title="Excluir"><i class="fas fa-times"></i> Excluir</button>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvarViagemLinha"><i class="fa fa-save salvar pointer"></i> Salvar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 <script>
     var qtdPontos = 0;
     jQuery('.valores').mask("#.##0,00", {
@@ -269,6 +378,25 @@
 
     jQuery(".datas").mask('00/00/0000 00:00');
     jQuery(".assentos").mask('0#');
+
+    jQuery("#dataIni, #dataFim").datetimepicker({
+        icons: {
+                time: 'fas fa-clock',
+                date: 'fas fa-calendar',
+                up: 'fas fa-arrow-up',
+                down: 'fas fa-arrow-down',
+                previous: 'fas fa-chevron-left',
+                next: 'fas fa-chevron-right',
+                today: 'fas fa-calendar-check-o',
+                clear: 'fas fa-trash',
+                close: 'fas fa-times'
+            } ,
+        locale: 'pt-BR',
+        format: 'DD/MM/yyyy',
+        dayViewHeaderFormat: 'MM/yyyy'
+    });
+
+
 
     jQuery(".datas").datetimepicker({
         format: "d/m/Y H:i"
@@ -300,7 +428,9 @@
             datepicker: false
         });
 
-        jQuery(".valores").mask('#.##0,00', {reverse: true});
+        jQuery(".valores").mask('#.##0,00', {
+            reverse: true
+        });
 
         jQuery(".cidadeAutocomplete").autocomplete({
             minLength: 2,
@@ -410,7 +540,9 @@
                     datepicker: false
                 });
 
-                jQuery(".valores").mask('#.##0,00', {reverse: true});
+                jQuery(".valores").mask('#.##0,00', {
+                    reverse: true
+                });
 
                 jQuery(".cidadeAutocomplete").autocomplete({
                     minLength: 2,
@@ -455,6 +587,9 @@
         jQuery("#formMediumModal").modal("show")
     });
 
+    jQuery(".editar2").click(function() {
+        jQuery("#formMediumModal2").modal("show")
+    });
 
     jQuery("#btnSalvar").click(function() {
         var este = jQuery(this);
@@ -464,6 +599,51 @@
         jQuery.ajax({
             type: 'POST',
             url: '<?= $this->siteUrl('viagens/salvar/') ?>' + id,
+            data: form.serialize(),
+            dataType: 'json',
+            beforeSend: function() {
+                jQuery('.error-label').html('');
+            },
+            success: function(retorno) {
+                if (retorno.status == true) {
+
+                    show_message(retorno.msg, 'success', null, '/viagens');
+
+                    let data_saida = new moment(retorno.data[0].data_saida);
+                    let data_chegada = new moment(retorno.data[0].data_chegada);
+                    jQuery("#label_descricao" + id).html(retorno.data[0].descricao);
+                    jQuery("#label_origem_id" + id).html(retorno.data[0].origem_id);
+                    jQuery("#label_destino_id" + id).html(retorno.data[0].destino_id);
+                    jQuery("#label_data_saida" + id).html(data_saida.format('DD/MM/YYYY HH:mm'));
+                    jQuery("#label_data_chegada" + id).html(data_chegada.format('DD/MM/YYYY HH:mm'));
+                    jQuery("#label_veiculos_id" + id).html(retorno.data[0].marca + ' ' + retorno.data[0].modelo + ' ' + retorno.data[0].ano + ' ' + retorno.data[0].codigo + ' ' + retorno.data[0].placa);
+                    jQuery("#label_valor" + id).html((retorno.data[0].valor).replace('.', ','));
+                    jQuery("#linha" + id).addClass('success-transition');
+                } else {
+                    jQuery("#linha" + id).addClass('error-transition');
+                    // jQuery("#retornomsg").html(retorno.msg).removeClass().addClass('text-danger');
+                    if (retorno.data) {
+                        for (var key in retorno.data) {
+                            jQuery("#" + key).parent('div').find('.error-label').html(retorno.data[key]);
+                        }
+
+                    }
+                }
+            },
+            error: function(st) {
+                show_message(st.status + ' ' + st.statusText, 'danger');
+            }
+        });
+    });
+
+    jQuery("#btnSalvarViagemLinha").click(function() {
+        var este = jQuery(this);
+        var id = jQuery("#viagens_id").val();
+        var form = jQuery("#formViagemLinha");
+
+        jQuery.ajax({
+            type: 'POST',
+            url: '<?= $this->siteUrl('viagens/linha/salvar/') ?>' + id,
             data: form.serialize(),
             dataType: 'json',
             beforeSend: function() {

@@ -64,7 +64,7 @@ class Linhas extends BaseController
     public function listPoints(Request $request, Response $response, $args)
     {
         $dados = [];
-        $requests = $request->getQueryParams();
+        $requests = $request->getParsedBody();
         
         $apiResult = $this->api->post('linhas_pontos/listar', $requests);
         if(property_exists($apiResult, 'data')){

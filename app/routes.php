@@ -95,6 +95,7 @@ return function (App $app, Request $request) {
         $group->map(['GET', 'POST'], '', [Viagens::class, 'list']);
         $group->map(['GET', 'POST'], '/pontos[/]', [Viagens::class, 'listPoints']);
         $group->post('/salvar[/[{id}]]', [Viagens::class, 'save']);
+        $group->post('/linha/salvar[/[{id}]]', [Viagens::class, 'saveRoute']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 
@@ -107,8 +108,9 @@ return function (App $app, Request $request) {
     $app->post('/localidades/salvar[/[{id}]]', [Localidades::class, 'save']);
     
     $app->group('/locais', function (Group $group) {
-        $group->map(['GET', 'POST'], '', [Locais::class, 'list']);
-        $group->post('/localidades/salvar[/[{id}]]', [Locais::class, 'save']);
+        $group->map(['GET', 'POST'], '', [Locais::class, 'home']);
+        $group->map(['GET', 'POST'], '/listar', [Locais::class, 'list']);
+        $group->post('/locais/salvar[/[{id}]]', [Locais::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(new CheckTokenMiddleware());
 

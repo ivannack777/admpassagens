@@ -20,7 +20,7 @@
     <!-- CSS only bootstrap 5 -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous"> -->
 
-    <!-- <link rel="stylesheet" href="<?= $this->siteUrl('vendors/font-awesome/css/font-awesome.min.css?'. time() ) ?>"> -->
+    
     <link rel="stylesheet" href="<?= $this->siteUrl('vendors/themify-icons/css/themify-icons.css?'. time() ) ?>">
     <link rel="stylesheet" href="<?= $this->siteUrl('vendors/flag-icon-css/css/flag-icon.min.css?'. time() ) ?>">
     <link rel="stylesheet" href="<?= $this->siteUrl('vendors/selectFX/css/cs-skin-elastic.css?'. time() ) ?>">
@@ -30,15 +30,15 @@
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/jquery.datetimepicker.min.css?'. time() ) ?>">
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/select2.css?'. time() ) ?>">
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/jquery-ui.min.css?'. time() ) ?>">
-
     <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/estilos.css?'. time() ) ?>">
+    <link rel="stylesheet" href="<?= $this->siteUrl('assets/css/bootstrap-datetimepicker.min.css') ?>">
+    <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' type='text/css'>
 
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
-
-    <script src="https://code.jquery.com/jquery-3.6.1.js"></script>
-    <script src="<?= $this->siteUrl('vendors/popper.js/dist/umd/popper.min.js?'. time() ) ?>"></script>
+    <script src="<?= $this->siteUrl('assets/js/jquery-3.6.1.min.js') ?>"></script>
     <script src="<?= $this->siteUrl('vendors/bootstrap/dist/js/bootstrap.min.js?'. time() ) ?>"></script>
+    <script src="<?= $this->siteUrl('assets/js/popper.min.js') ?>"></script>
+    
     <script src="<?= $this->siteUrl('assets/js/main.js?'. time() ) ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/jquery.datetimepicker.full.min.js?'. time() ) ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/moment-with-locales.js?'. time() ) ?>"></script>
@@ -50,6 +50,11 @@
         jQuery.datetimepicker.setLocale('pt-BR');
 
     </script>
+
+
+    <script src="<?= $this->siteUrl('assets/js/bootstrap-datetimepicker.min.js') ?>"></script>
+    <!-- <script src="<?= $this->siteUrl('assets/js/jQuery-provider.js') ?>"></script> -->
+
 
 </head>
 

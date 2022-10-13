@@ -45,7 +45,7 @@
                         <?php $session = $this->getAttributes();
                         $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
-                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar viagem</button>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar linha</button>
                         <?php endif ?>
                     </div>
                     <div class="">
@@ -75,24 +75,23 @@
                     </thead>
                     <tbody>
                         <?php foreach ($linhas->data as $linha) :
-                        $dias = explode(',', $linha->dias);
-                        $diasExt = [];
-                        if(!empty($linha->dias)){
-                            foreach($dias as $dia){
-                                $diasExt[] = $this->diasSemana($dia, true);
+                            $dia = explode(',', $linha->dia);
+                            $diaExt = [];
+                            if (!empty($linha->dia)) {
+                                foreach ($dia as $dia) {
+                                    $diaExt[] = $this->diasSemana($dia, true);
+                                }
                             }
-                        }
                         ?>
                             <tr id="linha<?= $linha->id ?>" class="list-label">
                                 <td><span id="label_descricao<?= $linha->id ?>"><?= $linha->descricao ?></span></td>
-                                <td><span id="label_dias<?= $linha->id ?>"><?= implode(', ', $diasExt) ?></span></td>
+                                <td><span id="label_dia<?= $linha->id ?>"><?= implode(', ', $diaExt) ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" 
-                                        data-id="<?= $linha->id ?>" data-descricao="<?= $linha->descricao ?>" data-dias="<?= $linha->dias ?>" >
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $linha->id ?>" data-descricao="<?= $linha->descricao ?>" data-dia="<?= $linha->dia ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                     <!-- Favoritar -->
@@ -187,14 +186,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label mb-1" for="dias">Dias da semana</label>
+                        <label class="control-label mb-1" for="dia">Dias da semana</label>
                         <span class="text-danger error-label"></span>
-                        <select type="text" class="form-elements" id="dias" name="dias[]" multiple>
-                            <option value="0">Selecione...</option>
-                            <?php 
+                        <select type="text" class="form-elements" id="dia" name="dia[]" multiple>
+                            <option value="">Selecione...</option>
+                            <?php
                             $diasSemana = $this->diasSemana();
-                            foreach($diasSemana as $d => $diaSemana): ?>
-                                <option value="<?= $d ?>"><?= $diaSemana ?></option>
+                            foreach ($diasSemana as $d => $diasSemana) : ?>
+                                <option value="<?= $d ?>"><?= $diasSemana ?></option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -216,7 +215,7 @@
 <script>
     var qtdPontos = 0;
 
-    jQuery('#dias').select2({
+    jQuery('#dia').select2({
         dropdownParent: jQuery('#formMediumModal'),
         class: 'form-elements',
         closeOnSelect: false
@@ -232,16 +231,25 @@
             '  <input type="hidden" class="pontos" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="" />' +
             '  <input type="hidden" class="pontos" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="" />' +
             '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade' + (c + 1) + '" value="" data-id="' + (c + 1) + '" style="width:270px;" /></div>' +
+            '  <div><label>Dias:</label><span><select class="form-elements" name="pontos[' + (c + 1) + '][dia]" id="dia' + (c + 1) + '"> <option value="">Selecione...</option>' +
+            <?php $diasSemana = $this->diasSemana();
+            foreach ($diasSemana as $d => $diasSemana) : ?> '<option value="<?= $d ?>"><?= $diasSemana ?></option>' +
+            <?php endforeach ?> '   </select></span></div>' +
             '  <div><label>Horário:</label><span><input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="" /></span></div>' +
             '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
             '</div>'
         );
         jQuery(".horas").datetimepicker({
-            format: "H:i",
-            datepicker: false
+            format: "HH:mm",
+            stepping: 10
         });
 
-        jQuery(".valores").mask('#.##0,00', {reverse: true});
+        jQuery(".valores").mask('#.##0,00', {
+            reverse: true
+        });
+        jQuery(".horas").mask('00:00', {
+            reverse: true
+        });
 
         jQuery(".cidadeAutocomplete").autocomplete({
             minLength: 2,
@@ -249,7 +257,7 @@
             source: function(request, response) {
 
                 jQuery.ajax({
-                    url: "/locais",
+                    url: "/locais/listar",
                     type: "post",
                     data: {
                         cidade: request.term
@@ -258,7 +266,7 @@
                     success: function(retorno) {
                         response(jQuery.map(retorno.data, function(val, key) {
 
-                            var label = val.cidade + ' - ' + val.uf;
+                            var label = val.cidade + ' - ' + val.uf + ' / ' + val.endereco;
                             return {
                                 label: label,
                                 value: label,
@@ -286,18 +294,18 @@
         var id = este.data('id');
 
 
-        // if (este.data('dias')) {
-        //     console.log(este.data('dias').split(','))
-        //     jQuery('#dias option[value="' + este.data('dias').split(',') + '"]').prop('selected', true);
+        // if (este.data('dia')) {
+        //     console.log(este.data('dia').split(','))
+        //     jQuery('#dia option[value="' + este.data('dia').split(',') + '"]').prop('selected', true);
         // } else {
-        //     jQuery('#dias option[value="0"]').prop('selected', true);
+        //     jQuery('#dia option[value="0"]').prop('selected', true);
         // }
 
         jQuery("#linhas_id").val(este.data('id'));
         jQuery("#descricao").val(este.data('descricao'));
         jQuery("#valor").val(este.data('valor'));
         jQuery("#assentos").val(este.data('assentos'));
-        jQuery("#dias").val(este.data('dias')?.split(',')).trigger('change');
+        jQuery("#dia").val(este.data('dia')?.split(',')).trigger('change');
 
         jQuery("#pontosDiv").html('');
         jQuery.ajax({
@@ -313,17 +321,39 @@
             success: function(retorno) {
                 if (retorno.status == true) {
                     jQuery("#pontosDiv").html('');
-                    jQuery.each(retorno.data, function(c, ponto) {
-                        jQuery("#pontosDiv").append(
-                            ' <div class="pontoDiv layout-flex flex-row layout-dados layout-margin" style="position: relative;">' +
-                            '  <div><div class="circle font-20 bold6"> ' + (c + 1) + '</div></div>' +
-                            '  <input type="hidden" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="' + ponto.id + '" />' +
-                            '  <input type="hidden" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="' + ponto.locais_id + '" />' +
-                            '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade" value="' + ponto.cidade + ' - ' + ponto.uf + '" style="width:270px" /></div>' +
-                            '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="' + ponto.hora + '" /></span></div>' +
-                            '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
-                            '</div>'
-                        );
+                    if (retorno.data.length) {
+                        let diasSemana = <?= json_encode($this->diasSemana()) ?>;
+                        jQuery.each(retorno.data, function(c, ponto) {
+                            jQuery("#pontosDiv").append(
+                                ' <div class="pontoDiv layout-flex flex-row layout-dados layout-margin" style="position: relative;">' +
+                                '  <div><div class="circle font-20 bold6"> ' + (c + 1) + '</div></div>' +
+                                '  <input type="hidden" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="' + ponto.id + '" />' +
+                                '  <input type="hidden" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="' + ponto.locais_id + '" />' +
+                                '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade" value="' + ponto.cidade + ' - ' + ponto.uf + '" style="width:270px" /></div>' +
+                                '  <div><label>Dias:</label><span><select class="form-elements" name="pontos[' + (c + 1) + '][dia]" id="dia' + (c + 1) + '"> <option value="">Selecione...</option></select>' +
+                                '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="' + ponto.hora + '" /></span></div>' +
+                                '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
+                                '</div>'
+                            );
+                            for(let w in diasSemana){
+                                if(w == ponto.dia){
+                                    newOption = new Option(diasSemana[w], w, true, true);
+                                } else {
+                                    newOption = new Option(diasSemana[w], w, false, false);
+                                }
+                                $("#dia" + (c + 1)).append(newOption);
+                            }
+                            
+                        });
+                    } else {
+                        jQuery("#pontosDiv").append(retorno.msg);
+                    }
+
+                    jQuery(".valores").mask('#.##0,00', {
+                        reverse: true
+                    });
+                    jQuery(".horas").mask('00:00', {
+                        reverse: true
                     });
 
 
@@ -336,11 +366,12 @@
             },
             complete: function() {
                 jQuery(".horas").datetimepicker({
-                    format: "H:i",
-                    datepicker: false
+                    format: "HH:mm",
                 });
 
-                jQuery(".valores").mask('#.##0,00', {reverse: true});
+                jQuery(".valores").mask('#.##0,00', {
+                    reverse: true
+                });
 
                 jQuery(".cidadeAutocomplete").autocomplete({
                     minLength: 2,
@@ -435,6 +466,6 @@
         var id = jQuery("#linhas_id").val();
         var rota = '<?= $this->siteUrl('linhas/excluir/') ?>' + id;
         var redirect = '<?= $this->siteUrl('linhas') ?>';
-        excluir(rota, 'Você realmente quer excluir esta viagem?', redirect);
+        excluir(rota, 'Você realmente quer excluir esta linha?', redirect);
     });
 </script>

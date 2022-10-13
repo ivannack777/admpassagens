@@ -23,6 +23,35 @@ class Locais extends BaseController
         $this->container = $container;
     }
 
+
+    /**
+     * Localiza e retorna um localidades passando 'localidades' por json request.
+     *
+     * @return string json
+     */
+    public function home(Request $request, Response $response)
+    {
+        $requests = $request->getParsedBody();
+        
+        $apiResult = $this->api->post('locais/listar', $requests);
+        $dados['locais'] = $apiResult;
+
+        $apiResult = $this->api->post('locais/estados', $requests);
+        $dados['estados'] = $apiResult;
+        
+        //usando $this->view setado em BaseController
+        if ($args['modo']??false == 'lista') {
+            return $this->views->render($response, 'locais_list.php', $dados);
+        } else {
+            $this->views->render($response, 'header.php', $dados);
+            $this->views->render($response, 'left.php', $dados);
+            $this->views->render($response, 'right_top.php', $dados);
+            $this->views->render($response, 'locais.php', $dados);
+            return $this->views->render($response, 'footer.php', $dados);
+        }
+
+    }
+
     /**
      * Localiza e retorna um localidades passando 'localidades' por json request.
      *

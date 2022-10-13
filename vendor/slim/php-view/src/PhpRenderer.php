@@ -259,7 +259,7 @@ class PhpRenderer
     public function diasSemana($idx=false, $brev=false){
 
         $dias = [
-           1=> "Domingo",
+            "Domingo",
             "Segunda-feira",
             "Terça-feira",
             "Quarta-feira",
@@ -267,10 +267,17 @@ class PhpRenderer
             "Sexta-feira",
             "Sábado",
         ];
+        
         if($brev){
             foreach($dias as $k=>$v){
                 $dias[$k] = mb_substr($v, 0, 3);
             }
+        }
+        if(is_array($idx )){
+            foreach($idx as $i){
+                $dias2[] = $dias[$i];
+            }
+            return $dias2;
         }
         return $idx ? $dias[$idx] : $dias;
     }

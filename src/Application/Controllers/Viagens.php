@@ -40,6 +40,9 @@ class Viagens extends BaseController
         $apiResult = $this->api->post('veiculos/listar', $requests);
         $dados['veiculos'] = $apiResult;
 
+        $apiResult = $this->api->post('linhas/listar', $requests);
+        $dados['linhas'] = $apiResult;
+
         $apiResult = $this->api->post('viagens/listar', $requests);
         $dados['viagens'] = $apiResult;
         
@@ -159,5 +162,25 @@ class Viagens extends BaseController
         */
     }
 
+
+    /**
+     * Salva um viagenss.
+     *
+     * @return string json
+     */
+    public function saveRoute(Request $request, Response $response, array $args)
+    { 
+        // session_start();
+        $id = $args['id'] ?? null;
+        $requests = $request->getParsedBody();
+        if (empty($requests)) {
+            return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
+        }
+
+        $apiResult = $this->api->post('viagens/linha/salvar/'.$id, $requests);
+        return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
+
+        
+    }
 
 }

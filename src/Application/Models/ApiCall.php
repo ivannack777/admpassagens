@@ -80,9 +80,10 @@ class ApiCall
             if(!empty($result)) $retorno = json_decode($result);
             if(preg_match('/true/i', $_ENV['DEBUG']??'') && !$retorno ){
                 
-                // echo "<pre>";
-                // var_export($result);
-                // echo "</pre>";
+                echo "<pre>";
+                var_export($result);
+                echo "</pre>";
+                exit;
                 $retorno = $result;
             }
             $this->retorno = $retorno;
