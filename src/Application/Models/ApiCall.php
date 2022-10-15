@@ -84,7 +84,7 @@ class ApiCall
                 var_export($result);
                 echo "</pre>";
                 exit;
-                $retorno = $result;
+                
             }
             $this->retorno = $retorno;
         }

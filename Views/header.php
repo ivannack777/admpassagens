@@ -48,6 +48,15 @@
     <script src="https://kit.fontawesome.com/8158c55e47.js" crossorigin="anonymous"></script>
     <script>
         jQuery.datetimepicker.setLocale('pt-BR');
+        jQuery.fn.addClassTemp = function(className, timeOut=2000) {
+            var element = this;
+            element.addClass(className);
+            setTimeout(function(){
+                element.removeClass(className);
+            }, timeOut)
+
+            return this; // Needed for other methods to be able to chain off of yourFunctionName.
+        };
 
     </script>
 

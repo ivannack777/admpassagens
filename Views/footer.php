@@ -156,8 +156,6 @@
          var item = element.data('item');
          var item_id = element.data('item_id');
 
-console.log('btn/fav', element,item,  item_id)
-
          jQuery.ajax({
              type: 'POST',
              url: '<?= $this->siteUrl('favoritos/salvar') ?>',
@@ -281,6 +279,41 @@ console.log('btn/fav', element,item,  item_id)
         
     });
 
+    function autocompleteLocais($el, url){
+
+        $($el).autocomplete({
+            minLength: 2,
+            delay: 100,
+            source: function(request, response) {
+
+                jQuery.ajax({
+                    url: "/locais/listar",
+                    type: "post",
+                    data: {
+                        cidade: request.term
+                    },
+                    dataType: 'json',
+                    success: function(retorno) {
+                        response(jQuery.map(retorno.data, function(val, key) {
+
+                            var label = val.cidade + ' - ' + val.uf + ' / ' + val.endereco;
+                            return {
+                                label: label,
+                                value: label,
+                                id: val.id
+                            };
+                        }));
+                    }
+                });
+            },
+            select: function(event, ui) {
+                // console.log(event)
+                let id = jQuery(event.target).data('id');
+                let destino = $el.data('target');
+                jQuery("#" +destino).val(ui.item.id)
+            }
+        });
+    }
 
  </script>
 

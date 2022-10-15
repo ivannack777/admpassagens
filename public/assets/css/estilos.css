@@ -156,6 +156,31 @@
     border-bottom-right-radius: 6px;
 }
 
+.form-elements-error{
+    
+    animation:hihtlighttemp 2s ease-in;
+}
+@keyframes hihtlighttemp {
+    0%{
+        border-color: rgb(206, 14, 190);
+    }
+    20%{
+        background:rgba(230, 30, 220, 0.2);
+        border-color: rgb(223, 26, 26);
+    }
+    50%{
+        background:rgba(230, 30, 220, 0.7);
+        border-color: rgb(223, 26, 26);
+    }
+    70%{
+        border-color: rgb(223, 26, 26);
+    }
+    100%{
+        background:initial;
+        border-color: initial;
+    }
+}
+
 ul.ui-autocomplete {
     z-index: 1100;
 }
@@ -315,4 +340,15 @@ ul.ui-autocomplete {
     background: #e7e6e6;
     color: #c2c0c0;
     cursor: context-menu;
+}
+
+a{
+    text-decoration: none;
+    outline: none !important;
+    color: #6195cc;
+    transition: all 0.25s ease;  
+}
+
+a:hover{
+    color: #1063bb;
 }

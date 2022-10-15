@@ -16,6 +16,7 @@ use App\Application\Controllers\Usuarios\Comentarios;
 use App\Application\Controllers\Veiculos;
 use App\Application\Controllers\Viagens;
 use App\Application\Controllers\Linhas;
+use App\Application\Controllers\Trechos;
 use App\Application\Controllers\Clientes;
 use App\Application\Controllers\Pedidos;
 use App\Application\Middleware\CheckTokenMiddleware;
@@ -88,6 +89,13 @@ return function (App $app, Request $request) {
         $group->map(['GET', 'POST'], '', [Linhas::class, 'list']);
         $group->map(['GET', 'POST'], '/pontos[/]', [Linhas::class, 'listPoints']);
         $group->post('/salvar[/[{id}]]', [Linhas::class, 'save']);
+        $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
+    })->add(CheckTokenMiddleware::class);
+
+    $app->group('/trechos', function (Group $group) {
+        $group->map(['GET', 'POST'], '', [Trechos::class, 'list']);
+        $group->map(['GET', 'POST'], '/pontos', [Trechos::class, 'listPoints']);
+        $group->post('/salvar[/[{id}]]', [Trechos::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
 

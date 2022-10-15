@@ -24,7 +24,8 @@
                 <li>
                     <a href="<?= $this->siteUrl('linhas') ?>"> <i class="menu-icon fas fa-bus-alt"></i> Linhas </a>
                     <a href="<?= $this->siteUrl('viagens') ?>"> <i class="menu-icon fas fa-road"></i> Viagens </a>
-                    <a href="<?= $this->siteUrl('locais') ?>"> <i class="menu-icon fas fa-road"></i> Locais </a>
+                    <a href="<?= $this->siteUrl('locais') ?>"> <i class="menu-icon fas fa-map-marked"></i> Locais </a>
+                    <a href="<?= $this->siteUrl('trechos') ?>"> <i class="menu-icon fas fa-route"></i> Trechos </a>
                     <a href="<?= $this->siteUrl('clientes') ?>"> <i class="menu-icon fas fa-user-tag"></i> Clientes</a>
                     <a href="<?= $this->siteUrl('pedidos') ?>"> <i class="menu-icon fas fa-file-invoice-dollar"></i> Pedidos</a>
                     <a href="<?= $this->siteUrl('usuarios') ?>"><i class="menu-icon fas fa-file-invoice-dollar"></i> Usuarios</a>

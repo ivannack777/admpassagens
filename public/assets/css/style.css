@@ -5248,7 +5248,6 @@ p:focus {
   outline: 0;
 }
 
-a,
 button {
   text-decoration: none;
   outline: none !important;

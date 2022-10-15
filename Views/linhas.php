@@ -329,8 +329,8 @@
                                 '  <div><div class="circle font-20 bold6"> ' + (c + 1) + '</div></div>' +
                                 '  <input type="hidden" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="' + ponto.id + '" />' +
                                 '  <input type="hidden" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="' + ponto.locais_id + '" />' +
-                                '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade" value="' + ponto.cidade + ' - ' + ponto.uf + '" style="width:270px" /></div>' +
-                                '  <div><label>Dias:</label><span><select class="form-elements" name="pontos[' + (c + 1) + '][dia]" id="dia' + (c + 1) + '"> <option value="">Selecione...</option></select>' +
+                                '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade" value="' + ponto.cidade + ' - ' + ponto.uf + '" /></div>' +
+                                '  <div><label>Dia da semana:</label><span><select class="form-elements" name="pontos[' + (c + 1) + '][dia]" id="dia' + (c + 1) + '"> <option value="">Selecione...</option></select></div>' +
                                 '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="' + ponto.hora + '" /></span></div>' +
                                 '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
                                 '</div>'
