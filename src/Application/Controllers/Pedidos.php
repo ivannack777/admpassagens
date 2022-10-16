@@ -68,62 +68,8 @@ class Pedidos extends BaseController
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }
-        $clientes_id = $requests['clientes_id'] ?? null;
-        $viagens_id = $requests['viagens_id'] ?? null;
-        $cpf = $requests['cpf'] ?? null;
-        $valor = $requests['valor'] ?? null;
-        $status = $requests['status'] ?? null;
-        
-        $sanitize = new Sanitize();
+        $apiResult = $this->api->post('pedidos/salvar/'.$id, $requests);
+        return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
 
-        $dados = [
-            'clientes_id' => $clientes_id,
-            'viagens_id' => $viagens_id,
-            'cpf' => $sanitize->number($cpf, 'clear')->get(),
-            'valor' => $sanitize->decimal($valor, 2)->get(),
-            'status' => $status,
-
-        ];
-
-        if (!empty($id)) {
-            $pedidos = PedidosModel::list(['id' => $id]);
-            if ($pedidos->count()) {
-                //  var_dump($list);exit;
-
-                PedidosModel::where(['id' => $id])->update($dados);
-                $pedidos = PedidosModel::list(['id' => $id]);
-
-                return $response->withJson($pedidos, true, 'Pedido foi salvo');
-            } else {
-                return $response->withJson($requests, false, 'Pedido não foi localizada');
-            }
-        } else {
-            $v = new Validator($dados);
-            $v->rule('required', ['clientes_id']);
-            if ($v->validate()) {
-                // $PedidosModel = new PedidosModel();
-                $pedidoMax = PedidosModel::where('excluido','N')->max('id');
-                $pedidoMax++;
-                
-                $dados['codigo'] = date('ymd') . sprintf('%05s', $clientes_id) . sprintf('%05s', $pedidoMax) ;
-                // var_dump($dados);exit;
-                $pedidosInsert = PedidosModel::create($dados);
-                $pedidosNew = PedidosModel::list(['pedidos.id' => $pedidosInsert->id]);
-
-                $viagens = ViagensModel::where('id',$viagens_id)->first();
-                // var_dump($viagens->origem_id, $viagens->destino_id);exit;
-                $dados = [
-                    'localidades_id' => $viagens->origem_id,
-                    'direcao' => '1'
-                ];
-   
-                return $response->withJson($pedidosNew, true, 'Pedido foi adicionado');
-            } else {
-                // Errors
-                $Errors = $this->valitorMessages($v->errors());
-
-                return $response->withJson($dados, false, $Errors);
-            }
-        }
     }
 }

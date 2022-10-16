@@ -38,7 +38,7 @@ class ExcluirController
         $uriPath = $request->getUri()->getPath();
         // var_dump($uriPath);exit;
         $api = new ApiCall();
-        $apiResult = $api->post('trechos/excluir/6');
+        $apiResult = $api->post($uriPath);
 
         return $response->withJson($apiResult->data, true, ($apiResult->msg) );
     }

@@ -69,6 +69,7 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
+                            <td>Código</td>
                             <td>Descrição</td>
                             <td>Saída</td>
                             <td>Chegada</td>
@@ -81,6 +82,7 @@
                         <?php foreach ($viagens->data as $viagem) :
                         ?>
                             <tr id="linha<?= $viagem->id ?>" class="list-label">
+                                <td><span id="label_codigo<?= $viagem->id ?>"><?= $viagem->codigo ?></span></td>
                                 <td><span id="label_descricao<?= $viagem->id ?>"><?= $viagem->descricao ?></span></td>
                                 <td><span id="label_data_saida<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?></span></td>
                                 <td><span id="label_data_chegada<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?></span></td>
@@ -90,7 +92,7 @@
                                         $viagem->marca . " " .
                                             $viagem->modelo . " " .
                                             $viagem->ano . " " .
-                                            $viagem->codigo . " " .
+                                            $viagem->veiculos_codigo . " " .
                                             $viagem->placa
                                         ?>
                                     </span>
@@ -247,7 +249,7 @@
                                                                     $veiculo->marca . " " .
                                                                         $veiculo->modelo . " " .
                                                                         $veiculo->ano . " " .
-                                                                        $veiculo->codigo . " " .
+                                                                        $veiculo->veiculos_codigo . " " .
                                                                         $veiculo->placa . " "
                                                                     ?></option>
                             <?php endforeach ?>
@@ -307,9 +309,9 @@
                         <label class="control-label mb-1" for="linha">Período</label>
                         <span class="text-danger error-label"></span>
                         <div class="form-elements-group">
-                            <input type="text" class="form-elements" id="dataIni" name="dataIni" />
+                            <input type="text" class="form-elements datas" id="dataIni" name="dataIni" />
                             <span class="">a</span>
-                            <input type="text" class="form-elements" id="dataFim" name="dataFim" />
+                            <input type="text" class="form-elements datas" id="dataFim" name="dataFim" />
                         </div>
 
                     </div>
@@ -350,7 +352,7 @@
                                                                     $veiculo->marca . " " .
                                                                         $veiculo->modelo . " " .
                                                                         $veiculo->ano . " " .
-                                                                        $veiculo->codigo . " " .
+                                                                        $veiculo->veiculos_codigo . " " .
                                                                         $veiculo->placa . " "
                                                                     ?></option>
                             <?php endforeach ?>
@@ -379,7 +381,8 @@
     jQuery(".datas").mask('00/00/0000 00:00');
     jQuery(".assentos").mask('0#');
 
-    jQuery("#dataIni, #dataFim").datetimepicker({
+
+    jQuery(".datas").datetimepicker({
         icons: {
                 time: 'fas fa-clock',
                 date: 'fas fa-calendar',
@@ -392,14 +395,8 @@
                 close: 'fas fa-times'
             } ,
         locale: 'pt-BR',
-        format: 'DD/MM/yyyy',
-        dayViewHeaderFormat: 'MM/yyyy'
-    });
-
-
-
-    jQuery(".datas").datetimepicker({
-        format: "d/m/Y H:i"
+        format: "DD/MM/YYYY HH:mm",
+        dayViewHeaderFormat: 'MM/YY',
     });
 
     jQuery('#veiculos_id').select2({
@@ -424,7 +421,7 @@
             '</div>'
         );
         jQuery(".horas").datetimepicker({
-            format: "H:i",
+            format: "HH:mm",
             datepicker: false
         });
 
@@ -498,88 +495,89 @@
         jQuery("#assentos_tipo").val(este.data('assentos_tipo'));
         jQuery("#detalhes").val(este.data('detalhes'));
         jQuery("#pontosDiv").html('');
-        jQuery.ajax({
-            type: 'POST',
-            url: '<?= $this->siteUrl('viagens/pontos') ?>',
-            data: {
-                viagens_id: id
-            },
-            dataType: 'json',
-            beforeSend: function() {
-                jQuery("#pontosDiv").html('Aguarde...');
-            },
-            success: function(retorno) {
-                if (retorno.status == true) {
-                    jQuery("#pontosDiv").html('');
-                    jQuery.each(retorno.data, function(c, ponto) {
-                        jQuery("#pontosDiv").append(
-                            ' <div class="pontoDiv layout-flex flex-row layout-dados layout-margin" style="position: relative;">' +
-                            '  <div><div class="circle font-20 bold6"> ' + (c + 1) + '</div></div>' +
-                            '  <input type="hidden" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="' + ponto.id + '" />' +
-                            '  <input type="hidden" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="' + ponto.locais_id + '" />' +
-                            '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade" value="' + ponto.cidade + ' - ' + ponto.uf + '" style="width:270px" /></div>' +
-                            '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="' + ponto.hora + '" /></span></div>' +
-                            '  <div><label>Valor:</label><span><input type="text" class="form-elements valores" name="pontos[' + (c + 1) + '][valor]" id="valor' + (c + 1) + '" value="' + (ponto.valor).replace('.', ',') + '" /></span></div>' +
-                            '  <div><label>Distância:</label><span><input type="text" class="form-elements" name="pontos[' + (c + 1) + '][distancia]" id="distancia' + (c + 1) + '" value="' + ponto.distancia + '" /></span></div>' +
-                            '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
-                            '</div>'
-                        );
+        if(id){
+            jQuery.ajax({
+                type: 'POST',
+                url: '<?= $this->siteUrl('viagens/pontos') ?>',
+                data: {
+                    viagens_id: id
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    jQuery("#pontosDiv").html('Aguarde...');
+                },
+                success: function(retorno) {
+                    if (retorno.status == true) {
+                        jQuery("#pontosDiv").html('');
+                        jQuery.each(retorno.data, function(c, ponto) {
+                            jQuery("#pontosDiv").append(
+                                ' <div class="pontoDiv layout-flex flex-row layout-dados layout-margin" style="position: relative;">' +
+                                '  <div><div class="circle font-20 bold6"> ' + (c + 1) + '</div></div>' +
+                                '  <input type="hidden" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="' + ponto.id + '" />' +
+                                '  <input type="hidden" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="' + ponto.locais_id + '" />' +
+                                '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade" value="' + ponto.cidade + ' - ' + ponto.uf + '" style="width:270px" /></div>' +
+                                '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="' + ponto.hora + '" /></span></div>' +
+                                '  <div><label>Valor:</label><span><input type="text" class="form-elements valores" name="pontos[' + (c + 1) + '][valor]" id="valor' + (c + 1) + '" value="' + (ponto.valor).replace('.', ',') + '" /></span></div>' +
+                                '  <div><label>Distância:</label><span><input type="text" class="form-elements" name="pontos[' + (c + 1) + '][distancia]" id="distancia' + (c + 1) + '" value="' + ponto.distancia + '" /></span></div>' +
+                                '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
+                                '</div>'
+                            );
+                        });
+
+
+                    } else {
+
+                    }
+                },
+                error: function(st) {
+                    show_message(st.status + ' ' + st.statusText, 'danger');
+                },
+                complete: function() {
+                    jQuery(".horas").datetimepicker({
+                        format: "HH:mm",
+                        datepicker: false
                     });
 
+                    jQuery(".valores").mask('#.##0,00', {
+                        reverse: true
+                    });
 
-                } else {
+                    jQuery(".cidadeAutocomplete").autocomplete({
+                        minLength: 2,
+                        delay: 100,
+                        source: function(request, response) {
+
+                            jQuery.ajax({
+                                url: "/locais",
+                                type: "post",
+                                data: {
+                                    cidade: request.term
+                                },
+                                dataType: 'json',
+                                success: function(retorno) {
+                                    response(jQuery.map(retorno.data, function(val, key) {
+
+                                        var label = val.cidade + ' - ' + val.uf;
+                                        return {
+                                            label: label,
+                                            value: label,
+                                            id: val.id
+                                        };
+                                    }));
+                                }
+                            });
+                        },
+                        select: function(event, ui) {
+                            console.log(event)
+                            let id = jQuery(event.target).data('id');
+                            console.log(jQuery(event.target).data('id'), id)
+                            jQuery("#locais_id" + id).val(ui.item.id)
+                        }
+                    });
 
                 }
-            },
-            error: function(st) {
-                show_message(st.status + ' ' + st.statusText, 'danger');
-            },
-            complete: function() {
-                jQuery(".horas").datetimepicker({
-                    format: "H:i",
-                    datepicker: false
-                });
-
-                jQuery(".valores").mask('#.##0,00', {
-                    reverse: true
-                });
-
-                jQuery(".cidadeAutocomplete").autocomplete({
-                    minLength: 2,
-                    delay: 100,
-                    source: function(request, response) {
-
-                        jQuery.ajax({
-                            url: "/locais",
-                            type: "post",
-                            data: {
-                                cidade: request.term
-                            },
-                            dataType: 'json',
-                            success: function(retorno) {
-                                response(jQuery.map(retorno.data, function(val, key) {
-
-                                    var label = val.cidade + ' - ' + val.uf;
-                                    return {
-                                        label: label,
-                                        value: label,
-                                        id: val.id
-                                    };
-                                }));
-                            }
-                        });
-                    },
-                    select: function(event, ui) {
-                        console.log(event)
-                        let id = jQuery(event.target).data('id');
-                        console.log(jQuery(event.target).data('id'), id)
-                        jQuery("#locais_id" + id).val(ui.item.id)
-                    }
-                });
-
-            }
-        });
-
+            });
+        }
 
 
         jQuery("#mediumModalLabel").html('Viagem ' + (este.data('descricao') ? este.data('descricao') : ''));
@@ -616,7 +614,7 @@
                     jQuery("#label_destino_id" + id).html(retorno.data[0].destino_id);
                     jQuery("#label_data_saida" + id).html(data_saida.format('DD/MM/YYYY HH:mm'));
                     jQuery("#label_data_chegada" + id).html(data_chegada.format('DD/MM/YYYY HH:mm'));
-                    jQuery("#label_veiculos_id" + id).html(retorno.data[0].marca + ' ' + retorno.data[0].modelo + ' ' + retorno.data[0].ano + ' ' + retorno.data[0].codigo + ' ' + retorno.data[0].placa);
+                    jQuery("#label_veiculos_id" + id).html(retorno.data[0].marca + ' ' + retorno.data[0].modelo + ' ' + retorno.data[0].ano + ' ' + retorno.data[0].veiculos_codigo + ' ' + retorno.data[0].placa);
                     jQuery("#label_valor" + id).html((retorno.data[0].valor).replace('.', ','));
                     jQuery("#linha" + id).addClass('success-transition');
                 } else {
@@ -661,7 +659,7 @@
                     jQuery("#label_destino_id" + id).html(retorno.data[0].destino_id);
                     jQuery("#label_data_saida" + id).html(data_saida.format('DD/MM/YYYY HH:mm'));
                     jQuery("#label_data_chegada" + id).html(data_chegada.format('DD/MM/YYYY HH:mm'));
-                    jQuery("#label_veiculos_id" + id).html(retorno.data[0].marca + ' ' + retorno.data[0].modelo + ' ' + retorno.data[0].ano + ' ' + retorno.data[0].codigo + ' ' + retorno.data[0].placa);
+                    jQuery("#label_veiculos_id" + id).html(retorno.data[0].marca + ' ' + retorno.data[0].modelo + ' ' + retorno.data[0].ano + ' ' + retorno.data[0].veiculos_codigo + ' ' + retorno.data[0].placa);
                     jQuery("#label_valor" + id).html((retorno.data[0].valor).replace('.', ','));
                     jQuery("#linha" + id).addClass('success-transition');
                 } else {

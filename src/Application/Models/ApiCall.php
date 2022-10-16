@@ -44,7 +44,8 @@ class ApiCall
     {
         $this->setHeader();   
 
-        $ch = curl_init($this->url . $route);
+        $url = preg_replace('/([^:])(\/{2,})/', '$1/', $this->url . $route); //limpar barras duplas
+        $ch = curl_init($url);
         $ignoreCert = preg_match('/true/i',$_ENV['API_IGNORE_CERTIFICATE']);
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);

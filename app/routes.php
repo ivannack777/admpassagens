@@ -131,7 +131,7 @@ return function (App $app, Request $request) {
 
     $app->group('/pedidos', function (Group $group) {
         $group->map(['GET', 'POST'], '', [Pedidos::class, 'list']);
-        $group->post('/pedidos/salvar[/[{id}]]', [Pedidos::class, 'save']);
+        $group->post('/salvar[/[{id}]]', [Pedidos::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
     // $app->post('/pedidos/salvar[/[{id}]]', [Pedidos::class, 'save']);
