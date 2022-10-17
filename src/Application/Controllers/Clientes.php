@@ -28,7 +28,7 @@ class Clientes extends BaseController
      *
      * @return string json
      */
-    public function list(Request $request, Response $response)
+    public function home(Request $request, Response $response)
     {
         $requests = $request->getParsedBody();
         $apiResult = $this->api->post('clientes/listar', $requests);
@@ -45,6 +45,22 @@ class Clientes extends BaseController
             return $this->views->render($response, 'footer.php', $dados);
         }
         
+
+    }
+    /**
+     * Localiza e retorna um clientes passando 'clientes' por json request.
+     *
+     * @return string json
+     */
+    public function list(Request $request, Response $response)
+    {
+        $requests = $request->getParsedBody();
+        $apiResult = $this->api->post('clientes/listar', $requests);
+
+        if($apiResult){
+            return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
+        }
+        return $response->withJson([], false, 'Erro na consulta', 500);
 
     }
 

@@ -37,7 +37,7 @@
                 <div class="layout-flex flex-row flex-between">
                     <div class="">
                         <h4 class="card-title mb-0">Pedidos</h4>
-                        <div class="small text-muted"><?= $pedidos->count ?> pedidos estão sendo exibidos</div>
+                        <div class="small text-muted"> pedidos estão sendo exibidos</div>
                     </div>
                     <div class="">
                         <?php $session = $this->getAttributes();
@@ -62,49 +62,77 @@
                         </div>
                     </div>
                 </div>
+                <?php $viagens = (array)$viagens->data; ?>
+
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <td>Código</td>
-                            <td>Cliente</td>
-                            <td>Viagem</td>
-                            <td>CPF</td>
-                            <td>Valor</td>
-                            <td>Status</td>
-                            <td>Data/Hora</td>
-                            <td><i class="fas fa-cog"></i></td>
+                            <th></th>
+                            <th>Código da viagem</th>
+                            <th>Descrição da viagem</th>
+                            <th>Data da viagem</th>
+                            <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($pedidos->data as $pedido) :
-                        ?>
-                            <tr id="linha<?= $pedido->id ?>" class="list-label">
-                                <td><span id="label_codigo<?= $pedido->id ?>"><?= $pedido->codigo ?></span></td>
-                                <td><span id="label_cliente_nome<?= $pedido->id ?>"><?= $pedido->cliente_nome ?></span></td>
-                                <td><span id="label_viagem_descricao<?= $pedido->id ?>"><?= $pedido->viagem_descricao ?></span></td>
-                                <td><span id="label_cpf<?= $pedido->id ?>" class="label_cpf"><?= $pedido->cpf ?></span></td>
-                                <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor??'') ?></span></td>
-                                <td><span id="label_status<?= $pedido->id ?>"><?= $pedido->status ?></span></td>
-                                <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
-                                <td>
-                                    <?php $session = $this->getAttributes();
-                                    $usersession = $session['userSession'] ?? false;
-                                    if ($usersession && $usersession['nivel'] >= 3) : ?>
-                                        <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-cpf="<?= $pedido->cpf ?>" data-valor="<?= str_replace('.', ',', $pedido->valor??'') ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
-                                            <i class="far fa-edit"></i> Editar</button>
-                                    <?php endif ?>
-                                    <!-- Favoritar -->
-                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="pedidos" data-item_id="<?= $pedido->id ?>">
-                                        <?php if (isset($pedido->favoritos_id) && !empty($pedido->favoritos_id)) : ?>
-                                            <i class="fas fa-heart"></i>
-                                        <?php else : ?>
-                                            <i class="far fa-heart"></i>
-                                        <?php endif ?>
-                                    </button>
+                        <?php
+                        foreach ($pedidosViagens as $viagemId => $pedidosViagem) : ?>
+                            <!-- informações da viagem -->
+                            <tr>
+                                <td><button class="btn btn-sm fas fa-chevron-right expandir" data-trtarget="pedidos<?= $viagemId ?>tr"><i class=""></i></button></td>
+                                <td><?= $viagens[$viagemId]->codigo ?></td>
+                                <td><?= $viagens[$viagemId]->descricao ?></td>
+                                <td><?= $viagens[$viagemId]->data_saida ?></td>
+                                <td></td>
+                            </tr>
+                            <!-- informações do pedido -->
+                            <tr id="pedidos<?= $viagemId ?>tr" style="display: none;">
+                                <td colspan="5">
+                                    <table id="pedidos<?= $viagemId ?>Table" class="table table-bordered dataTable no-footer" >
+                                        <thead>
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Cliente</th>
+                                                <th>CPF</th>
+                                                <th>Valor</th>
+                                                <th>Status</th>
+                                                <th>Data/Hora</th>
+                                                <th><i class="fas fa-cog"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <?php foreach ($pedidosViagem as $pedido) : ?>
+                                            <tbody>
+                                                <tr id="linha<?= $pedido->id ?>" class="list-label">
+                                                    <td><span id="label_codigo<?= $pedido->id ?>"><?= $pedido->codigo ?></span></td>
+                                                    <td><span id="label_cliente_nome<?= $pedido->id ?>"><?= $pedido->cliente_nome ?></span></td>
+                                                    <td><span id="label_cpf<?= $pedido->id ?>" class="label_cpf"><?= $pedido->cpf ?></span></td>
+                                                    <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor ?? '') ?></span></td>
+                                                    <td><span id="label_status<?= $pedido->id ?>"><?= $pedido->status ?></span></td>
+                                                    <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
+                                                    <td>
+                                                        <?php $session = $this->getAttributes();
+                                                        $usersession = $session['userSession'] ?? false;
+                                                        if ($usersession && $usersession['nivel'] >= 3) : ?>
+                                                            <!-- Editar -->
+                                                            <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-cpf="<?= $pedido->cpf ?>" data-valor="<?= str_replace('.', ',', $pedido->valor ?? '') ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
+                                                                <i class="far fa-edit"></i> Editar</button>
+                                                        <?php endif ?>
+                                                        <!-- Favoritar -->
+                                                        <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="pedidos" data-item_id="<?= $pedido->id ?>">
+                                                            <?php if (isset($pedido->favoritos_id) && !empty($pedido->favoritos_id)) : ?>
+                                                                <i class="fas fa-heart"></i>
+                                                            <?php else : ?>
+                                                                <i class="far fa-heart"></i>
+                                                            <?php endif ?>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                            <?php endforeach ?>
+                                            </tbody>
+                                    </table>
                                 </td>
                             </tr>
-
                         <?php endforeach ?>
                     </tbody>
                 </table>
@@ -169,12 +197,9 @@
                     <div class="form-group">
                         <label class="control-label mb-1" for="clientes_id">Cliente</label>
                         <span class="text-danger error-label"></span>
-                        <select class="form-elements" id="clientes_id" name="clientes_id">
-                            <option value="0">Selecione...</option>
-                            <?php foreach ($clientes->data as $cliente) : ?>
-                                <option value="<?= $cliente->id ?>"><?= $cliente->nome ?></option>
-                            <?php endforeach ?>
-                        </select>
+                        <input type="text" id="clientes_id" name="clientes_id">
+                        <!-- deixar sem name para não fazer submit -->
+                        <input class="form-elements" id="clientes" data-target="clientes_id">
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="viagens_id">Viagem</label>
@@ -182,7 +207,7 @@
 
                         <select class="form-elements" id="viagens_id" name="viagens_id">
                             <option value="0">Selecione...</option>
-                            <?php foreach ($viagens->data as $viagem) : ?>
+                            <?php foreach ($viagens as $viagem) : ?>
                                 <option value="<?= $viagem->id ?>"><?= $viagem->descricao ?></option>
                             <?php endforeach ?>
                         </select>
@@ -289,14 +314,14 @@
             },
             success: function(retorno) {
                 if (retorno.status == true) {
-                    
+
                     show_message(retorno.msg, 'success', null, 'pedidos');
 
                     let data = new moment(retorno.data[0].dataInsret);
 
                     jQuery("#label_codigo" + id).html(retorno.data[0].descricao);
                     jQuery("#label_cliente_nome" + id).html(retorno.data[0].cliente_nome);
-                    jQuery("#label_viagem_descricao" + id).html(retorno.data[0].viagem_descricao);
+                    jQuery("#label_viagens_descricao" + id).html(retorno.data[0].viagens_descricao);
                     jQuery("#label_cpf" + id).html(data.cpf).mask('000.000.000-00');
                     jQuery("#label_valor" + id).html((retorno.data[0].valor).replace('.', ','));
                     jQuery("#label_status" + id).html(retorno.data[0].status);
@@ -324,4 +349,27 @@
         var redirect = '<?= $this->siteUrl('pedidos') ?>';
         excluir(rota, 'Você realmente quer excluir este pedido?', redirect);
     });
+
+$(".expandir").click(function(){
+    var este = $(this);
+    var idtrTarget = este.data('trtarget');
+    var trTarget = $('#'+idtrTarget);
+    console.log(idtrTarget, trTarget)
+    if(trTarget.is(":visible")){
+        este.removeClass('fa-chevron-down').addClass('fa-chevron-right');
+        trTarget.css('display', 'none')
+    } else {
+        este.removeClass('fa-chevron-right').addClass('fa-chevron-down');
+        trTarget.css('display', 'table-row')
+    }
+})
+
+$("body").on('keyup', '#clientes', function(evt) {
+
+if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 65 && event.keyCode <= 90)) {
+    
+    autocompleteClientes($(this));
+}
+})
+    
 </script>

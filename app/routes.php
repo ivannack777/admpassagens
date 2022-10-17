@@ -123,8 +123,9 @@ return function (App $app, Request $request) {
     })->add(new CheckTokenMiddleware());
 
     $app->group('/clientes', function (Group $group) {
-        $group->map(['GET', 'POST'], '', [Clientes::class, 'list']);
-        $group->post('/clientes/salvar[/[{id}]]', [Clientes::class, 'save']);
+        $group->map(['GET', 'POST'], '', [Clientes::class, 'home']);
+        $group->map(['GET', 'POST'], '/listar', [Clientes::class, 'list']);
+        $group->post('/salvar[/[{id}]]', [Clientes::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
     // $app->post('/clientes/salvar[/[{id}]]', [Clientes::class, 'save']);

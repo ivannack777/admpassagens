@@ -314,6 +314,43 @@
             }
         });
     }
+    function autocompleteClientes($el){
+
+        $($el).autocomplete({
+            minLength: 2,
+            delay: 100,
+            source: function(request, response) {
+
+                jQuery.ajax({
+                    url: '/clientes/listar',
+                    type: "post",
+                    data: {
+                        nome: request.term,
+                        cpf: request.term,
+                        busca: '1',
+                    },
+                    dataType: 'json',
+                    success: function(retorno) {
+                        response(jQuery.map(retorno.data, function(val, key) {
+                            
+                            var label = val.nome + ' - ' + val.cpf;
+                            return {
+                                label: label,
+                                value: label,
+                                id: val.id
+                            };
+                        }));
+                    }
+                });
+            },
+            select: function(event, ui) {
+                // console.log(event)
+                let id = jQuery(event.target).data('id');
+                let destino = $el.data('target');
+                jQuery("#" +destino).val(ui.item.id)
+            }
+        });
+    }
 
  </script>
 

@@ -34,15 +34,24 @@ class Pedidos extends BaseController
      */
     public function list(Request $request, Response $response)
     {
+        $pedidosArr = [];
         $requests = $request->getParsedBody();
         $apiResult = $this->api->post('pedidos/listar', $requests);
-        $dados['pedidos'] = $apiResult;
+        $pedidos = $apiResult;
 
         $apiResult = $this->api->post('clientes/listar', $requests);
         $dados['clientes'] = $apiResult;
 
         $apiResult = $this->api->post('viagens/listar', $requests);
         $dados['viagens'] = $apiResult;
+
+        # agrupar pedidos por viagem
+        foreach($pedidos->data as $pedido){
+            $pedidosArr[$pedido->viagens_id][$pedido->id] = $pedido;
+        }
+        $dados['pedidosViagens'] = $pedidosArr;
+
+
 
         //usando $this->view setado em BaseController
         if ($args['modo']??false == 'lista') {
