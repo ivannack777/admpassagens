@@ -30,7 +30,7 @@ class Home extends BaseController
      */
     public function index(Request $request, Response $response)
     {
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $dados = [];
         if ($this->getUserSession()) {
             $this->views->render($response, 'header.php', $dados);

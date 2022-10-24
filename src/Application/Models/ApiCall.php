@@ -46,7 +46,7 @@ class ApiCall
 
         $url = preg_replace('/([^:])(\/{2,})/', '$1/', $this->url . $route); //limpar barras duplas
         $ch = curl_init($url);
-        $ignoreCert = preg_match('/true/i',$_ENV['API_IGNORE_CERTIFICATE']);
+        $ignoreCert = $_ENV['API_IGNORE_CERTIFICATE'];
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postData);
@@ -79,7 +79,7 @@ class ApiCall
         }else{
             curl_close($ch); 
             if(!empty($result)) $retorno = json_decode($result);
-            if(preg_match('/true/i', $_ENV['DEBUG']??'') && !$retorno ){
+            if( ($_ENV['DEBUG']??false) && !$retorno ){
                 
                 echo "<pre>";
                 var_export($result);

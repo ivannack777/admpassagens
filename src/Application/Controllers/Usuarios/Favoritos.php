@@ -39,7 +39,7 @@ class Favoritos extends BaseController
     public function list(Request $request, Response $response)
     {
 
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
 
         $item = $requests['item'] ?? null;
         $item_id = $requests['item_id'] ?? null;
@@ -78,58 +78,19 @@ class Favoritos extends BaseController
         if ($_SESSION['user'] ?? false) {
             
             // $sanitize = new Sanitize();
-            $requests = $request->getParsedBody();
+            $requests = $this->getRequests($request);
             if (empty($requests)) {
-                return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
+                return  $response->withJson([], false, 'Parâmetros incorretos.', 401);
             }
 
-            $item = $requests['item'];
-            $item_id = $requests['item_id'];
-            $usuario_id = $_SESSION['user']['id'];
-
-            $dados = [
-                'item' => $item,
-                'item_id' => $item_id,
-                'usuario_id' => $usuario_id,
-            ];
 
             $api = new ApiCall();
-            $apiResult = $api->post('favoritos/salvar', $dados);
+            $apiResult = $api->post('favoritos/salvar', $requests);
 
             // var_dump($apiResult->data);exit;
             
             return $response->withJson($apiResult->data, true, ($apiResult->data->resultado ? 'Favorito foi salvo' : 'Favorito foi excluído') );
 
-            var_export($apiResult);exit;
-            # definindo linguagem do validador
-            Validator::lang('pt-br');
-            $v = new Validator($dados);
-            $v->rule('required', ['item', 'item_id', 'usuario_id']);
-            $v->labels(
-                array(
-                    'item' => 'Item',
-                    'item_id' => 'ID do item',
-                    'usuario_id' => 'ID do usuário',
-                )
-            );
-
-            if ($v->validate()) {
-
-                $favoritos = FavoritosModel::list($dados);
-                    
-                if ($favoritos->count()) {
-                    FavoritosModel::where($dados)->delete();
-                    return $response->withJson(['resultado'=>0,'dados'=>$dados], true, 'Favorito excluído');
-                } else {
-                    FavoritosModel::create($dados);
-                    $favoritosNew = FavoritosModel::list($dados);
-                    return $response->withJson(['resultado'=>1,'dados'=>$favoritosNew], true, 'Favorito foi salvo');
-                }
-            } else {
-                $Errors = $this->valitorMessages($v->errors());
-
-                return $response->withJson($Errors['errors'], false, $Errors['msg']);
-            }
         }
 
         return $response->withJson([], false, 'Usuário não foi identificado');

@@ -12,17 +12,17 @@
 
 
 
- <div class="modal fade"  id="comentariosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">>
+ <div class="modal fade" id="comentariosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">>
      <div class="modal-dialog modal-lg">
          <div class="modal-content">
              <div class="modal-header">
                  <h5 class="modal-title" id="comentariosModalLabel">Modal title</h5>
-                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                 <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">x</button>
              </div>
              <div class="modal-body">
 
 
-                 
+
                  <div class="border-bottom" style="padding: 12px;">
 
                      <form id="comentariosModalForm">
@@ -38,7 +38,7 @@
                          <button type="button" class="btn btn-primary" id="btnComentariosModalSalvar"><i class="fas fa-paper-plane"></i> Enviar</button>
                      </div>
                  </div>
-             
+
                  <div id="comentariosModalBody"></div>
              </div>
              <div class="modal-footer">
@@ -152,9 +152,10 @@
 
      jQuery(".btnFav").click(function() {
          var element = jQuery(this);
-
          var item = element.data('item');
          var item_id = element.data('item_id');
+
+         var prevState = element.html();
 
          jQuery.ajax({
              type: 'POST',
@@ -171,25 +172,23 @@
                  if (retorno.status == true) {
                      if (retorno.data.resultado == 1) {
                          element.html('<i class="fas fa-heart"></i>');
-                     } else {
+                        } else {
                          element.html('<i class="far fa-heart"></i>');
                      }
-                     // show_message(retorno.msg, 'success');
-
-
                  } else {
                      show_message(retorno.msg, 'danger');
                  }
              },
              error: function(st) {
                  show_message(st.status + ' ' + st.statusText, 'danger');
+                 element.html(prevState);
              }
-         });
+         })
      });
 
 
      jQuery(".btnComentario").click(function() {
-        
+
          var element = jQuery(this);
          var item = element.data('item');
          var item_id = element.data('item_id');
@@ -197,14 +196,14 @@
 
          jQuery("#comentariosModalitem").val(item);
          jQuery("#comentariosModalitem_id").val(item_id);
-         
+
          showComentarios(item, item_id)
-         jQuery("#comentariosModalLabel").html(title);
+         jQuery("#comentariosModalLabel").html('Comentários '+ title);
          jQuery("#comentariosModal").modal('show');
      });
 
      function showComentarios(item, item_id) {
-        // jQuery("#comentariosModalBody").html('');
+         // jQuery("#comentariosModalBody").html('');
          jQuery.ajax({
              type: 'POST',
              url: '<?= $this->siteUrl('comentarios/ver') ?>',
@@ -214,7 +213,7 @@
              },
              dataType: 'html',
              beforeSend: function() {
-                jQuery(document.getElementById("comentariosModatextoPostitle")).html('<i class="fas fa-spinner fa-spin"></i>');
+                 jQuery(document.getElementById("comentariosModatextoPostitle")).html('<i class="fas fa-spinner fa-spin"></i>');
              },
              success: function(retorno) {
                  jQuery("#comentariosModalBody").html(retorno);
@@ -223,7 +222,7 @@
                  show_message(st.status + ' ' + st.statusText, 'danger');
              },
              complete: function() {
-                //  element.html('<i class="far fa-comment"></i>');
+                 //  element.html('<i class="far fa-comment"></i>');
              }
          });
      }
@@ -250,7 +249,7 @@
              },
              success: function(retorno) {
                  if (retorno.status == true) {
-                    jQuery('#comentariosModatexto').val('');
+                     jQuery('#comentariosModatexto').val('');
                      showComentarios(item, item_id);
                  } else {
                      show_message(retorno.msg, 'danger');
@@ -265,92 +264,91 @@
          });
      });
 
-     jQuery("body").on("click", ".comentariosExcluir" , function() {
-        var id = jQuery(this).data('codigo');
-        var item = jQuery("#comentariosModalitem").val();
-        var item_id = jQuery("#comentariosModalitem_id").val();
-        var rota = '<?= $this->siteUrl('comentarios/excluir/') ?>' + id;
-        var redirect = '<?= $this->siteUrl('viagens') ?>';
-        excluir(rota, 'Você realmente quer excluir este comentário?', null);
-        jQuery("#comentarioId"+id).hide('shlow');
-        setTimeout(function(){
-            showComentarios(item, item_id);
-        }, 600);
-        
-    });
+     jQuery("body").on("click", ".comentariosExcluir", function() {
+         var id = jQuery(this).data('codigo');
+         var item = jQuery("#comentariosModalitem").val();
+         var item_id = jQuery("#comentariosModalitem_id").val();
+         var rota = '<?= $this->siteUrl('comentarios/excluir/') ?>' + id;
+         var redirect = '<?= $this->siteUrl('viagens') ?>';
+         excluir(rota, 'Você realmente quer excluir este comentário?', null);
+         jQuery("#comentarioId" + id).hide('shlow');
+         setTimeout(function() {
+             showComentarios(item, item_id);
+         }, 600);
 
-    function autocompleteLocais($el, url){
+     });
 
-        $($el).autocomplete({
-            minLength: 2,
-            delay: 100,
-            source: function(request, response) {
+     function autocompleteLocais($el, url) {
 
-                jQuery.ajax({
-                    url: "/locais/listar",
-                    type: "post",
-                    data: {
-                        cidade: request.term
-                    },
-                    dataType: 'json',
-                    success: function(retorno) {
-                        response(jQuery.map(retorno.data, function(val, key) {
+         $($el).autocomplete({
+             minLength: 2,
+             delay: 100,
+             source: function(request, response) {
 
-                            var label = val.cidade + ' - ' + val.uf + ' / ' + val.endereco;
-                            return {
-                                label: label,
-                                value: label,
-                                id: val.id
-                            };
-                        }));
-                    }
-                });
-            },
-            select: function(event, ui) {
-                // console.log(event)
-                let id = jQuery(event.target).data('id');
-                let destino = $el.data('target');
-                jQuery("#" +destino).val(ui.item.id)
-            }
-        });
-    }
-    function autocompleteClientes($el){
+                 jQuery.ajax({
+                     url: "/locais/listar",
+                     type: "post",
+                     data: {
+                         cidade: request.term
+                     },
+                     dataType: 'json',
+                     success: function(retorno) {
+                         response(jQuery.map(retorno.data, function(val, key) {
 
-        $($el).autocomplete({
-            minLength: 2,
-            delay: 100,
-            source: function(request, response) {
+                             var label = val.cidade + ' - ' + val.uf + ' / ' + val.endereco;
+                             return {
+                                 label: label,
+                                 value: label,
+                                 id: val.id
+                             };
+                         }));
+                     }
+                 });
+             },
+             select: function(event, ui) {
+                 let id = jQuery(event.target).data('id');
+                 let destino = $el.data('target');
+                 jQuery("#" + destino).val(ui.item.id)
+             }
+         });
+     }
 
-                jQuery.ajax({
-                    url: '/clientes/listar',
-                    type: "post",
-                    data: {
-                        nome: request.term,
-                        cpf: request.term,
-                        busca: '1',
-                    },
-                    dataType: 'json',
-                    success: function(retorno) {
-                        response(jQuery.map(retorno.data, function(val, key) {
-                            
-                            var label = val.nome + ' - ' + val.cpf;
-                            return {
-                                label: label,
-                                value: label,
-                                id: val.id
-                            };
-                        }));
-                    }
-                });
-            },
-            select: function(event, ui) {
-                // console.log(event)
-                let id = jQuery(event.target).data('id');
-                let destino = $el.data('target');
-                jQuery("#" +destino).val(ui.item.id)
-            }
-        });
-    }
+     function autocompleteClientes($el) {
+
+         $($el).autocomplete({
+             minLength: 2,
+             delay: 100,
+             source: function(request, response) {
+
+                 jQuery.ajax({
+                     url: '/clientes/listar',
+                     type: "post",
+                     data: {
+                         nome: request.term,
+                         cpf: request.term,
+                         busca: '1',
+                     },
+                     dataType: 'json',
+                     success: function(retorno) {
+                         response(jQuery.map(retorno.data, function(val, key) {
+
+                             var label = val.nome + ' - ' + val.cpf;
+                             return {
+                                 label: label,
+                                 value: label,
+                                 id: val.id
+                             };
+                         }));
+                     }
+                 });
+             },
+             select: function(event, ui) {
+                 let id = jQuery(event.target).data('id');
+                 let destino = $el.data('target');
+                 jQuery("#" + destino).val(ui.item.id)
+             }
+         });
+     }
 
  </script>
 

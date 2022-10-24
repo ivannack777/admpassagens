@@ -32,7 +32,7 @@ class Empresas extends BaseController
     {
 
 
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $apiResult = $this->api->post('empresas/listar', $requests);
         $dados['empresas'] = $apiResult;
 
@@ -62,7 +62,7 @@ class Empresas extends BaseController
 
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

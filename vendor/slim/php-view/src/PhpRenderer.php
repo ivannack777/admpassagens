@@ -248,6 +248,8 @@ class PhpRenderer
             if($dt instanceof \DateTime){
                 if (!empty($format)) {
                     return $dt->format($format);
+                } else {
+                    return $dt->format('d/m/Y H:i');
                 }
             }
         }
@@ -279,6 +281,6 @@ class PhpRenderer
             }
             return $dias2;
         }
-        return $idx ? $dias[$idx] : $dias;
+        return $idx !== false ? $dias[$idx] : $dias;
     }
 }

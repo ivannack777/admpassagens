@@ -31,7 +31,7 @@ class Locais extends BaseController
      */
     public function home(Request $request, Response $response)
     {
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         
         $apiResult = $this->api->post('locais/listar', $requests);
         $dados['locais'] = $apiResult;
@@ -59,7 +59,7 @@ class Locais extends BaseController
      */
     public function list(Request $request, Response $response)
     {
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $apiResult = $this->api->post('locais/listar', $requests);
         if($apiResult){
             return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
@@ -75,7 +75,7 @@ class Locais extends BaseController
     public function save(Request $request, Response $response, array $args)
     {
         $id = $args['id'] ?? null;
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

@@ -34,7 +34,7 @@ class Enderecos extends BaseController
             return $response->withJson([], true, 'Sem permissão para acessar esta área', 403);
         }
 
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $id = $requests['id'] ?? null;
         $cep = $requests['cep'] ?? null;
         $logradouro = $requests['logradouro'] ?? null;
@@ -76,7 +76,7 @@ class Enderecos extends BaseController
 
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

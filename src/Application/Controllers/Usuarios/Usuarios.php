@@ -37,7 +37,7 @@ class Usuarios extends BaseController
     public function list(Request $request, Response $response)
     {
 
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $id = $requests['id']??null;
         $usuario = $requests['usuario']??null;
         $email = $requests['email']??null;
@@ -103,7 +103,7 @@ class Usuarios extends BaseController
     {
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if(empty($requests)){
             return  $response->withJson([], false, 'Parâmetros incorretos.', 401);
         }

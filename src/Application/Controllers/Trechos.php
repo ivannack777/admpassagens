@@ -32,10 +32,10 @@ class Trechos extends BaseController
      *
      * @return string json
      */
-    public function list(Request $request, Response $response, $args)
+    public function home(Request $request, Response $response, $args)
     {
         $dados = [];
-        $requests = $request->getQueryParams();
+        $requests = $this->getRequests($request);
         
         $apiResult = $this->api->post('locais/listar', $requests);
         $dados['locais'] = $apiResult;
@@ -52,9 +52,22 @@ class Trechos extends BaseController
         $this->views->render($response, 'right_top.php', $dados);
         $this->views->render($response, 'trechos.php', $dados);
         return $this->views->render($response, 'footer.php', $dados);
-
     }
 
+
+    /**
+     * Localiza e retorna um trechoss filtrando por json request.
+     *
+     * @return string json
+     */
+    public function list(Request $request, Response $response, $args)
+    {
+        $requests = $this->getRequests($request);
+
+        $apiResult = $this->api->post('trechos/listar', $requests);
+        
+        return $response->withJson($apiResult->data, $apiResult->status,$apiResult->msg);
+    }
         /**
      * Localiza e retorna um linhass passando 'linhas' por json request.
      *
@@ -63,7 +76,7 @@ class Trechos extends BaseController
     public function listPoints(Request $request, Response $response, $args)
     {
         $dados = [];
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         
         $apiResult = $this->api->post('trechos/listar', $requests);
         if(property_exists($apiResult, 'data')){
@@ -82,7 +95,7 @@ class Trechos extends BaseController
     { 
         // session_start();
         $id = $args['id'] ?? null;
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

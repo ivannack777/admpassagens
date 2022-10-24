@@ -69,24 +69,30 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <td>Código</td>
-                            <td>Descrição</td>
-                            <td>Saída</td>
-                            <td>Chegada</td>
-                            <td>Valor</td>
-                            <td>Veículo</td>
-                            <td><i class="fas fa-cog"></i></td>
+                            <th>Código</th>
+                            <th>Descrição</th>
+                            <th>Pedidos/Assentos</th>
+                            <th>Saída</th>
+                            <th>Veículo</th>
+                            <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($viagens->data as $viagem) :
                         ?>
                             <tr id="linha<?= $viagem->id ?>" class="list-label">
-                                <td><span id="label_codigo<?= $viagem->id ?>"><?= $viagem->codigo ?></span></td>
+                                <td><span id="label_codigo<?= $viagem->id ?>"><?= $viagem->codigo ?>[<?= $viagem->id ?>]</span></td>
                                 <td><span id="label_descricao<?= $viagem->id ?>"><?= $viagem->descricao ?></span></td>
+                                <td>
+                                    <span id="label_pedidos<?= $viagem->id ?>">
+                                        <?= isset($pedidosCount[$viagem->id]) ? ($pedidosCount[$viagem->id]->count) : '0' ?>/<?= $viagem->assentos ?>
+                                        <?php if( isset($pedidosCount[$viagem->id]) && ($pedidosCount[$viagem->id]->count > 0) ): ?>
+                                            <a href="<?= $this->siteUrl('pedidos?viagens_key='. $viagem->key) ?>" title="Ver pedidos dessa viagem">Pedidos</a>
+                                            <span class="link verOcupacao pull-right" data-viagens_key="<?= $viagem->key ?>" data-assentos="<?= $viagem->assentos ?>" title="Ver ocupação dos assentos">Ocupação</span>
+                                        <?php endif ?>
+                                    </span>
+                                </td>
                                 <td><span id="label_data_saida<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?></span></td>
-                                <td><span id="label_data_chegada<?= $viagem->id ?>"><?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?></span></td>
-                                <td><span id="label_valor<?= $viagem->id ?>"><?= str_replace('.', ',', $viagem->valor ?? '') ?></span></td>
                                 <td><span id="label_veiculos_id<?= $viagem->id ?>">
                                         <?=
                                         $viagem->marca . " " .
@@ -102,7 +108,7 @@
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $viagem->id ?>" data-veiculos_id="<?= $viagem->veiculos_id ?>" data-descricao="<?= $viagem->descricao ?>" data-valor="<?= str_replace('.', ',', $viagem->valor ?? '') ?>" data-data_saida="<?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?>" data-data_chegada="<?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?>" data-assentos="<?= $viagem->assentos ?>" data-assentos_tipo="<?= $viagem->assentos_tipo ?>" data-detalhes="<?= $viagem->detalhes ?>">
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $viagem->id ?>" data-linhas_id="<?= $viagem->linhas_id ?>" data-veiculos_id="<?= $viagem->veiculos_id ?>" data-descricao="<?= $viagem->descricao ?>" data-valor="<?= str_replace('.', ',', $viagem->valor ?? '') ?>" data-data_saida="<?= $this->dateFormat($viagem->data_saida, 'd/m/Y H:i') ?>" data-data_chegada="<?= $this->dateFormat($viagem->data_chegada, 'd/m/Y H:i') ?>" data-assentos="<?= $viagem->assentos ?>" data-assentos_tipo="<?= $viagem->assentos_tipo ?>" data-detalhes="<?= $viagem->detalhes ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                     <!-- Favoritar -->
@@ -113,6 +119,7 @@
                                             <i class="far fa-heart"></i>
                                         <?php endif ?>
                                     </button>
+                
                                     <button class="btn btn-outline-primary btn-sm btnComentario" title="Comentarios" style="margin-right: 8px;" data-item="viagens" data-item_id="<?= $viagem->id ?>" data-title="<?= $viagem->descricao ?>">
                                         <i class="far fa-comment"></i>
                                     </button>
@@ -165,15 +172,10 @@
             </div>
         </div>
     </div>
-    <div class="input-group log-event" id="datetimepicker1" data-td-target-input="nearest" data-td-target-toggle="nearest">
-        <input id="datetimepicker1Input" type="text" class="form-control" data-td-target="#datetimepicker1" />
-        <span class="input-group-text" data-td-target="#datetimepicker1" data-td-toggle="datetimepicker">
-            <i class="fas fa-calendar"></i>
-        </span>
-    </div>
+
 </div> <!-- .content -->
 
-<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+<div class="modal fade" id="viagensModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -192,15 +194,25 @@
                         <input type="text" class="form-elements" id="descricao" name="descricao" value="" />
                         <small class="form-text text-muted">São Paulo x Rio de janeiro</small>
                     </div>
+
                     <div class="form-group">
-                        <label class="control-label mb-1" for="pontos">Pontos</label>
+                        <label class="control-label mb-1" for="linha">Linha</label>
                         <span class="text-danger error-label"></span>
-                        <div id="pontosDiv" class="hide-last-last">
+                        <select class="form-elements" id="linhas_id" name="linhas_id">
+                            <option value="">Selecione...</option>
+                            <?php foreach ($linhas->data as $linha) :
+                                $dias = explode(',', $linha->dias);
+                                $dias = $this->diasSemana($dias, true);
+                            ?>
+                                <option value="<?= $linha->id ?>"><?= $linha->descricao . " (" . implode(', ', $dias) . ")" ?></option>
+                            <?php endforeach ?>
+                        </select>
 
-                        </div>
-
-                        <button class="btn btn-secondary" id="addPontos">+</button>
+                        <span class="link " id="verTrechos">Ver trechos dessa linha</span>
+                        <span id="verTrechosMsg"></span>
                     </div>
+
+
 
 
                     <div class="form-group">
@@ -213,11 +225,7 @@
                         <span class="text-danger error-label"></span>
                         <input type="text" class="form-elements datas" id="data_chegada" name="data_chegada" value="" />
                     </div>
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="valor">Valor</label>
-                        <span class="text-danger error-label"></span>
-                        <input type="text" class="form-elements valores" id="valor" name="valor" value="" placeholder="0,00" />
-                    </div>
+
                     <div class="form-group">
                         <label class="control-label mb-1" for="assentos">Assentos</label>
                         <span class="text-danger error-label"></span>
@@ -246,12 +254,12 @@
                             <option value="0">Selecione...</option>
                             <?php foreach ($veiculos->data as $veiculo) : ?>
                                 <option value="<?= $veiculo->id ?>"><?=
-                                                                    $veiculo->marca . " " .
-                                                                        $veiculo->modelo . " " .
-                                                                        $veiculo->ano . " " .
-                                                                        $veiculo->veiculos_codigo . " " .
-                                                                        $veiculo->placa . " "
-                                                                    ?></option>
+                                    $veiculo->marca . " " .
+                                    $veiculo->modelo . " " .
+                                    $veiculo->ano . " " .
+                                    $veiculo->codigo . " " .
+                                    $veiculo->placa . " "
+                                ?></option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -270,11 +278,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="formMediumModal2" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+<div class="modal fade" id="viagensLinhaModal" tabindex="-1" role="dialog" aria-labelledby="Label" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mediumModalLabel2">Adicionar viagem para uma linha</h5>
+                <h5 class="modal-title" id="mediumModalLabel2">Adicionar viagens para uma linha</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -296,10 +304,10 @@
                         <select class="form-elements" id="linha" name="linha">
                             <option value="0">Selecione...</option>
                             <?php foreach ($linhas->data as $linha) :
-                                $dia = explode(',', $linha->dia);
-                                $dia = $this->diasSemana($dia, true);
+                                $dias = explode(',', $linha->dias);
+                                $dias = $this->diasSemana($dias, true);
                             ?>
-                                <option value="<?= $linha->id ?>"><?= $linha->descricao . " (" . implode(', ', $dia) . ")" ?></option>
+                                <option value="<?= $linha->id ?>"><?= $linha->descricao . " (" . implode(', ', $dias) . ")" ?></option>
                             <?php endforeach ?>
                         </select>
 
@@ -349,12 +357,12 @@
                             <option value="0">Selecione...</option>
                             <?php foreach ($veiculos->data as $veiculo) : ?>
                                 <option value="<?= $veiculo->id ?>"><?=
-                                                                    $veiculo->marca . " " .
-                                                                        $veiculo->modelo . " " .
-                                                                        $veiculo->ano . " " .
-                                                                        $veiculo->veiculos_codigo . " " .
-                                                                        $veiculo->placa . " "
-                                                                    ?></option>
+                                $veiculo->marca . " " .
+                                    $veiculo->modelo . " " .
+                                    $veiculo->ano . " " .
+                                    $veiculo->codigo . " " .
+                                    $veiculo->placa . " "
+                                ?></option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -367,6 +375,49 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" id="btnSalvarViagemLinha"><i class="fa fa-save salvar pointer"></i> Salvar</button>
                 </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ocupacaoModal" tabindex="-1" role="dialog" aria-labelledby="ocupacaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ocupacaoLabel">Adicionar viagem para uma linha</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ocupacaoModalDiv"></div>
+                <div id="retornomsg"></div>
+            </div>
+            <div class="modal-footer">
+                <div></div>
+                <div><button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="verTrechoModal" tabindex="-1" role="dialog" aria-labelledby="verTrechoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verTrechoLabel">Trechos da linha</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="verTrechoModalDiv"></div>
+            </div>
+            <div class="modal-footer">
+                <div></div>
+                <div><button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button></div>
             </div>
 
         </div>
@@ -400,7 +451,7 @@
     });
 
     jQuery('#veiculos_id').select2({
-        dropdownParent: jQuery('#formMediumModal'),
+        dropdownParent: jQuery('#viagensModal'),
         class: 'form-elements'
     });
 
@@ -413,54 +464,26 @@
             '  <div><div class="circle font-20 bold6"> ' + (c + 1) + '</div></div>' +
             '  <input type="hidden" class="pontos" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="" />' +
             '  <input type="hidden" class="pontos" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="" />' +
-            '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade' + (c + 1) + '" value="" data-id="' + (c + 1) + '" style="width:270px;" /></div>' +
+            '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade' + (c + 1) + '" value="" data-id="' + (c + 1) + '" data-target="locais_id' + (c + 1) + '" style="width:270px;" /></div>' +
             '  <div><label>Horário:</label><span><input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="" /></span></div>' +
-            '  <div><label>Valor:</label><span><input type="text" class="form-elements valores" name="pontos[' + (c + 1) + '][valor]" id="valor' + (c + 1) + '" value="" /></span></div>' +
-            '  <div><label>Distância:</label><span><input type="text" class="form-elements" name="pontos[' + (c + 1) + '][distancia]" id="distancia' + (c + 1) + '" value="" /></span></div>' +
+            // '  <div><label>Valor:</label><span><input type="text" class="form-elements valores" name="pontos[' + (c + 1) + '][valor]" id="valor' + (c + 1) + '" value="" /></span></div>' +
+            // '  <div><label>Distância:</label><span><input type="text" class="form-elements" name="pontos[' + (c + 1) + '][distancia]" id="distancia' + (c + 1) + '" value="" /></span></div>' +
             '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
             '</div>'
         );
         jQuery(".horas").datetimepicker({
             format: "HH:mm",
-            datepicker: false
+            stepping: 10
         });
 
         jQuery(".valores").mask('#.##0,00', {
             reverse: true
         });
-
-        jQuery(".cidadeAutocomplete").autocomplete({
-            minLength: 2,
-            delay: 100,
-            source: function(request, response) {
-
-                jQuery.ajax({
-                    url: "/locais",
-                    type: "post",
-                    data: {
-                        cidade: request.term
-                    },
-                    dataType: 'json',
-                    success: function(retorno) {
-                        response(jQuery.map(retorno.data, function(val, key) {
-
-                            var label = val.cidade + ' - ' + val.uf;
-                            return {
-                                label: label,
-                                value: label,
-                                id: val.id
-                            };
-                        }));
-                    }
-                });
-            },
-            select: function(event, ui) {
-                console.log(event)
-                let id = jQuery(event.target).data('id');
-                console.log(jQuery(event.target).data('id'), id)
-                jQuery("#locais_id" + id).val(ui.item.id)
-            }
+        jQuery(".cidadeAutocomplete").keyup(function(){
+            autocompleteLocais($(this), "/locais/listar");
         });
+
+
     });
 
 
@@ -483,6 +506,7 @@
         }
 
         jQuery("#viagens_id").val(este.data('id'));
+        jQuery("#linhas_id").val(este.data('linhas_id')).trigger('change');
         jQuery("#descricao").val(este.data('descricao'));
         jQuery("#origem").val(este.data('origem'));
         jQuery("#origem_id").val(este.data('origem_id'));
@@ -515,10 +539,10 @@
                                 '  <div><div class="circle font-20 bold6"> ' + (c + 1) + '</div></div>' +
                                 '  <input type="hidden" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="' + ponto.id + '" />' +
                                 '  <input type="hidden" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="' + ponto.locais_id + '" />' +
-                                '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade" value="' + ponto.cidade + ' - ' + ponto.uf + '" style="width:270px" /></div>' +
+                                '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade" value="' + ponto.cidade + ' - ' + ponto.uf + '" data-target="locais_id' + (c + 1) + '" style="width:270px" /></div>' +
                                 '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="' + ponto.hora + '" /></span></div>' +
-                                '  <div><label>Valor:</label><span><input type="text" class="form-elements valores" name="pontos[' + (c + 1) + '][valor]" id="valor' + (c + 1) + '" value="' + (ponto.valor).replace('.', ',') + '" /></span></div>' +
-                                '  <div><label>Distância:</label><span><input type="text" class="form-elements" name="pontos[' + (c + 1) + '][distancia]" id="distancia' + (c + 1) + '" value="' + ponto.distancia + '" /></span></div>' +
+                                // '  <div><label>Valor:</label><span><input type="text" class="form-elements valores" name="pontos[' + (c + 1) + '][valor]" id="valor' + (c + 1) + '" value="' + (ponto.valor).replace('.', ',') + '" /></span></div>' +
+                                // '  <div><label>Distância:</label><span><input type="text" class="form-elements" name="pontos[' + (c + 1) + '][distancia]" id="distancia' + (c + 1) + '" value="' + ponto.distancia + '" /></span></div>' +
                                 '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
                                 '</div>'
                             );
@@ -535,44 +559,17 @@
                 complete: function() {
                     jQuery(".horas").datetimepicker({
                         format: "HH:mm",
-                        datepicker: false
+                        stepping: 10
+                        // datepicker: false
                     });
 
                     jQuery(".valores").mask('#.##0,00', {
                         reverse: true
                     });
 
-                    jQuery(".cidadeAutocomplete").autocomplete({
-                        minLength: 2,
-                        delay: 100,
-                        source: function(request, response) {
-
-                            jQuery.ajax({
-                                url: "/locais",
-                                type: "post",
-                                data: {
-                                    cidade: request.term
-                                },
-                                dataType: 'json',
-                                success: function(retorno) {
-                                    response(jQuery.map(retorno.data, function(val, key) {
-
-                                        var label = val.cidade + ' - ' + val.uf;
-                                        return {
-                                            label: label,
-                                            value: label,
-                                            id: val.id
-                                        };
-                                    }));
-                                }
-                            });
-                        },
-                        select: function(event, ui) {
-                            console.log(event)
-                            let id = jQuery(event.target).data('id');
-                            console.log(jQuery(event.target).data('id'), id)
-                            jQuery("#locais_id" + id).val(ui.item.id)
-                        }
+                    jQuery(".cidadeAutocomplete").keyup(function(){
+                        autocompleteLocais($(this), "/locais/listar");
+                        
                     });
 
                 }
@@ -582,11 +579,57 @@
 
         jQuery("#mediumModalLabel").html('Viagem ' + (este.data('descricao') ? este.data('descricao') : ''));
 
-        jQuery("#formMediumModal").modal("show")
+        jQuery("#viagensModal").modal("show")
+    });
+
+    $("#linhas_id").change(function(){
+        $("#verTrechosMsg").html('').removeClass();
+    });
+    $("#verTrechos").click(function(evt){
+        evt.preventDefault();
+        console.log($("#linhas_id").val());
+        if($("#linhas_id").val() == '' || !$("#linhas_id").val()){
+            $("#verTrechosMsg").html('Por favor, selecione uma linha').addClass('text-danger');
+        }
+        jQuery.ajax({
+            type: 'POST',
+            url: '<?= $this->siteUrl('/linhas/trechos')?>',
+            data: {
+                linhas_id: $("#linhas_id").val()
+            },
+            dataType: 'json',
+            beforeSend: function (){
+                $("#verTrechoModalDiv").html('Aguarde...');
+            },
+            success: function (retorno) {
+                $("#verTrechoModalDiv").html('');
+                $("#verTrechoModalDiv").append('<h5>'+ retorno.msg +'</h5>');
+                if (retorno.status == true) {
+                    
+                    $tabela = $('<div class="layout-grid layout-dados" style="grid-template-columns: max-content auto max-content;"></div>');
+                        
+                    for(let i in retorno.data){
+                      
+                        $tabela.append(
+                            '  <div>'+ retorno.data[i].origem_cidade +' - '+ retorno.data[i].origem_uf  +'</div>'+
+                            '  <div class="text-center"><i class="fa fa-arrow-right"></i></div>'+
+                            '  <div>'+ retorno.data[i].destino_cidade +' - '+ retorno.data[i].destino_uf  +'</div>'
+                        );
+                    }
+                    $("#verTrechoModalDiv").append($tabela);
+                    $("#verTrechoModal").modal('show');
+                } else {
+                }
+            },
+            error: function (st){
+                show_message( st.status +' '+ st.statusText, 'danger');
+            },
+            complete: function(){}
+        });
     });
 
     jQuery(".editar2").click(function() {
-        jQuery("#formMediumModal2").modal("show")
+        jQuery("#viagensLinhaModal").modal("show")
     });
 
     jQuery("#btnSalvar").click(function() {
@@ -684,5 +727,74 @@
         var rota = '<?= $this->siteUrl('viagens/excluir/') ?>' + id;
         var redirect = '<?= $this->siteUrl('viagens') ?>';
         excluir(rota, 'Você realmente quer excluir esta viagem?', redirect);
+    });
+
+
+    $(".verOcupacao").click(function(){
+        var viagens_key = $(this).data('viagens_key');
+        var assentos = $(this).data('assentos')*1;
+        jQuery.ajax({
+            type: 'POST',
+            url: '<?= $this->siteUrl('pedidos?modo=lista')?>',
+            data: {
+                viagens_key: viagens_key
+            },
+            dataType: 'json',
+            beforeSend: function (){},
+            success: function (retorno) {
+                if (retorno.status == true) {
+                    $("#ocupacaoModal").modal();
+                    var tabela = $('<div>');
+                    tabela.append('<h5> Número de assentos: '+ assentos +'</h5>');
+                    tabela.append('<h5> Ocupação:</h5>');
+                    var lista = $('<div class="layout-grid gap layout-grid-4col layout-dados">');
+                    
+                    var assentosInPedidos = [];
+                    
+                    // Criar array indexado pelo numero do assento
+                    for(k in retorno.data){
+                        assentosInPedidos[retorno.data[k].assento] = retorno.data[k]
+                    }
+
+                    //criar lista de assentos
+                    var contaStatu = {
+                        r:0,
+                        p:0,
+                        l:0,
+                    };
+                    for(let i=1; i <= assentos; i++){
+                        
+                        if(assentosInPedidos[i]?.status == 'R'){
+                            classe = 'reservado';
+                            contaStatu['r']++
+                        }
+                        else if(assentosInPedidos[i]?.status == 'P'){
+                            classe = 'pago';
+                            contaStatu['p']++
+                        } else{
+                            classe = 'livre';
+                            contaStatu['l']++
+                        }
+                        lista.append('<div><strong>'+ i +'</strong> <span class="'+ classe +'">'+(assentosInPedidos[i]?.codigo? '<a href="/pedidos?pedidos_key='+assentosInPedidos[i]?.key+'"  title="Visualizar este pedido">'+assentosInPedidos[i]?.codigo+'</a>':'livre') +'</span></div>')
+                    }
+                    //adicionar lista na tabela
+                    tabela.append(lista);
+                    var legenda = $(
+                        '<div>'+
+                        '  <span class="livre">Livre/Cancelado ('+ contaStatu['l'] +')</span>'+
+                        '  <span class="reservado">Reservado ('+ contaStatu['r'] +')</span>'+
+                        '  <span class="pago">Pago ('+ contaStatu['p'] +')</span>'+
+                        '</div>'
+                    );
+                    tabela.append(legenda);
+                    $("#ocupacaoModalDiv").html( tabela );
+                } else {
+                }
+            },
+            error: function (st){
+                show_message( st.status +' '+ st.statusText, 'danger');
+            },
+            complete: function(){}
+        });
     });
 </script>

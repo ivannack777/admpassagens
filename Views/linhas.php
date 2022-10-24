@@ -68,30 +68,28 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <td>Descrição</td>
-                            <td>Dias</td>
-                            <td><i class="fas fa-cog"></i></td>
+                            <th>Descrição</th>
+                            <th>Dias</th>
+                            <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($linhas->data as $linha) :
-                            $dia = explode(',', $linha->dia);
-                            $diaExt = [];
-                            if (!empty($linha->dia)) {
-                                foreach ($dia as $dia) {
-                                    $diaExt[] = $this->diasSemana($dia, true);
-                                }
+                            $dias = explode(',', $linha->dias);
+                            $diasExt = [];
+                            foreach ($dias as $dia) {
+                                $diasExt[] = $this->diasSemana($dia, true);
                             }
                         ?>
                             <tr id="linha<?= $linha->id ?>" class="list-label">
                                 <td><span id="label_descricao<?= $linha->id ?>"><?= $linha->descricao ?></span></td>
-                                <td><span id="label_dia<?= $linha->id ?>"><?= implode(', ', $diaExt) ?></span></td>
+                                <td><span id="label_dias<?= $linha->id ?>"><?= implode(', ', $diasExt) ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $linha->id ?>" data-descricao="<?= $linha->descricao ?>" data-dia="<?= $linha->dia ?>">
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $linha->id ?>" data-descricao="<?= $linha->descricao ?>" data-dias="<?= $linha->dias ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                     <!-- Favoritar -->
@@ -156,17 +154,17 @@
     </div>
 </div> <!-- .content -->
 
-<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+<div class="modal" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true" tabindex="-1" data-width="760">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mediumModalLabel">Viagem</h5>
+                <h5 class="modal-title" id="mediumModalLabel">Linha</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="formViagem">
+                <form id="formLinha">
                     <input type="hidden" id="linhas_id" name="linhas_id" value="0" />
 
                     <div class="form-group">
@@ -176,20 +174,19 @@
                         <small class="form-text text-muted">São Paulo x Rio de janeiro</small>
                     </div>
                     <div class="form-group">
-                        <label class="control-label mb-1" for="pontos">Pontos</label>
+                        <label class="control-label mb-1" for="trechos">Trechos</label>
                         <span class="text-danger error-label"></span>
-                        <div id="pontosDiv" class="hide-last-last">
+                        <div id="trechosDiv" class="hide-last-last">
 
                         </div>
 
-                        <button class="btn btn-secondary" id="addPontos">+</button>
+                        <button class="btn btn-secondary" id="addtrechos">+</button>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label mb-1" for="dia">Dias da semana</label>
+                        <label class="control-label mb-1" for="dias">Dias da semana</label>
                         <span class="text-danger error-label"></span>
-                        <select type="text" class="form-elements" id="dia" name="dia[]" multiple>
-                            <option value="">Selecione...</option>
+                        <select type="text" class="form-control" id="dias" name="dias[]" multiple>
                             <?php
                             $diasSemana = $this->diasSemana();
                             foreach ($diasSemana as $d => $diasSemana) : ?>
@@ -213,32 +210,19 @@
 </div>
 
 <script>
-    var qtdPontos = 0;
+    
 
-    jQuery('#dia').select2({
+    jQuery('#dias').select2({
         dropdownParent: jQuery('#formMediumModal'),
         class: 'form-elements',
-        closeOnSelect: false
+        closeOnSelect: false,
+        placeholder:'Selecione...',
+        allowClear: true
     });
 
-    jQuery("#addPontos").click(function(evt) {
+    jQuery("#addtrechos").click(function(evt) {
         evt.preventDefault();
-        var c = jQuery('.pontoDiv').length
-        qtdPontos++
-        jQuery("#pontosDiv").append(
-            ' <div class="pontoDiv layout-flex flex-row layout-dados layout-margin" style="position: relative;">' +
-            '  <div><div class="circle font-20 bold6"> ' + (c + 1) + '</div></div>' +
-            '  <input type="hidden" class="pontos" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="" />' +
-            '  <input type="hidden" class="pontos" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="" />' +
-            '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade' + (c + 1) + '" value="" data-id="' + (c + 1) + '" style="width:270px;" /></div>' +
-            '  <div><label>Dias:</label><span><select class="form-elements" name="pontos[' + (c + 1) + '][dia]" id="dia' + (c + 1) + '"> <option value="">Selecione...</option>' +
-            <?php $diasSemana = $this->diasSemana();
-            foreach ($diasSemana as $d => $diasSemana) : ?> '<option value="<?= $d ?>"><?= $diasSemana ?></option>' +
-            <?php endforeach ?> '   </select></span></div>' +
-            '  <div><label>Horário:</label><span><input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="" /></span></div>' +
-            '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
-            '</div>'
-        );
+        createTrecho()
         jQuery(".horas").datetimepicker({
             format: "HH:mm",
             stepping: 10
@@ -251,13 +235,40 @@
             reverse: true
         });
 
-        jQuery(".cidadeAutocomplete").autocomplete({
+    });
+
+    function createTrecho(dado=false){
+
+        var qtd = jQuery('.trechoDiv').length +1
+            
+        jQuery("#trechosDiv").append(
+            ' <div class="trechoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 6fr 3fr 2fr;">' +
+            '  <div><div class="circle font-20 bold6"> ' + qtd + '</div></div>' +
+            '  <input type="hidden" id="id'+ qtd +'" name="trechos[' + qtd + '][id]" value="' + (dado?dado.id:'') + '" />' +
+            '  <input type="hidden" id="trechos_id'+ qtd +'" name="trechos[' + qtd + '][trechos_id]" value="' + (dado?dado.trechos_id:'') + '" />' +
+            '  <div><label>Local</label><input type="text" class="form-elements trechoAutocomplete" id="cidade'+ qtd +'" data-index="'+ qtd +'" value="' + (dado ? dado.origem_cidade +' ('+ dado.origem_sigla + ') - '+ dado.origem_uf +' -> '+ dado.destino_cidade + ' (' + dado.destino_sigla +') - '+ dado.destino_uf:'') + '" /></div>' +
+            '  <div><label>dias da semana:</label><span><select class="form-elements" name="trechos[' + qtd + '][dias]" id="dias'+ qtd +'"> <option value="">Selecione...</option></select></div>' +
+            '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="trechos[' + qtd + '][hora]" id="hora'+ qtd +'" value="' + (dado?dado.hora:'') + '" /></span></div>' +
+            '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
+            '</div>'
+        );
+        let diasSemana = <?= json_encode($this->diasSemana()) ?>;
+        for(let w in diasSemana){
+            if(w == dado?.dias){
+                newOption = new Option(diasSemana[w], w, true, true);
+            } else {
+                newOption = new Option(diasSemana[w], w, false, false);
+            }
+            $("#dias" + qtd).append(newOption);
+        }
+
+        jQuery(".trechoAutocomplete").autocomplete({
             minLength: 2,
             delay: 100,
             source: function(request, response) {
 
                 jQuery.ajax({
-                    url: "/locais/listar",
+                    url: "/trechos/listar",
                     type: "post",
                     data: {
                         cidade: request.term
@@ -265,8 +276,8 @@
                     dataType: 'json',
                     success: function(retorno) {
                         response(jQuery.map(retorno.data, function(val, key) {
-
-                            var label = val.cidade + ' - ' + val.uf + ' / ' + val.endereco;
+                            
+                            var label = val.origem_cidade + ' (' + val.origem_sigla + ') - ' + val.origem_uf +' -> '+ val.destino_cidade + ' (' + val.destino_sigla + ') - ' + val.destino_uf;
                             return {
                                 label: label,
                                 value: label,
@@ -277,141 +288,84 @@
                 });
             },
             select: function(event, ui) {
-                console.log(event)
-                let id = jQuery(event.target).data('id');
-                console.log(jQuery(event.target).data('id'), id)
-                jQuery("#locais_id" + id).val(ui.item.id)
+                let index = jQuery(event.target).data('index');
+                jQuery("#trechos_id" + index).val(ui.item.id)
             }
         });
-    });
 
-
+    }
 
     jQuery(".editar").click(function() {
-        qtdPontos = jQuery("#pontosDiv").find('.pontos');
-        qtdPontos = qtdPontos.length;
+        qtdtrechos = jQuery("#trechosDiv").find('.trechos');
+        qtdtrechos = qtdtrechos.length;
         var este = jQuery(this);
         var id = este.data('id');
-
-
-        // if (este.data('dia')) {
-        //     console.log(este.data('dia').split(','))
-        //     jQuery('#dia option[value="' + este.data('dia').split(',') + '"]').prop('selected', true);
-        // } else {
-        //     jQuery('#dia option[value="0"]').prop('selected', true);
-        // }
 
         jQuery("#linhas_id").val(este.data('id'));
         jQuery("#descricao").val(este.data('descricao'));
         jQuery("#valor").val(este.data('valor'));
         jQuery("#assentos").val(este.data('assentos'));
-        jQuery("#dia").val(este.data('dia')?.split(',')).trigger('change');
+        jQuery("#dias").val(este.data('dias')?.toString().split(',')).trigger('change');
 
-        jQuery("#pontosDiv").html('');
-        jQuery.ajax({
-            type: 'POST',
-            url: '<?= $this->siteUrl('linhas/pontos') ?>',
-            data: {
-                linhas_id: id
-            },
-            dataType: 'json',
-            beforeSend: function() {
-                jQuery("#pontosDiv").html('Aguarde...');
-            },
-            success: function(retorno) {
-                if (retorno.status == true) {
-                    jQuery("#pontosDiv").html('');
-                    if (retorno.data.length) {
-                        let diasSemana = <?= json_encode($this->diasSemana()) ?>;
-                        jQuery.each(retorno.data, function(c, ponto) {
-                            jQuery("#pontosDiv").append(
-                                ' <div class="pontoDiv layout-flex flex-row layout-dados layout-margin" style="position: relative;">' +
-                                '  <div><div class="circle font-20 bold6"> ' + (c + 1) + '</div></div>' +
-                                '  <input type="hidden" id="id' + (c + 1) + '" name="pontos[' + (c + 1) + '][id]" value="' + ponto.id + '" />' +
-                                '  <input type="hidden" id="locais_id' + (c + 1) + '" name="pontos[' + (c + 1) + '][locais_id]" value="' + ponto.locais_id + '" />' +
-                                '  <div><label>Local</label><input type="text" class="form-elements cidadeAutocomplete" name="pontos[' + (c + 1) + '][cidade]" id="cidade" value="' + ponto.cidade + ' - ' + ponto.uf + '" /></div>' +
-                                '  <div><label>Dia da semana:</label><span><select class="form-elements" name="pontos[' + (c + 1) + '][dia]" id="dia' + (c + 1) + '"> <option value="">Selecione...</option></select></div>' +
-                                '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="pontos[' + (c + 1) + '][hora]" id="hora' + (c + 1) + '" value="' + ponto.hora + '" /></span></div>' +
-                                '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
-                                '</div>'
-                            );
-                            for(let w in diasSemana){
-                                if(w == ponto.dia){
-                                    newOption = new Option(diasSemana[w], w, true, true);
-                                } else {
-                                    newOption = new Option(diasSemana[w], w, false, false);
-                                }
-                                $("#dia" + (c + 1)).append(newOption);
-                            }
+        jQuery("#trechosDiv").html('');
+        if(id){
+            $.ajax({
+                type: 'POST',
+                url: '<?= $this->siteUrl('linhas/trechos') ?>',
+                data: {
+                    linhas_id: id
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    jQuery("#trechosDiv").html('Aguarde...');
+                },
+                success: function(retorno) {
+                    if (retorno.status == true) {
+                        jQuery("#trechosDiv").html('');
+                        if (retorno.data.length) {
                             
-                        });
+                            jQuery.each(retorno.data, function(c, trecho) {
+                                qtdtrechos = c +1;
+                                createTrecho(trecho);
+                                // jQuery("#trechosDiv").append(
+                                //     createTrecho(qtdtrechos, trecho)
+                                // );
+
+                                
+                            });
+                        } else {
+                            jQuery("#trechosDiv").append(retorno.msg);
+                        }
+
                     } else {
-                        jQuery("#pontosDiv").append(retorno.msg);
+
                     }
+                },
+                error: function(st) {
+                    show_message(st.status + ' ' + st.statusText, 'danger');
+                },
+                complete: function() {
+                    jQuery(".horas").datetimepicker({
+                        format: "HH:mm",
+                        stepping: 10
+                    });
 
                     jQuery(".valores").mask('#.##0,00', {
                         reverse: true
                     });
+
                     jQuery(".horas").mask('00:00', {
-                        reverse: true
-                    });
+                            reverse: true
+                        });
 
-
-                } else {
 
                 }
-            },
-            error: function(st) {
-                show_message(st.status + ' ' + st.statusText, 'danger');
-            },
-            complete: function() {
-                jQuery(".horas").datetimepicker({
-                    format: "HH:mm",
-                });
-
-                jQuery(".valores").mask('#.##0,00', {
-                    reverse: true
-                });
-
-                jQuery(".cidadeAutocomplete").autocomplete({
-                    minLength: 2,
-                    delay: 100,
-                    source: function(request, response) {
-
-                        jQuery.ajax({
-                            url: "/locais",
-                            type: "post",
-                            data: {
-                                cidade: request.term
-                            },
-                            dataType: 'json',
-                            success: function(retorno) {
-                                response(jQuery.map(retorno.data, function(val, key) {
-
-                                    var label = val.cidade + ' - ' + val.uf;
-                                    return {
-                                        label: label,
-                                        value: label,
-                                        id: val.id
-                                    };
-                                }));
-                            }
-                        });
-                    },
-                    select: function(event, ui) {
-                        console.log(event)
-                        let id = jQuery(event.target).data('id');
-                        console.log(jQuery(event.target).data('id'), id)
-                        jQuery("#locais_id" + id).val(ui.item.id)
-                    }
-                });
-
-            }
-        });
+            });
+        }
 
 
 
-        jQuery("#mediumModalLabel").html('Viagem ' + (este.data('descricao') ? este.data('descricao') : ''));
+        jQuery("#mediumModalLabel").html('Linha ' + (este.data('descricao') ? este.data('descricao') : ''));
 
         jQuery("#formMediumModal").modal("show")
     });
@@ -420,7 +374,7 @@
     jQuery("#btnSalvar").click(function() {
         var este = jQuery(this);
         var id = jQuery("#linhas_id").val();
-        var form = jQuery("#formViagem");
+        var form = jQuery("#formLinha");
 
         jQuery.ajax({
             type: 'POST',

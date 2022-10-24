@@ -65,14 +65,14 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <td>Marca</td>
-                            <td>Modelo</td>
-                            <td>Ano</td>
-                            <td>Codigo</td>
-                            <td>Placa</td>
-                            <td>Empresa</td>
-                            <td>Tipo</td>
-                            <td><i class="fas fa-cog"></i></td>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Ano</th>
+                            <th>Codigo</th>
+                            <th>Placa</th>
+                            <th>Empresa</th>
+                            <th>Tipo</th>
+                            <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
                     <tbody>

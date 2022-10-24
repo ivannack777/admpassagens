@@ -37,7 +37,7 @@ class Ambientes extends BaseController
     {
 
 
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $usuario_id = $requests['usuario_id'] ?? null;
         $empreendimento_id = $requests['empreendimento_id'] ?? null;
         $nome = $requests['nome'] ?? null;
@@ -79,7 +79,7 @@ class Ambientes extends BaseController
     {
 
         $id = $args['id'] ?? null;
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

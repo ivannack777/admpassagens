@@ -40,11 +40,12 @@ $container = $containerBuilder->build();
 // Instantiate the app
 AppFactory::setContainer($container);
 $app = AppFactory::create();
-$callableResolver = $app->getCallableResolver();
-
 // Register middleware
 $middleware = require __DIR__.'/../app/middleware.php';
 $middleware($app);
+
+$callableResolver = $app->getCallableResolver();
+
 
 // Create Request object from globals
 $serverRequestCreator = ServerRequestCreatorFactory::create();

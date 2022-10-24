@@ -17,7 +17,9 @@
 .font-12 {
     font-size: 12px;
 }
-
+.font-18 {
+    font-size: 18px;
+}
 .font-20 {
     font-size: 20px;
 }
@@ -74,7 +76,9 @@
 .flex-between {
     justify-content: space-between;
 }
-
+.flex-around {
+    justify-content: space-around;
+}
 .form-group label {
     display: block;
 }
@@ -239,10 +243,11 @@ ul.ui-autocomplete {
 .layout-dados {
     border: 1px solid silver;
     border-radius: 6px;
-    box-shadow: 2px 4px 7px -1px rgba(88, 135, 192, 0.67);
+    box-shadow: 3px 3px 3px 0px rgba(88, 135, 192, 0.67);
     padding: 6px;
     margin: 9px 0;
 }
+
 
 
 .layout-margin >div{
@@ -342,13 +347,46 @@ ul.ui-autocomplete {
     cursor: context-menu;
 }
 
-a{
+a, .link{
     text-decoration: none;
     outline: none !important;
     color: #6195cc;
     transition: all 0.25s ease;  
 }
 
-a:hover{
+a:hover, .link:hover{
     color: #1063bb;
+    cursor: pointer;
+}
+
+.btn-outline-info:focus{
+    
+    color: #fff !important;
+    border-color: #fff !important;
+    background-color: #17a2b8 !important;
+}
+
+.livre{
+    background-color: rgb(193, 255, 219);
+    border: 1px solid rgb(0, 189, 126);
+    border-radius: 6px;
+    padding: 3px;
+}
+.cancelado{
+    background-color: rgb(193, 255, 193);
+    border: 1px solid rgb(0, 189, 126);
+    border-radius: 6px;
+    padding: 3px;
+}
+.reservado{
+    background-color: rgb(185, 220, 252);
+    border: 1px solid rgb(0, 50, 189);
+    border-radius: 6px;
+    padding: 3px;
+}
+.pago{
+    background-color: rgb(255, 223, 187);
+    border: 1px solid rgb(189, 76, 0);
+    border-radius: 6px;
+    padding: 3px;
 }

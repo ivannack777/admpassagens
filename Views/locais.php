@@ -68,11 +68,11 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <td>Cidade</td>
-                            <td>Sigla</td>
-                            <td>Estado</td>
-                            <td>Endereço</td>
-                            <td><i class="fas fa-cog"></i></td>
+                            <th>Cidade</th>
+                            <th>Sigla</th>
+                            <th>Estado</th>
+                            <th>Endereço</th>
+                            <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
                     <tbody>

@@ -39,7 +39,7 @@ class Comentarios extends BaseController
     public function list(Request $request, Response $response)
     {
 
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
 
         $usuario_id = $_SESSION['user']['id']??0;
         if ($usuario_id < '1') {
@@ -90,7 +90,7 @@ class Comentarios extends BaseController
         if ($_SESSION['user'] ?? false) {
 
             // $sanitize = new Sanitize();
-            $requests = $request->getParsedBody();
+            $requests = $this->getRequests($request);
             if (empty($requests)) {
                 return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
             }

@@ -69,12 +69,12 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <td>Linha</td>
-                            <td>Local origem</td>
-                            <td>Local destino</td>
-                            <td>Horário</td>
-                            <td>Valor</td>
-                            <td><i class="fas fa-cog"></i></td>
+                            <th>Linha</th>
+                            <th>Local origem</th>
+                            <th>Local destino</th>
+                            <th>Horário</th>
+                            <th>Valor</th>
+                            <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,7 +103,8 @@
                                             <i class="far fa-heart"></i>
                                         <?php endif ?>
                                     </button>
-                                    <button class="btn btn-outline-primary btn-sm btnComentario" title="Comentarios" style="margin-right: 8px;" data-item="trechos" data-item_id="<?= $trecho->id ?>" data-title="<?= $trecho->linhas_descricao ?>">
+                                    <button class="btn btn-outline-primary btn-sm btnComentario" title="Comentarios" style="margin-right: 8px;" data-item="trechos" data-item_id="<?= $trecho->id ?>" 
+                                    data-title="<?= $trecho->linhas_descricao ?> (<?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?> -> <?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?>)">
                                         <i class="far fa-comment"></i>
                                     </button>
                                 </td>
@@ -189,26 +190,33 @@
                         <!--deixar sem name pra não fazer submit -->
                         <input type="text" class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id" />
                     </div>
+                    <div class="form-group" id="pontosDivGroup">
+                        <label class="control-label mb-1" for="destino_id">Locais de destino</label>
+                        <div id="pontosDiv"></div>
+                        
+                        <!--deixar sem name pra não fazer submit -->
+                        <button type="text" class="btn btn-outline-info" id="addPontos"><i class="fas fa-plus"></i> Adicionar ponto</button>
+                    </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="destinoDiv" style="display: none;">
                         <label class="control-label mb-1" for="destino_id">Local de destino</label>
                         <span class="text-danger error-label"></span>
                         <input type="hidden" id="destino_id" name="destino_id" />
-                        <!--deixar sem name pra não fazer submit -->
+                        <!-- deixar sem name pra não fazer submit -->
                         <input type="text" class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id" />
                     </div>
 
                     <div class="layout-flex">
-                        <div class="form-group">
+                        <div class="form-group" style="margin-right: 18px;">
                             <label class="control-label mb-1" for="hora">Horário</label>
                             <span class="text-danger error-label"></span>
-                            <input type="text" class="form-elements" id="hora" name="hora" style="width: 150px;" />
+                            <input type="text" class="form-elements horas" id="hora" name="hora" style="width: 150px;" />
                         </div>
 
                         <div class="form-group">
                             <label class="control-label mb-1" for="valor">Valor</label>
                             <span class="text-danger error-label"></span>
-                            <input type="text" class="form-elements" id="valor" style="width: 150px;" />
+                            <input type="text" class="form-elements valores" id="valor" name="valor" style="width: 150px;" />
                         </div>
                     </div>
 
@@ -256,10 +264,14 @@
         closeOnSelect: false
     });
 
+    $("input.horas").datetimepicker({
+            format: "HH:mm",
+            stepping: 10
+        });
+
     $("#addPontos").click(function(evt) {
         evt.preventDefault();
         var c = $('.pontoDiv').length + 1;
-        qtdPontos++
         $("#pontosDiv").append(
             ' <div class="pontoDiv layout-flex flex-row layout-dados layout-margin" style="position: relative;">' +
             '  <div><i class="fas fa-level-up-alt fa-2x fa-fw fa-rotate-90" style="color: #408ba9"></i></div>' +
@@ -275,7 +287,8 @@
             '  <div><label>Valor:</label><input type="text" class="form-elements valores" name="pontos[' + c + '][valor]" id="valor' + c + '" value="" /></div>' +
             '</div>'
         );
-        $(".horas").datetimepicker({
+
+        $("input.horas").datetimepicker({
             format: "HH:mm",
             stepping: 10
         });
@@ -286,6 +299,8 @@
         $(".horas").mask('00:00', {
             reverse: true
         });
+
+        $('#destino' + c ).focus();
 
 
     });
@@ -305,8 +320,8 @@
     });
 
     $(".editar").click(function() {
-        qtdPontos = $("#pontosDiv").find('.pontos');
-        qtdPontos = qtdPontos.length;
+        // qtdPontos = $("#pontosDiv").find('.pontos');
+        // qtdPontos = qtdPontos.length;
         var este = $(this);
         var id = este.data('id');
 
@@ -320,7 +335,7 @@
 
         $("#trechos_id").val(este.data('id'));
         $("#linha").val(este.data('linha'));
-        $("#linhas_id").select2().val(este.data('linhas_id')).trigger('change');
+        $("#linhas_id").select2().val(este.data('linhas_id')).trigger('change').focus();
         $("#linha").val(este.data('linha'));
         $("#origem_id").val(este.data('origem_id'));
         $("#origem").val(este.data('origem'));
@@ -329,6 +344,11 @@
         $("#hora").val(este.data('hora'));
         $("#valor").val(este.data('valor'));
         $("#dia").select2().val(este.data('dia')).trigger('change');
+
+        if(este.data('linhas_id') !=''){
+            $("#destinoDiv").show('slow');
+            $("#pontosDivGroup").hide('slow');
+        }
 
         // $("#pontosDiv").html('');
         // $.ajax({

@@ -69,9 +69,9 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <td>Nome</td>
-                            <td>Descrição</td>
-                            <td><i class="fas fa-cog"></i></td>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
                     <tbody>

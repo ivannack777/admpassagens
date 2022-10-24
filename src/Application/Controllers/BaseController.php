@@ -72,4 +72,13 @@ class BaseController
         return false;
     }
 
+    /**
+     * Ajuntar o array do
+     *  $request->getParsedBody() // json e post
+     *  com  $request->getQueryParams() //get
+     */
+    protected function getRequests($request){
+        return array_merge((array)$request->getParsedBody(), (array)$request->getQueryParams() );
+    }
+
 }

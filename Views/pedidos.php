@@ -67,7 +67,7 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>Pedidos</th>
                             <th>Código da viagem</th>
                             <th>Descrição da viagem</th>
                             <th>Data da viagem</th>
@@ -79,42 +79,48 @@
                         foreach ($pedidosViagens as $viagemId => $pedidosViagem) : ?>
                             <!-- informações da viagem -->
                             <tr>
-                                <td><button class="btn btn-sm fas fa-chevron-right expandir" data-trtarget="pedidos<?= $viagemId ?>tr"><i class=""></i></button></td>
-                                <td><?= $viagens[$viagemId]->codigo ?></td>
+                                <td><button class="btn btn-sm fas fa-chevron-right expandir" data-trtarget="pedidos<?= $viagemId ?>tr"><i class=""></i></button> (<?= count($pedidosViagem) ?>)</td>
+                                <td><a href="<?= $this->siteUrl('viagens?key=' . $viagens[$viagemId]->key) ?>" title="Ver pedidos dessa viagem"><?= $viagens[$viagemId]->codigo ?></a></td>
                                 <td><?= $viagens[$viagemId]->descricao ?></td>
-                                <td><?= $viagens[$viagemId]->data_saida ?></td>
+                                <td><?= $this->dateFormat($viagens[$viagemId]->data_saida, 'd/m/Y H:i')?></td>
                                 <td></td>
                             </tr>
                             <!-- informações do pedido -->
                             <tr id="pedidos<?= $viagemId ?>tr" style="display: none;">
                                 <td colspan="5">
-                                    <table id="pedidos<?= $viagemId ?>Table" class="table table-bordered dataTable no-footer" >
+                                    <table id="pedidos<?= $viagemId ?>Table" class="table table-bordered dataTable no-footer">
                                         <thead>
                                             <tr>
                                                 <th>Código</th>
                                                 <th>Cliente</th>
-                                                <th>CPF</th>
+                                                <th>Assento</th>
                                                 <th>Valor</th>
                                                 <th>Status</th>
                                                 <th>Data/Hora</th>
                                                 <th><i class="fas fa-cog"></i></th>
                                             </tr>
                                         </thead>
-                                        <?php foreach ($pedidosViagem as $pedido) : ?>
+                                        <?php 
+                                        $statusClasses = [
+                                            'R' => 'reservado',
+                                            'P' => 'pago',
+                                            'C' => 'cancelado',
+                                        ];
+                                        foreach ($pedidosViagem as $pedido) : ?>
                                             <tbody>
                                                 <tr id="linha<?= $pedido->id ?>" class="list-label">
                                                     <td><span id="label_codigo<?= $pedido->id ?>"><?= $pedido->codigo ?></span></td>
                                                     <td><span id="label_cliente_nome<?= $pedido->id ?>"><?= $pedido->cliente_nome ?></span></td>
-                                                    <td><span id="label_cpf<?= $pedido->id ?>" class="label_cpf"><?= $pedido->cpf ?></span></td>
+                                                    <td><span id="label_assento<?= $pedido->id ?>" class="label_assento"><?= $pedido->assento ?></span></td>
                                                     <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor ?? '') ?></span></td>
-                                                    <td><span id="label_status<?= $pedido->id ?>"><?= $pedido->status ?></span></td>
+                                                    <td><span id="label_status<?= $pedido->id ?>"><span class="<?= $statusClasses[$pedido->status] ?>"><?= ucfirst($statusClasses[$pedido->status]) ?></span></span></td>
                                                     <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
                                                     <td>
                                                         <?php $session = $this->getAttributes();
                                                         $usersession = $session['userSession'] ?? false;
                                                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                                                             <!-- Editar -->
-                                                            <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-cpf="<?= $pedido->cpf ?>" data-valor="<?= str_replace('.', ',', $pedido->valor ?? '') ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
+                                                            <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>"  data-cliente_nome="<?= $pedido->cliente_nome ?>" data-cliente_cpf="<?= $pedido->cliente_cpf ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-assento="<?= $pedido->assento ?>" data-valor="<?= str_replace('.', ',', $pedido->valor ?? '') ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
                                                                 <i class="far fa-edit"></i> Editar</button>
                                                         <?php endif ?>
                                                         <!-- Favoritar -->
@@ -196,27 +202,73 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="clientes_id">Cliente</label>
+                        <input type="hidden" id="clientes_id" name="clientes_id">
                         <span class="text-danger error-label"></span>
-                        <input type="text" id="clientes_id" name="clientes_id">
                         <!-- deixar sem name para não fazer submit -->
                         <input class="form-elements" id="clientes" data-target="clientes_id">
+                        <button class="btn" id="btnAddCliente"><i class="fas fa-plus"></i> Adicionar cliente</button>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="viagens_id">Viagem</label>
-                        <span class="text-danger error-label"></span>
 
-                        <select class="form-elements" id="viagens_id" name="viagens_id">
-                            <option value="0">Selecione...</option>
-                            <?php foreach ($viagens as $viagem) : ?>
-                                <option value="<?= $viagem->id ?>"><?= $viagem->descricao ?></option>
-                            <?php endforeach ?>
-                        </select>
+                    <div class="form-group" id="addClienteDiv" style="display: none; margin: 12px;">
+                        <label>Dados do novo cliente</label>
+                        <div class="form-group">
+                            <label class="control-label mb-1" for="nome">Nome</label>
+                            <span class="text-danger error-label"></span>
+                            <input type="text" class="form-elements" id="nome" name="cliente[nome]" value="" placeholder="Nome" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label mb-1" for="cpf">CPF</label>
+                            <span class="text-danger error-label"></span>
+                            <input type="text" class="form-elements" id="cpf" name="cliente[cpf]" value="" placeholder="CPF" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label mb-1" for="rg">RG</label>
+                            <span class="text-danger error-label"></span>
+                            <input type="text" class="form-elements" id="rg" name="cliente[rg]" value="" placeholder="RG" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label mb-1" for="celular">Celular</label>
+                            <span class="text-danger error-label"></span>
+                            <input type="text" class="form-elements" id="celular" name="cliente[celular]" value="" placeholder="Celular" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label mb-1" for="email">E-mail</label>
+                            <span class="text-danger error-label"></span>
+                            <input type="text" class="form-elements" id="email" name="cliente[email]" value="" placeholder="E-mail" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="border: 1px solid; padding: 8px;">
+                        <label class="control-label mb-1" for="origem">Origem</label>
+                        <input type="text" id="origem_id">
+                        <span class="text-danger error-label"></span>
+                        <!-- deixar sem name para não fazer submit -->
+                        <input class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id">
+                        
+                        <label class="control-label mb-1" for="destino">Destino</label>
+                        <input type="text" id="destino_id">
+                        <span class="text-danger error-label"></span>
+                        <!-- deixar sem name para não fazer submit -->
+                        <input class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id">
+
+                        <label class="control-label mb-1" for="data">Data</label>
+                        <input type="text" class="form-control datas" id="data" />
+                        <span class="text-danger error-label"></span>
+                        
+
+                        <button class="btn btn-secundary" id="btnLocalizarViagem" title="Localizar trecho"><i class="fas fa-search" ></i></button>
+                        
+                        <input type="text" id="trechos_id" name="trechos_id" />
+                        <input type="text" id="viagens_id" name="viagens_id" />
+                        
+                        <div id="trecho_info">trecho_info</div>
 
                     </div>
+
                     <div class="form-group">
-                        <label class="control-label mb-1" for="cpf">CPF</label>
+                        <label class="control-label mb-1" for="assento">Assento</label>
                         <span class="text-danger error-label"></span>
-                        <input type="text" class="form-elements" id="cpf" name="cpf" value="" placeholder="___.___.___-__" />
+                        <input type="text" class="form-elements" id="assento" name="assento" value="" placeholder="Assento" />
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="valor">Valor</label>
@@ -249,15 +301,14 @@
 </div>
 
 <script>
-    jQuery('#valor').mask("#.##0,00", {
-        reverse: true
-    });
-    jQuery('.label_cpf').mask("000.000.000-00");
+    jQuery('#valor').mask("#.##0,00", {reverse: true});
 
     jQuery(".datas").mask('00/00/0000 00:00');
+    jQuery("#cpf").mask('000.000.000-00');
+    jQuery("#celular").mask('00 00000-0000');
 
     jQuery(".datas").datetimepicker({
-        format: "d/m/Y H:i"
+        format: "DD/MM/YYYY"
     });
 
     jQuery('#veiculos_id').select2({
@@ -287,18 +338,93 @@
             jQuery('#status option[value="0"]').prop('selected', true);
         }
 
+
         jQuery("#clientes_id").val(este.data('clientes_id'));
+        jQuery("#clientes").val(este.data('cliente_nome') +' - '+  este.data('cliente_cpf'));
         jQuery("#viagens_id").val(este.data('viagens_id'));
-        jQuery("#cpf").val(este.data('cpf')).mask("000.000.000-00");
+        jQuery("#assento").val(este.data('assento'));
         jQuery("#valor").val(este.data('valor')?.replace('.', ',')).mask("#.##0,00", {
             reverse: true
         });
         jQuery("#status").val(este.data('status'));
         jQuery("#mediumModalLabel").html('Pedido ' + (este.data('codigo') ? este.data('codigo') : ''));
 
-        jQuery("#formMediumModal").modal("show")
+        jQuery("#formMediumModal").modal("show");
+        jQuery(".cidadeAutocomplete").keyup(function(){
+            autocompleteLocais($(this), "/locais/listar");
+        });
+
     });
 
+    
+    $("#btnLocalizarViagem").click(function(evt){
+        evt.preventDefault();
+        var origem_id = $("#origem_id").val();
+        var destino_id = $("#destino_id").val();
+
+        jQuery.ajax({
+            type: 'POST',
+            url: '<?= $this->siteUrl('viagens/listar')?>',
+            data: {
+                origem_id: origem_id,
+                destino_id: destino_id
+            },
+            dataType: 'json',
+            beforeSend: function (){},
+            success: function (retorno) {
+                console.log('btnLocalizarTrecho -> retorno', retorno);
+                if (retorno.status == true) {
+                    if(retorno.data.length){
+                        $("#trechos_id").val(retorno.data[0].id);
+                        $("#trecho_info").html(
+                            '<h5>Informações da viagem localizada</h5>'+
+                            '<ul>'+
+                            '  <li>id: '+ retorno.data[0].id +'</li>'+
+                            '  <li>key: '+ retorno.data[0].key +'</li>'+
+                            '  <li>linhas_id: '+ retorno.data[0].linhas_id +'</li>'+
+                            '  <li>linhas_descricao: '+ retorno.data[0].linhas_descricao +'</li>'+
+                            '  <li>origem_id: '+ retorno.data[0].origem_id +'</li>'+
+                            '  <li>origem_key: '+ retorno.data[0].origem_key +'</li>'+
+                            '  <li>origem_cidade: '+ retorno.data[0].origem_cidade +'</li>'+
+                            '  <li>origem_sigla: '+ retorno.data[0].origem_sigla +'</li>'+
+                            '  <li>origem_uf: '+ retorno.data[0].origem_uf +'</li>'+
+                            '  <li>origem_endereco: '+ retorno.data[0].origem_endereco +'</li>'+
+                            '  <li>destino_id: '+ retorno.data[0].destino_id +'</li>'+
+                            '  <li>destino_key: '+ retorno.data[0].destino_key +'</li>'+
+                            '  <li>destino_cidade: '+ retorno.data[0].destino_cidade +'</li>'+
+                            '  <li>destino_sigla: '+ retorno.data[0].destino_sigla +'</li>'+
+                            '  <li>destino_uf: '+ retorno.data[0].destino_uf +'</li>'+
+                            '  <li>destino_endereco: '+ retorno.data[0].destino_endereco +'</li>'+
+                            '  <li>hora: '+ retorno.data[0].hora +'</li>'+
+                            '  <li>dia: '+ retorno.data[0].dia +'</li>'+
+                            '  <li>valor: '+ retorno.data[0].valor +'</li>'+
+                            '  <li>excluido: '+ retorno.data[0].excluido +'</li>'+
+                            '</ul>'
+                        );
+                    } else {
+                        $("#trechos_id").val('');
+                        $("#trecho_info").html('<h5>'+retorno.msg+'</h5>')
+                    }
+                } else {
+                }
+            },
+            error: function (st){
+                show_message( st.status +' '+ st.statusText, 'danger');
+            },
+            complete: function(){}
+        });    
+    });
+
+    $("#btnAddCliente").click(function(evt) {
+        evt.preventDefault()
+        $("#addClienteDiv").toggle('slow');
+    });
+
+    $("#clientes").change(function(evt) {
+        if ($(this).val() == '') {
+            $("#clientes_id").val('')
+        }
+    });
     jQuery("#btnSalvar").click(function() {
         var este = jQuery(this);
         var id = jQuery("#pedidos_id").val();
@@ -322,12 +448,13 @@
                     jQuery("#label_codigo" + id).html(retorno.data[0].descricao);
                     jQuery("#label_cliente_nome" + id).html(retorno.data[0].cliente_nome);
                     jQuery("#label_viagens_descricao" + id).html(retorno.data[0].viagens_descricao);
-                    jQuery("#label_cpf" + id).html(data.cpf).mask('000.000.000-00');
+                    jQuery("#label_assento" + id).html(data.assento);
                     jQuery("#label_valor" + id).html((retorno.data[0].valor).replace('.', ','));
                     jQuery("#label_status" + id).html(retorno.data[0].status);
                     jQuery("#linha" + id).addClass('success-transition');
                 } else {
                     jQuery("#linha" + id).addClass('error-transition');
+                    show_message(retorno.msg, 'danger');
                     // jQuery("#retornomsg").html(retorno.msg).removeClass().addClass('text-danger');
                     if (retorno.data) {
                         for (var key in retorno.data) {
@@ -350,26 +477,25 @@
         excluir(rota, 'Você realmente quer excluir este pedido?', redirect);
     });
 
-$(".expandir").click(function(){
-    var este = $(this);
-    var idtrTarget = este.data('trtarget');
-    var trTarget = $('#'+idtrTarget);
-    console.log(idtrTarget, trTarget)
-    if(trTarget.is(":visible")){
-        este.removeClass('fa-chevron-down').addClass('fa-chevron-right');
-        trTarget.css('display', 'none')
-    } else {
-        este.removeClass('fa-chevron-right').addClass('fa-chevron-down');
-        trTarget.css('display', 'table-row')
-    }
-})
+    $(".expandir").click(function() {
+        var este = $(this);
+        var idtrTarget = este.data('trtarget');
+        var trTarget = $('#' + idtrTarget);
+        console.log(idtrTarget, trTarget)
+        if (trTarget.is(":visible")) {
+            este.removeClass('fa-chevron-down').addClass('fa-chevron-right');
+            trTarget.hide('slow')
+        } else {
+            este.removeClass('fa-chevron-right').addClass('fa-chevron-down');
+            trTarget.show('slow')
+        }
+    })
 
-$("body").on('keyup', '#clientes', function(evt) {
+    $("body").on('keyup', '#clientes', function(evt) {
 
-if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 65 && event.keyCode <= 90)) {
-    
-    autocompleteClientes($(this));
-}
-})
-    
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 65 && event.keyCode <= 90)) {
+
+            autocompleteClientes($(this));
+        }
+    })
 </script>

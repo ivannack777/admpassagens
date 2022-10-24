@@ -35,14 +35,16 @@ class Pedidos extends BaseController
     public function list(Request $request, Response $response)
     {
         $pedidosArr = [];
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);//postt
+
         $apiResult = $this->api->post('pedidos/listar', $requests);
         $pedidos = $apiResult;
+        // var_dump($pedidos);exit;
 
         $apiResult = $this->api->post('clientes/listar', $requests);
         $dados['clientes'] = $apiResult;
 
-        $apiResult = $this->api->post('viagens/listar', $requests);
+        $apiResult = $this->api->post('viagens/listar');
         $dados['viagens'] = $apiResult;
 
         # agrupar pedidos por viagem
@@ -52,10 +54,9 @@ class Pedidos extends BaseController
         $dados['pedidosViagens'] = $pedidosArr;
 
 
-
         //usando $this->view setado em BaseController
-        if ($args['modo']??false == 'lista') {
-            return $this->views->render($response, 'viagens_list.php', $dados);
+        if ( ($requests['modo']??false) == 'lista') {
+            return $response->withJson($pedidos->data, $pedidos->status, $pedidos->count . ($pedidos->count > 1 ? ' pedidos encontrados' : ' pedido encontrado'));
         } else {
             $this->views->render($response, 'header.php', $dados);
             $this->views->render($response, 'left.php', $dados);
@@ -73,7 +74,7 @@ class Pedidos extends BaseController
     public function save(Request $request, Response $response, array $args)
     {
         $id = $args['id'] ?? null;
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

@@ -64,11 +64,11 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <td>Nome</td>
-                            <td>CPF</td>
-                            <td>Celular</td>
-                            <td>E-mail</td>
-                            <td><i class="fas fa-cog"></i></td>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Celular</th>
+                            <th>E-mail</th>
+                            <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
                     <tbody>

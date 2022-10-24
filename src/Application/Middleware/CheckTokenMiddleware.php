@@ -22,20 +22,16 @@ class CheckTokenMiddleware implements Middleware
     public function process(Request $request, RequestHandler $handler): Response
     {
         session_start();
+        $sessUser = $_SESSION['user'] ?? false;
         // $routeContext = RouteContext::fromRequest($request);
         // $headers = $request->getHeaders();
         
-        $sessUser = $_SESSION['user'] ?? false;
         // var_dump($_SESSION);exit;
         
-        $uri = $request->getUri();
-        
-        if($sessUser){
-            // echo "deu bom";
-        } else {
+        if(!$sessUser){
+            $uri = $request->getUri();
             // echo "deu ruim";
-            $_SESSION["rememberuri"] = $uri->getPath();
-            // setcookie("rememberuri", $uri->getPath(), time()+3600*10000, "/", $_ENV['SITE_URL'], true);
+            // $_SESSION["rememberuri"] = $uri->getPath();
             $response = $handler->handle($request);
             return $response->withHeader('Location', '/usuarios/login/form')->withStatus(302);
         }

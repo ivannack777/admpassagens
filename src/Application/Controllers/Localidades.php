@@ -29,7 +29,7 @@ class Localidades extends BaseController
      */
     public function list(Request $request, Response $response)
     {
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $usuario_id = $requests['usuario_id'] ?? null;
         $nome = $requests['nome'] ?? null;
         $uf = $requests['uf'] ?? null;
@@ -79,7 +79,7 @@ class Localidades extends BaseController
     public function save(Request $request, Response $response, array $args)
     {
         $id = $args['id'] ?? null;
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

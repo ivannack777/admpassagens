@@ -32,7 +32,7 @@ class Veiculos extends BaseController
      */
     public function list(Request $request, Response $response, $args)
     {
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $apiResult = $this->api->post('veiculos/listar', $requests);
         $dados['veiculos'] = $apiResult;
 
@@ -62,7 +62,7 @@ class Veiculos extends BaseController
      */
     public function tipo_list(Request $request, Response $response)
     {
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $apiResult = $this->api->post('veiculos/tipo/listar', $requests);
         $dados['veiculosTipo'] = $apiResult;
 
@@ -87,7 +87,7 @@ class Veiculos extends BaseController
     {
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }
@@ -158,7 +158,7 @@ class Veiculos extends BaseController
 
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

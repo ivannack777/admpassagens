@@ -34,7 +34,7 @@ class Pessoas extends BaseController
     public function list(Request $request, Response $response)
     {
 
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
 
         $endereco_id = $requests['endereco_id'] ?? null;
         $nome = $requests['nome'] ?? null;
@@ -75,7 +75,7 @@ class Pessoas extends BaseController
     {
         $id = $args['id'] ?? null;
         $sanitize = new Sanitize();
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

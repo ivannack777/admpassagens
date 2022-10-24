@@ -30,7 +30,7 @@ class Clientes extends BaseController
      */
     public function home(Request $request, Response $response)
     {
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $apiResult = $this->api->post('clientes/listar', $requests);
         $dados['clientes'] = $apiResult;
 
@@ -54,7 +54,7 @@ class Clientes extends BaseController
      */
     public function list(Request $request, Response $response)
     {
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         $apiResult = $this->api->post('clientes/listar', $requests);
 
         if($apiResult){
@@ -72,7 +72,7 @@ class Clientes extends BaseController
     public function save(Request $request, Response $response, array $args)
     {
         $id = $args['id'] ?? null;
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

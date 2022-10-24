@@ -43,7 +43,7 @@ class Login extends BaseController
     {
         $method = $request->getMethod();
 
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (isset($requests['usuario'])) {
             $usuarios = Usuarios::list(['usuario' => $requests['usuario']]);
         } else {
@@ -68,7 +68,7 @@ class Login extends BaseController
         foreach ($headers as $name => $values) {
             $caminho .= $name . ': ' . implode(', ', $values) . '; ';
         }
-        $requests = array_map('trim', $request->getParsedBody() ?? []);
+        $requests = array_map('trim', $this->getRequests($request) ?? []);
 
         $usuario = $requests['usuario'] ?? null;
         $email = $requests['email'] ?? null;
@@ -147,7 +147,7 @@ class Login extends BaseController
     public function login(Request $request, Response $response): Response
     {
         session_start();
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
 
         $usuario  = $requests['usuario'] ?? false;
         $email  = $requests['email'] ?? false;

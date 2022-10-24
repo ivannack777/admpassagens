@@ -35,7 +35,7 @@ class Linhas extends BaseController
     public function list(Request $request, Response $response, $args)
     {
         $dados = [];
-        $requests = $request->getQueryParams();
+        $requests = $this->getRequests($request);
         
         $apiResult = $this->api->post('veiculos/listar', $requests);
         $dados['veiculos'] = $apiResult;
@@ -57,16 +57,33 @@ class Linhas extends BaseController
     }
 
         /**
-     * Localiza e retorna um linhass passando 'linhas' por json request.
+     * Localiza e retorna  passando 'linhas' por json request.
      *
      * @return string json
      */
     public function listPoints(Request $request, Response $response, $args)
     {
         $dados = [];
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         
         $apiResult = $this->api->post('linhas_pontos/listar', $requests);
+        if(property_exists($apiResult, 'data')){
+            return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
+        }
+        return $response->withJson([$apiResult], false, 'Erro na consulta', 500);
+    }
+
+    /**
+     * Localiza e retorna trechos da linha 
+     *
+     * @return string json
+     */
+    public function listTrechos(Request $request, Response $response, $args)
+    {
+        $dados = [];
+        $requests = $this->getRequests($request);
+        
+        $apiResult = $this->api->post('linhas/trechos', $requests);
         if(property_exists($apiResult, 'data')){
             return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
         }
@@ -83,7 +100,7 @@ class Linhas extends BaseController
     { 
         // session_start();
         $id = $args['id'] ?? null;
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }

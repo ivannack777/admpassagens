@@ -45,12 +45,12 @@
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
                         <tr>
-                            <td>Usuário</td>
-                            <td>E-mail</td>
-                            <td>Celular</td>
-                            <td>Pessoa</td>
-                            <td>Nível</td>
-                            <td><i class="fas fa-cog"></i></td>
+                            <th>Usuário</th>
+                            <th>E-mail</th>
+                            <th>Celular</th>
+                            <th>Pessoa</th>
+                            <th>Nível</th>
+                            <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
                     <tbody>

@@ -11,13 +11,15 @@ return function (ContainerBuilder $containerBuilder) {
 
     $dotenv = Dotenv\Dotenv::createMutable(__DIR__);
     $dotenv->load();
+
     // Global Settings Object
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
+            
             return new Settings([
-                'displayErrorDetails' => true, // Should be set to false in production
-                'logError'            => true,
-                'logErrorDetails'     => true,
+                'displayErrorDetails' => $_ENV['DISPLAYERRORDETAILS'], // Should be set to false in production
+                'logError'            => $_ENV['LOGERROR'],
+                'logErrorDetails'     => $_ENV['LOGERRORDETAILS'],
                 'logger' => [
                     'name' => 'slim-app',
                     'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',

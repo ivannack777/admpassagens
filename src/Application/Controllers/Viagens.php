@@ -35,7 +35,10 @@ class Viagens extends BaseController
     public function list(Request $request, Response $response, $args)
     {
         $dados = [];
-        $requests = $request->getQueryParams();
+        $pedidosCount = [];
+        $requests = $this->getRequests($request);//post
+
+        // var_dump($requests, $params,($params['modo']??false) == 'lista');exit;
         
         $apiResult = $this->api->post('veiculos/listar', $requests);
         $dados['veiculos'] = $apiResult;
@@ -46,9 +49,17 @@ class Viagens extends BaseController
         $apiResult = $this->api->post('viagens/listar', $requests);
         $dados['viagens'] = $apiResult;
         
+        $apiResult = $this->api->post('pedidos/listar', ['group'=>'viagens']);
+        var_dump($apiResult);
+        
+        if(($apiResult) && ($apiResult->status === true && $apiResult->count > 0)){
+            $pedidosCount = (array)$apiResult->data;
+        }
+        $dados['pedidosCount'] = $pedidosCount;
+        
         //usando $this->view setado em BaseController
-        if ($args['modo']??false == 'lista') {
-            return $this->views->render($response, 'viagens_list.php', $dados);
+        if ( ($requests['modo']??false) == 'lista') {
+            return $response->withJson($dados['viagens']->data, $dados['viagens']->status, $dados['viagens']->count . ($dados['viagens']->count > 1 ? ' viagens encontradas' : ' viagen encontrada'));
         } else {
             $this->views->render($response, 'header.php', $dados);
             $this->views->render($response, 'left.php', $dados);
@@ -68,8 +79,8 @@ class Viagens extends BaseController
     public function listPoints(Request $request, Response $response, $args)
     {
         $dados = [];
-        $requests = $request->getQueryParams();
-        
+        $requests = $this->getRequests($request);
+
         $apiResult = $this->api->post('viagens/pontos/listar', $requests);
         if(property_exists($apiResult, 'data')){
             return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
@@ -80,7 +91,7 @@ class Viagens extends BaseController
 
 
     /**
-     * Salva um viagenss.
+     * Salva uma viagem
      *
      * @return string json
      */
@@ -88,7 +99,7 @@ class Viagens extends BaseController
     { 
         // session_start();
         $id = $args['id'] ?? null;
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }
@@ -172,7 +183,7 @@ class Viagens extends BaseController
     { 
         // session_start();
         $id = $args['id'] ?? null;
-        $requests = $request->getParsedBody();
+        $requests = $this->getRequests($request);
         if (empty($requests)) {
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }
