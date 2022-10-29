@@ -80,7 +80,7 @@ class ApiCall
             curl_close($ch); 
             if(!empty($result)) $retorno = json_decode($result);
             // var_dump($retorno);exit;
-            if( ($_ENV['DEBUG']??false) && !$retorno ){
+            if( ($_ENV['DEBUG']??false) && !$retorno || isset($retorno->error)){
                 
                 echo "<pre>";
                 var_export($result);

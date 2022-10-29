@@ -161,22 +161,22 @@
                     <input type="hidden" id="cliente_id" name="id" value="0" />
                     <div class="form-group">
                         <label class="control-label mb-1" for="nome">Nome</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="nome" name="nome" value="" />
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="cpf">CPF</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="cpf" name="cpf" value="" placeholder="___.___.___-__" />
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="celular">Celular</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="celular" name="celular" value="" placeholder="__ _____-____" />
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="email">email</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="email" name="email" value="" />
                     </div>
                 </form>

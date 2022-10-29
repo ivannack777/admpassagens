@@ -168,21 +168,21 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="cidade">Cidade</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="cidade" name="cidade" value="" />
                         <small class="form-text text-muted">Ex: São Paulo x Rio de janeiro</small>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="sigla">Sigla</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="sigla" name="sigla" value="" placeholder="Sigla da cidade"/>
                         <small class="form-text text-muted">Ex: SPO</small>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="uf">Estado</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
 
                         <select type="text" class="form-elements" id="uf" name="uf">
                             <option value="0">Selecione...</option>
@@ -193,7 +193,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="endereco">Endereço</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="endereco" name="endereco" value="" />
                         <small class="form-text text-muted">Ex: Terminal Rodoviário - Rua das Esmeraldas...</small>
                     </div>

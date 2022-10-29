@@ -78,32 +78,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($trechos->data as $trecho) :
-
-                        ?>
-                            <tr id="trecho<?= $trecho->id ?>" class="list-label">
-                                <td><span id="label_linha<?= $trecho->id ?>"><?= $trecho->linhas_descricao ?></span></td>
-                                <td><span id="label_origem_id<?= $trecho->id ?>"><a href="<?= $this->siteUrl('trechos?origem_key=' . $trecho->origem_key) ?>"> <?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?></a></span></td>
-                                <td><span id="label_destino_id<?= $trecho->id ?>"><a href="<?= $this->siteUrl('trechos?destino_key=' . $trecho->destino_key) ?>"> <?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?></a></span></td>
-                                <td><span id="label_hora_id<?= $trecho->id ?>" class="horas"><?= $trecho->hora ?></span></td>
-                                <td><span id="label_valor_id<?= $trecho->id ?>" class="valores"><?= $trecho->valor ?></span></td>
+                        <?php foreach ($trechos->data as $trecho): ?>
+                            <tr id="trecho<?= $trecho->trechos_id ?>" class="list-label">
+                                <td><span id="label_linha<?= $trecho->trechos_id ?>"><?= $trecho->linhas_descricao ?></span></td>
+                                <td><span id="label_origem_id<?= $trecho->trechos_id ?>"><a href="<?= $this->siteUrl('trechos?origem_key=' . $trecho->origem_key) ?>"> <?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?></a></span></td>
+                                <td><span id="label_destino_id<?= $trecho->trechos_id ?>"><a href="<?= $this->siteUrl('trechos?destino_key=' . $trecho->destino_key) ?>"> <?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?></a></span></td>
+                                <td><span id="label_hora_id<?= $trecho->trechos_id ?>" class="horas"><?= $trecho->hora ?></span></td>
+                                <td><span id="label_valor_id<?= $trecho->trechos_id ?>" class="valores"><?= $trecho->valor ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $trecho->id ?>" data-linhas_id="<?= $trecho->linhas_id ?>" data-linhas_descricao="<?= $trecho->linhas_descricao ?>" data-origem_id="<?= $trecho->origem_id ?>" data-origem="<?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?>/ <?= $trecho->origem_endereco ?>" data-destino_id="<?= $trecho->destino_id ?>" data-destino="<?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?>/ <?= $trecho->destino_endereco ?>" data-hora="<?= $trecho->hora ?>" data-valor="<?= $trecho->valor ?>" data-dia="<?= $trecho->dia ?>">
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $trecho->trechos_id ?>" data-linhas_id="<?= $trecho->linhas_id ?>" data-linhas_descricao="<?= $trecho->linhas_descricao ?>" data-origem_id="<?= $trecho->origem_id ?>" data-origem="<?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?>/ <?= $trecho->origem_endereco ?>" data-destino_id="<?= $trecho->destino_id ?>" data-destino="<?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?>/ <?= $trecho->destino_endereco ?>" data-hora="<?= $trecho->hora ?>" data-valor="<?= $trecho->valor ?>" data-dia="<?= $trecho->dia ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                     <!-- Favoritar -->
-                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="trechos" data-item_id="<?= $trecho->id ?>">
+                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="trechos" data-item_id="<?= $trecho->trechos_id ?>">
                                         <?php if (isset($trecho->favoritos_id) && !empty($trecho->favoritos_id)) : ?>
                                             <i class="fas fa-heart"></i>
                                         <?php else : ?>
                                             <i class="far fa-heart"></i>
                                         <?php endif ?>
                                     </button>
-                                    <button class="btn btn-outline-primary btn-sm btnComentario" title="Comentarios" style="margin-right: 8px;" data-item="trechos" data-item_id="<?= $trecho->id ?>" 
+                                    <button class="btn btn-outline-primary btn-sm btnComentario" title="Comentarios" style="margin-right: 8px;" data-item="trechos" data-item_id="<?= $trecho->trechos_id ?>" 
                                     data-title="<?= $trecho->linhas_descricao ?> (<?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?> -> <?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?>)">
                                         <i class="far fa-comment"></i>
                                     </button>
@@ -173,19 +171,19 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="linha">Linha</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select type="text" class="form-elements" id="linhas_id" name="linhas_id">
                             <option value="">Selecione...</option>
                             <?php
                             foreach ($linhas->data as $linha) : ?>
-                                <option value="<?= $linha->id ?>"><?= $linha->descricao ?></option>
+                                <option value="<?= $linha->linhas_id ?>"><?= $linha->descricao ?></option>
                             <?php endforeach ?>
                         </select>
 
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="origem_id">Local de origem</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="hidden" id="origem_id" name="origem_id" />
                         <!--deixar sem name pra não fazer submit -->
                         <input type="text" class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id" />
@@ -200,7 +198,7 @@
 
                     <div class="form-group" id="destinoDiv" style="display: none;">
                         <label class="control-label mb-1" for="destino_id">Local de destino</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="hidden" id="destino_id" name="destino_id" />
                         <!-- deixar sem name pra não fazer submit -->
                         <input type="text" class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id" />
@@ -209,13 +207,13 @@
                     <div class="layout-flex">
                         <div class="form-group" style="margin-right: 18px;">
                             <label class="control-label mb-1" for="hora">Horário</label>
-                            <span class="text-danger error-label"></span>
+                            <span class="error-label"></span>
                             <input type="text" class="form-elements horas" id="hora" name="hora" style="width: 150px;" />
                         </div>
 
                         <div class="form-group">
                             <label class="control-label mb-1" for="valor">Valor</label>
-                            <span class="text-danger error-label"></span>
+                            <span class="error-label"></span>
                             <input type="text" class="form-elements valores" id="valor" name="valor" style="width: 150px;" />
                         </div>
                     </div>
@@ -223,7 +221,7 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="dia">Dias da semana</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select type="text" class="form-elements" id="dia" name="dia" style="width: 150px;">
                             <option value="">Selecione...</option>
                             <?php

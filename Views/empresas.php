@@ -165,49 +165,49 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="nome">Nome</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="nome" name="nome" value="" />
                         <small class="form-text text-muted">ex. Nome da Empresa S.A.</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="cnpj">CNPJ</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="cnpj" name="cnpj" value="" placeholder="__.___.___/____-__" />
                         <small class="form-text text-muted">ex. 12.345.678/0001-90</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="cep">CEP</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="cep" name="cep" value="" placeholder="_____-___" />
                         <small class="form-text text-muted">ex. 12345-678</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="logradouro">Logradouro</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="logradouro" name="logradouro" value="" placeholder="Logradouro" />
                         <small class="form-text text-muted">ex. Av. Brasil</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="numero">Número</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="numero" name="numero" value="" placeholder="Número" />
                         <small class="form-text text-muted">ex. 123</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="bairro">Bairro</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="bairro" name="bairro" value="" placeholder="Bairro" />
                         <small class="form-text text-muted">ex. 123</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="uf">Estado</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="uf" name="uf" value="" placeholder="__" style="text-transform: uppercase;" />
                         <small class="form-text text-muted">ex. AM</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="cidade">Cidade</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="cidade" name="cidade" value="" placeholder="Cidade" />
                         <small class="form-text text-muted">ex. Rincão</small>
                     </div>
@@ -216,7 +216,7 @@
                     if ($usersession && $usersession['nivel'] >= 5) : ?>
                         <div class="form-group">
                             <label class="control-label mb-1" for="usuarios_id">Usuário</label>
-                            <span class="text-danger error-label"></span>
+                            <span class="error-label"></span>
                             <select class="form-elements" id="usuarios_id" name="usuarios_id">
                                 <option>Selecione...</option>
 

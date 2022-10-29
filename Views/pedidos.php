@@ -203,77 +203,90 @@
                     <div class="form-group">
                         <label class="control-label mb-1" for="clientes_id">Cliente</label>
                         <input type="hidden" id="clientes_id" name="clientes_id">
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <!-- deixar sem name para não fazer submit -->
                         <input class="form-elements" id="clientes" data-target="clientes_id">
-                        <button class="btn" id="btnAddCliente"><i class="fas fa-plus"></i> Adicionar cliente</button>
+                        <button class="btn btn-outline-secondary" id="btnAddCliente"><i class="fas fa-plus"></i> Adicionar cliente</button>
                     </div>
 
-                    <div class="form-group" id="addClienteDiv" style="display: none; margin: 12px;">
+                    <div class="" id="addClienteDiv" style="display: none; margin: 3px; padding:6px; border: 1px solid silver;">
                         <label>Dados do novo cliente</label>
                         <div class="form-group">
                             <label class="control-label mb-1" for="nome">Nome</label>
-                            <span class="text-danger error-label"></span>
+                            <span class="error-label"></span>
                             <input type="text" class="form-elements" id="nome" name="cliente[nome]" value="" placeholder="Nome" />
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="cpf">CPF</label>
-                            <span class="text-danger error-label"></span>
                             <input type="text" class="form-elements" id="cpf" name="cliente[cpf]" value="" placeholder="CPF" />
+                            <span class="error-label"></span>
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="rg">RG</label>
-                            <span class="text-danger error-label"></span>
+                            <span class="error-label"></span>
                             <input type="text" class="form-elements" id="rg" name="cliente[rg]" value="" placeholder="RG" />
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="celular">Celular</label>
-                            <span class="text-danger error-label"></span>
+                            <span class="error-label"></span>
                             <input type="text" class="form-elements" id="celular" name="cliente[celular]" value="" placeholder="Celular" />
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="email">E-mail</label>
-                            <span class="text-danger error-label"></span>
                             <input type="text" class="form-elements" id="email" name="cliente[email]" value="" placeholder="E-mail" />
+                            <span class="error-label"></span>
                         </div>
                     </div>
 
-                    <div class="form-group" style="border: 1px solid; padding: 8px;">
+                    <div class="form-group">
                         <label class="control-label mb-1" for="origem">Origem</label>
                         <input type="hidden" id="origem_id">
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <!-- deixar sem name para não fazer submit -->
                         <input class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id">
-                        
+                    </div>
+                    <div class="form-group">
                         <label class="control-label mb-1" for="destino">Destino</label>
                         <input type="hidden" id="destino_id">
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <!-- deixar sem name para não fazer submit -->
                         <input class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id">
+                    </div>
 
-                        <label class="control-label mb-1" for="data">Data</label>
-                        <input type="text" class="form-control datas" id="data_saida" />
-                        <span class="text-danger error-label"></span>
+                    <div class="form-group" style="display: flex;  align-items: end;  align-content: baseline;  justify-content: space-between;  width: max-content;">
+                        <div style="width:45%;">
+
+                            <label class="control-label mb-1" for="data">Data</label>
+                            <input type="text" class="form-control datas" id="data_saida_ini" />
+                            <span class="error-label"></span>
+                        </div>
+                        <div style="width:10%; text-align: center;">a</div>
+                        <div style="width:45%;">
+                            <label class="control-label mb-1" for="data">Data</label>
+                            <input type="text" class="form-control datas" id="data_saida_fim" />
+                            <span class="error-label"></span>
+                        </div>
+                    </div>
                         
-
-                        <button class="btn btn-secondary" id="btnLocalizarViagem" title="Localizar trecho"><i class="fas fa-search" ></i></button>
+                    <div class="form-group">
+                        <button class="btn btn-outline-secondary" id="btnLocalizarViagem" title="Localizar trecho"><i class="fas fa-search" ></i></button>
                         
                         <input type="hidden" id="trechos_id" name="trechos_id" />
                         <input type="hidden" id="viagens_id" name="viagens_id" />
-                        
-                        <div id="trecho_info">trecho_info</div>
-
                     </div>
+                        
+                    <div id="trecho_info" style="border:0; padding: 8px;"></div>
+
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="assento">Assento</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="assento" name="assento" value="" placeholder="Assento" />
                     </div>
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="status">Status</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select type="text" class="form-elements" id="status" name="status">
                             <option value="0">Selecione...</option>
                             <option value="R">Reservado</option>
@@ -357,7 +370,8 @@
         evt.preventDefault();
         var origem_id = $("#origem_id").val();
         var destino_id = $("#destino_id").val();
-        var data_saida = $("#data_saida").val();
+        var data_saida_ini = $("#data_saida_ini").val();
+        var data_saida_fim = $("#data_saida_fim").val();
 
         jQuery.ajax({
             type: 'POST',
@@ -365,7 +379,8 @@
             data: {
                 origem_id: origem_id,
                 destino_id: destino_id,
-                data_saida: data_saida
+                data_saida_ini: data_saida_ini,
+                data_saida_fim: data_saida_fim
             },
             dataType: 'json',
             beforeSend: function (){},
@@ -380,28 +395,47 @@
                         viagem = retorno.data[key].viagem;
                         trecho = retorno.data[key].trecho;
                         $("#trecho_info").append(
-                            '<h5>Informações da viagem localizada</h5>'+
-                            '<div class="layout-grid gap grid-3col layout-dados">'+
-                            '  <div>id: '+ viagem.id +'</div>'+
-                            '  <div>key: '+ viagem.codigo +'</div>'+
-                            '  <div>linhas_id: '+ viagem.linhas_id +'</div>'+
-                            '  <div>descricao: '+ viagem.descricao +'</div>'+
-                            '  <div>detalhes: '+ viagem.detalhes +'</div>'+
-                            '  <div>data_saida: '+ viagem.data_saida +'</div>'+
-                            '  <div>assentos: '+ viagem.assentos +'</div>'+
-                            '  <div>assentos_tipo: '+ viagem.assentos_tipo +'</div>'+
-                            '</div>'+
-                            '<h5>Informações do trecho </h5>'+
-                            '<div class="layout-grid gap grid-2col layout-dados">'+
-                            '  <div>Linha: '+ trecho.linhas_descricao +'</div>'+
-                            '  <div>Origem: '+ trecho.origem_cidade +' ('+ trecho.origem_sigla +') - ' + trecho.origem_uf +' '+ trecho.origem_endereco +'</div>'+
-                            '  <div>Destino: '+ trecho.destino_cidade +' ('+ trecho.destino_sigla +') - '+ trecho.destino_uf +' '+ trecho.destino_endereco +'</div>'+
-                            '  <div>Horário: '+ trecho.hora +'</div>'+
-                            '  <div>Dias: '+ trecho.dias +'</div>'+
-                            '  <div class="valores">Valor: '+ trecho.valor +'</div>'+
+                            '<div class="layout-dados" id="viagens-trechos_card'+key+'">'+
+                            '  <input type="radio" class="viagens-trechos_radios" id="radio_id'+key+'" name="viagens-trechos_id" data-id="'+key+'" data-viagens_id="'+viagem.id+'" data-trechos_id="'+trecho.trechos_id+'" />'+
+                            '  <label for="radio_id'+key+'" style="display: inline-block;">Selecionar esta viagem</label>'+
+                            '  <h5>Informações da viagem</h5>'+
+                            '  <div class="layout-grid gap grid-3col">'+
+                            '    <div>Descrição: '+ viagem.descricao +'</div>'+
+                            '    <div>Detalhes: '+ viagem.detalhes +'</div>'+
+                            '    <div>Data saída: '+ viagem.data_saidaFmt +'</div>'+
+                            '    <div>Assentos: '+ viagem.assentos +'</div>'+
+                            '    <div>Tipo de assento: '+ viagem.assentos_tipo +'</div>'+
+                            '  </div>'+
+                            '    <h5>Informações do trecho </h5>'+
+                            '    <div class="layout-grid gap grid-2col">'+
+                            '    <div>Linha: '+ trecho.linhas_descricao +'</div>'+
+                            '    <div>Origem: '+ trecho.origem_cidade +' ('+ trecho.origem_sigla +') - ' + trecho.origem_uf +' '+ trecho.origem_endereco +'</div>'+
+                            '    <div>Dias: '+ (trecho.diasSemanaTextBrev).join('; ') +'</div>'+
+                            '    <div>Destino: '+ trecho.destino_cidade +' ('+ trecho.destino_sigla +') - '+ trecho.destino_uf +' '+ trecho.destino_endereco +'</div>'+
+                            '    <div>Horário: '+ trecho.hora +'</div>'+
+                            '    <div class="valores">Valor: '+ trecho.valor +'</div>'+
+                            '  </div>'+
                             '</div>'
                         );
                     }
+                    $(".viagens-trechos_radios").change(function(){
+                        
+                        var viagens_id = $(this).data('viagens_id');
+                        var trechos_id = $(this).data('trechos_id');
+                        $("#viagens_id").val(viagens_id);
+                        $("#trechos_id").val(trechos_id);
+                        $(".viagens-trechos_radios").each(function(c, v){
+                            var $id = $(this).data('id');
+                            console.log($(this));
+                            if($(this).is(":checked")){
+                                $("#viagens-trechos_card"+$id).css('outline','2px solid #2ec8f7');
+                            } else {
+                                $("#viagens-trechos_card"+$id).css('outline', '1px solid silver');
+                            }
+
+                        })
+                        
+                    });
                 } else {
                     $("#trechos_id").val('');
                     $("#trecho_info").html('<h5>'+retorno.msg+'</h5>')

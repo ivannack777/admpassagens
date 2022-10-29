@@ -190,21 +190,21 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="descricao">Descrição</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="descricao" name="descricao" value="" />
                         <small class="form-text text-muted">São Paulo x Rio de janeiro</small>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="linha">Linha</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select class="form-elements" id="linhas_id" name="linhas_id">
                             <option value="">Selecione...</option>
                             <?php foreach ($linhas->data as $linha) :
                                 $dias = explode(',', $linha->dias);
                                 $dias = $this->diasSemana($dias, true);
                             ?>
-                                <option value="<?= $linha->id ?>"><?= $linha->descricao . " (" . implode(', ', $dias) . ")" ?></option>
+                                <option value="<?= $linha->linhas_id ?>"><?= $linha->descricao . " (" . implode(', ', $dias) . ")" ?></option>
                             <?php endforeach ?>
                         </select>
 
@@ -217,23 +217,23 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="data_saida">Data/hora saída</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements datas" id="data_saida" name="data_saida" value="" />
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="data_chegada">Data/hora chegada</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements datas" id="data_chegada" name="data_chegada" value="" />
                     </div>
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="assentos">Assentos</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements assentos" id="assentos" name="assentos" value="" placeholder="Quantidade de assentos" />
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="assentos_tipo">Tipos de assentos</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select type="text" class="form-elements" id="assentos_tipo" name="assentos_tipo">
                             <option value="0">Selecione...</option>
                             <option value="Comum">Comum</option>
@@ -244,12 +244,12 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="detalhes">Detalhes</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <textarea type="text" class="form-elements" id="detalhes" name="detalhes"></textarea>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="veiculo_id">Veículo</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select class="form-elements" id="veiculos_id" name="veiculos_id">
                             <option value="0">Selecione...</option>
                             <?php foreach ($veiculos->data as $veiculo) : ?>
@@ -293,21 +293,21 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="descricao">Descrição</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="descricao" name="descricao" value="" />
                         <small class="form-text text-muted">São Paulo x Rio de janeiro</small>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="linha">Linha</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select class="form-elements" id="linhas_id" name="linhas_id">
                             <option value="0">Selecione...</option>
                             <?php foreach ($linhas->data as $linha) :
                                 $dias = explode(',', $linha->dias);
                                 $dias = $this->diasSemana($dias, true);
                             ?>
-                                <option value="<?= $linha->id ?>"><?= $linha->descricao . " (" . implode(', ', $dias) . ")" ?></option>
+                                <option value="<?= $linha->linhas_id ?>"><?= $linha->descricao . " (" . implode(', ', $dias) . ")" ?></option>
                             <?php endforeach ?>
                         </select>
 
@@ -315,7 +315,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="linha">Período</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <div class="form-elements-group">
                             <input type="text" class="form-elements datas" id="dataIni" name="dataIni" />
                             <span class="">a</span>
@@ -327,12 +327,12 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="assentos">Assentos</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements assentos" id="assentos" name="assentos" value="" placeholder="Quantidade de assentos" />
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="assentos_tipo">Tipos de assentos</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select type="text" class="form-elements" id="assentos_tipo" name="assentos_tipo">
                             <option value="0">Selecione...</option>
                             <option value="Comum">Comum</option>
@@ -343,12 +343,12 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="detalhes">Detalhes</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <textarea type="text" class="form-elements" id="detalhes" name="detalhes"></textarea>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="veiculo_id">Veículo</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select class="form-elements" id="veiculos_id" name="veiculos_id">
                             <option value="0">Selecione...</option>
                             <?php foreach ($veiculos->data as $veiculo) : ?>

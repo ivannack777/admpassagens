@@ -81,26 +81,26 @@
                                 $diasExt[] = $this->diasSemana($dia, true);
                             }
                         ?>
-                            <tr id="linha<?= $linha->id ?>" class="list-label">
-                                <td><span id="label_descricao<?= $linha->id ?>"><?= $linha->descricao ?></span></td>
-                                <td><span id="label_dias<?= $linha->id ?>"><?= implode(', ', $diasExt) ?></span></td>
+                            <tr id="linha<?= $linha->linhas_id ?>" class="list-label">
+                                <td><span id="label_descricao<?= $linha->linhas_id ?>"><?= $linha->descricao ?></span></td>
+                                <td><span id="label_dias<?= $linha->linhas_id ?>"><?= implode(', ', $diasExt) ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $linha->id ?>" data-descricao="<?= $linha->descricao ?>" data-dias="<?= $linha->dias ?>">
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $linha->linhas_id ?>" data-descricao="<?= $linha->descricao ?>" data-dias="<?= $linha->dias ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                     <!-- Favoritar -->
-                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="linhas" data-item_id="<?= $linha->id ?>">
+                                    <button class="btn btn-outline-primary btn-sm btnFav" title="Favoritar" style="margin-right: 8px;" data-item="linhas" data-item_id="<?= $linha->linhas_id ?>">
                                         <?php if (isset($linha->favoritos_id) && !empty($linha->favoritos_id)) : ?>
                                             <i class="fas fa-heart"></i>
                                         <?php else : ?>
                                             <i class="far fa-heart"></i>
                                         <?php endif ?>
                                     </button>
-                                    <button class="btn btn-outline-primary btn-sm btnComentario" title="Comentarios" style="margin-right: 8px;" data-item="linhas" data-item_id="<?= $linha->id ?>" data-title="<?= $linha->descricao ?>">
+                                    <button class="btn btn-outline-primary btn-sm btnComentario" title="Comentarios" style="margin-right: 8px;" data-item="linhas" data-item_id="<?= $linha->linhas_id ?>" data-title="<?= $linha->descricao ?>">
                                         <i class="far fa-comment"></i>
                                     </button>
                                 </td>
@@ -169,23 +169,23 @@
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="descricao">Descrição</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <input type="text" class="form-elements" id="descricao" name="descricao" value="" />
                         <small class="form-text text-muted">São Paulo x Rio de janeiro</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="trechos">Trechos</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <div id="trechosDiv" class="hide-last-last">
 
                         </div>
 
-                        <button class="btn btn-secondary" id="addtrechos">+</button>
+                        <button class="btn btn-outline-secondary" id="addtrechos">+</button>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="dias">Dias da semana</label>
-                        <span class="text-danger error-label"></span>
+                        <span class="error-label"></span>
                         <select type="text" class="form-control" id="dias" name="dias[]" multiple>
                             <?php
                             $diasSemana = $this->diasSemana();
@@ -242,17 +242,26 @@
         var qtd = jQuery('.trechoDiv').length +1
             
         jQuery("#trechosDiv").append(
-            ' <div class="trechoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 6fr 3fr 2fr;">' +
+            ' <div class="trechoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 5fr 4fr 2fr;">' +
             '  <div><div class="circle font-20 bold6"> ' + qtd + '</div></div>' +
             '  <input type="hidden" id="id'+ qtd +'" name="trechos[' + qtd + '][id]" value="' + (dado?dado.id:'') + '" />' +
             '  <input type="hidden" id="trechos_id'+ qtd +'" name="trechos[' + qtd + '][trechos_id]" value="' + (dado?dado.trechos_id:'') + '" />' +
             '  <div><label>Local</label><input type="text" class="form-elements trechoAutocomplete" id="cidade'+ qtd +'" data-index="'+ qtd +'" value="' + (dado ? dado.origem_cidade +' ('+ dado.origem_sigla + ') - '+ dado.origem_uf +' -> '+ dado.destino_cidade + ' (' + dado.destino_sigla +') - '+ dado.destino_uf:'') + '" /></div>' +
-            '  <div><label>dias da semana:</label><span><select class="form-elements" name="trechos[' + qtd + '][dias]" id="dias'+ qtd +'"> <option value="">Selecione...</option></select></div>' +
+            '  <div><label>Dias da semana:</label><span><select class="form-elements dias" name="trechos[' + qtd + '][dias][]" id="dias'+ qtd +'" multiple="" style="width: 150px;"> <option value="">Selecione...</option></select></div>' +
             '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="trechos[' + qtd + '][hora]" id="hora'+ qtd +'" value="' + (dado?dado.hora:'') + '" /></span></div>' +
             '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
             '</div>'
         );
-        let diasSemana = <?= json_encode($this->diasSemana()) ?>;
+        $('.dias').select2({
+            dropdownParent: jQuery('#formMediumModal'),
+            class: 'form-elements',
+            closeOnSelect: false,
+            placeholder:'Selecione...',
+            allowClear: true,
+            maximumSelectionLength:6,
+            maximumInputLength:2
+        });
+        let diasSemana = <?= json_encode($this->diasSemana(false,true)) ?>;
         for(let w in diasSemana){
             if(w == dado?.dias){
                 newOption = new Option(diasSemana[w], w, true, true);
@@ -281,7 +290,7 @@
                             return {
                                 label: label,
                                 value: label,
-                                id: val.id
+                                id: val.trechos_id
                             };
                         }));
                     }
