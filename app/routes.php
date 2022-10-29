@@ -101,7 +101,9 @@ return function (App $app, Request $request) {
     })->add(CheckTokenMiddleware::class);
 
     $app->group('/viagens', function (Group $group) {
-        $group->map(['GET', 'POST'],'', [Viagens::class, 'list']);
+        $group->map(['GET', 'POST'],'', [Viagens::class, 'home']);
+        $group->map(['GET', 'POST'],'/listar', [Viagens::class, 'list']);
+        $group->map(['GET', 'POST'],'/procurar', [Viagens::class, 'find']);
         
         $group->map(['GET', 'POST'], '/pontos[/]', [Viagens::class, 'listPoints']);
         $group->post('/salvar[/[{id}]]', [Viagens::class, 'save']);

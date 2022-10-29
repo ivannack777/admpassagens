@@ -32,6 +32,43 @@ class Viagens extends BaseController
      *
      * @return string json
      */
+    public function home(Request $request, Response $response, $args)
+    {
+        $dados = [];
+        $pedidosCount = [];
+        $requests = $this->getRequests($request);//post
+
+        // var_dump($requests, $params,($params['modo']??false) == 'lista');exit;
+        
+        $apiResult = $this->api->post('veiculos/listar', $requests);
+        $dados['veiculos'] = $apiResult;
+
+        $apiResult = $this->api->post('linhas/listar', $requests);
+        $dados['linhas'] = $apiResult;
+
+        $apiResult = $this->api->post('viagens/listar', $requests);
+        $dados['viagens'] = $apiResult;
+        
+        $apiResult = $this->api->post('pedidos/listar', ['group'=>'viagens']);
+        // var_dump($apiResult);exit;
+        if(($apiResult) && ($apiResult->status === true && $apiResult->count > 0)){
+            $pedidosCount = (array)$apiResult->data;
+        }
+        $dados['pedidosCount'] = $pedidosCount;
+        
+        
+        $this->views->render($response, 'header.php', $dados);
+        $this->views->render($response, 'left.php', $dados);
+        $this->views->render($response, 'right_top.php', $dados);
+        $this->views->render($response, 'viagens.php', $dados);
+        return $this->views->render($response, 'footer.php', $dados);
+    }
+   
+    /**
+     * Localiza e retorna um viagenss passando 'viagens' por json request.
+     *
+     * @return string json
+     */
     public function list(Request $request, Response $response, $args)
     {
         $dados = [];
@@ -50,25 +87,37 @@ class Viagens extends BaseController
         $dados['viagens'] = $apiResult;
         
         $apiResult = $this->api->post('pedidos/listar', ['group'=>'viagens']);
-        var_dump($apiResult);
         
         if(($apiResult) && ($apiResult->status === true && $apiResult->count > 0)){
             $pedidosCount = (array)$apiResult->data;
         }
         $dados['pedidosCount'] = $pedidosCount;
         
-        //usando $this->view setado em BaseController
-        if ( ($requests['modo']??false) == 'lista') {
-            return $response->withJson($dados['viagens']->data, $dados['viagens']->status, $dados['viagens']->count . ($dados['viagens']->count > 1 ? ' viagens encontradas' : ' viagen encontrada'));
-        } else {
-            $this->views->render($response, 'header.php', $dados);
-            $this->views->render($response, 'left.php', $dados);
-            $this->views->render($response, 'right_top.php', $dados);
-            $this->views->render($response, 'viagens.php', $dados);
-            return $this->views->render($response, 'footer.php', $dados);
-        }
+        return $response->withJson($dados['viagens']->data, $dados['viagens']->status, $dados['viagens']->count . ($dados['viagens']->count > 1 ? ' viagens encontradas' : ' viagen encontrada'));
+    }
 
-        // return $response->withJson($viagens, true, $viagens->count().($viagens->count() > 1 ? ' viagens encontradas' : ' viagen encontrada'));
+    /**
+     * Localiza e retorna um viagenss passando 'viagens' por json request.
+     *
+     * @return string json
+     */
+    public function find(Request $request, Response $response, $args)
+    {
+        $dados = [];
+        $pedidosCount = [];
+        $requests = $this->getRequests($request);//post
+
+
+        $apiResult = $this->api->post('viagens/procurar', $requests);
+        $dados['viagens'] = $apiResult;
+        
+        
+        if(($apiResult) && ($apiResult->status === true && $apiResult->count > 0)){
+            $pedidosCount = (array)$apiResult->data;
+        }
+        $dados['pedidosCount'] = $pedidosCount;
+        
+        return $response->withJson($dados['viagens']->data, $dados['viagens']->status, $dados['viagens']->msg);
     }
 
         /**

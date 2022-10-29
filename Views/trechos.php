@@ -275,7 +275,7 @@
         $("#pontosDiv").append(
             ' <div class="pontoDiv layout-flex flex-row layout-dados layout-margin" style="position: relative;">' +
             '  <div><i class="fas fa-level-up-alt fa-2x fa-fw fa-rotate-90" style="color: #408ba9"></i></div>' +
-            '  <input type="text" class="pontos" id="destino_id' + c + '" name="pontos[' + c + '][destino_id]" value="" />' +
+            '  <input type="hidden" class="pontos" id="destino_id' + c + '" name="pontos[' + c + '][destino_id]" value="" />' +
             '  <div><label>Destino</label><input type="text" class="form-elements cidadeAutocomplete" id="destino' + c + '" value="" data-id="' + c + '" data-target="destino_id' + c + '" style="width:270px;" /></div>' + //deixar sem name pra não fazer submit
             '  <div><label>Dia:</label>' +
             '    <select class="form-elements" name="pontos[' + c + '][dia]" id="dia' + c + '"> <option value="">Selecione...</option>' +

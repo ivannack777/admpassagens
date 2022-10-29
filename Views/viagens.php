@@ -30,7 +30,7 @@
         </div>
     </div>
     <?php
-    // var_dump($viagens->data); exit; 
+    // var_dump($viagens); exit; 
     ?>
 
     <div class="col-xl-12">
@@ -88,7 +88,7 @@
                                         <?= isset($pedidosCount[$viagem->id]) ? ($pedidosCount[$viagem->id]->count) : '0' ?>/<?= $viagem->assentos ?>
                                         <?php if( isset($pedidosCount[$viagem->id]) && ($pedidosCount[$viagem->id]->count > 0) ): ?>
                                             <a href="<?= $this->siteUrl('pedidos?viagens_key='. $viagem->key) ?>" title="Ver pedidos dessa viagem">Pedidos</a>
-                                            <span class="link verOcupacao pull-right" data-viagens_key="<?= $viagem->key ?>" data-assentos="<?= $viagem->assentos ?>" title="Ver ocupação dos assentos">Ocupação</span>
+                                            <span class="link verOcupacao pull-right" data-viagens_key="<?= $viagem->key ?>" data-assentos="<?= $viagem->assentos ?>" data-descricao="<?= $viagem->descricao ?>" title="Ver ocupação dos assentos">Ocupação</span>
                                         <?php endif ?>
                                     </span>
                                 </td>
@@ -301,7 +301,7 @@
                     <div class="form-group">
                         <label class="control-label mb-1" for="linha">Linha</label>
                         <span class="text-danger error-label"></span>
-                        <select class="form-elements" id="linha" name="linha">
+                        <select class="form-elements" id="linhas_id" name="linhas_id">
                             <option value="0">Selecione...</option>
                             <?php foreach ($linhas->data as $linha) :
                                 $dias = explode(',', $linha->dias);
@@ -311,7 +311,7 @@
                             <?php endforeach ?>
                         </select>
 
-                        <button class="btn btn-secondary" id="addLinhas">+ Adicionar uma linha</button>
+                        <button class="btn btn-secondary" id="addLinhas"><i class="fas fa-plus"></i> Adicionar uma linha</button>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="linha">Período</label>
@@ -324,11 +324,7 @@
 
                     </div>
 
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="valor">Valor</label>
-                        <span class="text-danger error-label"></span>
-                        <input type="text" class="form-elements valores" id="valor" name="valor" value="" placeholder="0,00" />
-                    </div>
+
                     <div class="form-group">
                         <label class="control-label mb-1" for="assentos">Assentos</label>
                         <span class="text-danger error-label"></span>
@@ -381,11 +377,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="ocupacaoModal" tabindex="-1" role="dialog" aria-labelledby="ocupacaoLabel" aria-hidden="true">
+<div class="modal fade" id="ocupacaoModal" tabindex="-1" role="dialog" aria-labelledby="ocupacaoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ocupacaoLabel">Adicionar viagem para uma linha</h5>
+                <h5 class="modal-title" id="ocupacaoModalLabel">Ocupação dos assentos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -446,8 +442,8 @@
                 close: 'fas fa-times'
             } ,
         locale: 'pt-BR',
-        format: "DD/MM/YYYY HH:mm",
-        dayViewHeaderFormat: 'MM/YY',
+        format: "DD/MM/YYYY",
+        dayViewHeaderFormat: 'MMM/YYYY',
     });
 
     jQuery('#veiculos_id').select2({
@@ -732,6 +728,7 @@
 
     $(".verOcupacao").click(function(){
         var viagens_key = $(this).data('viagens_key');
+        var descricao = $(this).data('descricao');
         var assentos = $(this).data('assentos')*1;
         jQuery.ajax({
             type: 'POST',
@@ -744,10 +741,11 @@
             success: function (retorno) {
                 if (retorno.status == true) {
                     $("#ocupacaoModal").modal();
+                    $("#ocupacaoModalLabel").html('Ocupação dos assentos "'+descricao+'"');
                     var tabela = $('<div>');
                     tabela.append('<h5> Número de assentos: '+ assentos +'</h5>');
                     tabela.append('<h5> Ocupação:</h5>');
-                    var lista = $('<div class="layout-grid gap layout-grid-4col layout-dados">');
+                    var lista = $('<div class="layout-grid gap grid-4col layout-dados">');
                     
                     var assentosInPedidos = [];
                     

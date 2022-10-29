@@ -113,7 +113,7 @@
                                                     <td><span id="label_cliente_nome<?= $pedido->id ?>"><?= $pedido->cliente_nome ?></span></td>
                                                     <td><span id="label_assento<?= $pedido->id ?>" class="label_assento"><?= $pedido->assento ?></span></td>
                                                     <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor ?? '') ?></span></td>
-                                                    <td><span id="label_status<?= $pedido->id ?>"><span class="<?= $statusClasses[$pedido->status] ?>"><?= ucfirst($statusClasses[$pedido->status]) ?></span></span></td>
+                                                    <td><span id="label_status<?= $pedido->id ?>"><span class="<?= $statusClasses[$pedido->status]??'' ?>"><?= ucfirst($statusClasses[$pedido->status]??'') ?></span></span></td>
                                                     <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
                                                     <td>
                                                         <?php $session = $this->getAttributes();
@@ -240,26 +240,26 @@
 
                     <div class="form-group" style="border: 1px solid; padding: 8px;">
                         <label class="control-label mb-1" for="origem">Origem</label>
-                        <input type="text" id="origem_id">
+                        <input type="hidden" id="origem_id">
                         <span class="text-danger error-label"></span>
                         <!-- deixar sem name para não fazer submit -->
                         <input class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id">
                         
                         <label class="control-label mb-1" for="destino">Destino</label>
-                        <input type="text" id="destino_id">
+                        <input type="hidden" id="destino_id">
                         <span class="text-danger error-label"></span>
                         <!-- deixar sem name para não fazer submit -->
                         <input class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id">
 
                         <label class="control-label mb-1" for="data">Data</label>
-                        <input type="text" class="form-control datas" id="data" />
+                        <input type="text" class="form-control datas" id="data_saida" />
                         <span class="text-danger error-label"></span>
                         
 
-                        <button class="btn btn-secundary" id="btnLocalizarViagem" title="Localizar trecho"><i class="fas fa-search" ></i></button>
+                        <button class="btn btn-secondary" id="btnLocalizarViagem" title="Localizar trecho"><i class="fas fa-search" ></i></button>
                         
-                        <input type="text" id="trechos_id" name="trechos_id" />
-                        <input type="text" id="viagens_id" name="viagens_id" />
+                        <input type="hidden" id="trechos_id" name="trechos_id" />
+                        <input type="hidden" id="viagens_id" name="viagens_id" />
                         
                         <div id="trecho_info">trecho_info</div>
 
@@ -270,11 +270,7 @@
                         <span class="text-danger error-label"></span>
                         <input type="text" class="form-elements" id="assento" name="assento" value="" placeholder="Assento" />
                     </div>
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="valor">Valor</label>
-                        <span class="text-danger error-label"></span>
-                        <input type="text" class="form-elements" id="valor" name="valor" value="" placeholder="0,00" />
-                    </div>
+
                     <div class="form-group">
                         <label class="control-label mb-1" for="status">Status</label>
                         <span class="text-danger error-label"></span>
@@ -340,7 +336,7 @@
 
 
         jQuery("#clientes_id").val(este.data('clientes_id'));
-        jQuery("#clientes").val(este.data('cliente_nome') +' - '+  este.data('cliente_cpf'));
+        jQuery("#clientes").val((este.data('cliente_nome')?este.data('cliente_nome')+' - '+(este.data('cliente_cpf')??''): ''));
         jQuery("#viagens_id").val(este.data('viagens_id'));
         jQuery("#assento").val(este.data('assento'));
         jQuery("#valor").val(este.data('valor')?.replace('.', ',')).mask("#.##0,00", {
@@ -361,57 +357,62 @@
         evt.preventDefault();
         var origem_id = $("#origem_id").val();
         var destino_id = $("#destino_id").val();
+        var data_saida = $("#data_saida").val();
 
         jQuery.ajax({
             type: 'POST',
-            url: '<?= $this->siteUrl('viagens/listar')?>',
+            url: '<?= $this->siteUrl('viagens/procurar')?>',
             data: {
                 origem_id: origem_id,
-                destino_id: destino_id
+                destino_id: destino_id,
+                data_saida: data_saida
             },
             dataType: 'json',
             beforeSend: function (){},
             success: function (retorno) {
                 console.log('btnLocalizarTrecho -> retorno', retorno);
                 if (retorno.status == true) {
-                    if(retorno.data.length){
-                        $("#trechos_id").val(retorno.data[0].id);
-                        $("#trecho_info").html(
+                    // $("#trechos_id").val(retorno.data[0].id);
+                    $("#trecho_info").html('<h5>'+retorno.msg+'</h5>')
+                    let viagem,trecho;
+                    for(let key in retorno.data){
+                        console.log(key +' => '+ retorno.data[key])
+                        viagem = retorno.data[key].viagem;
+                        trecho = retorno.data[key].trecho;
+                        $("#trecho_info").append(
                             '<h5>Informações da viagem localizada</h5>'+
-                            '<ul>'+
-                            '  <li>id: '+ retorno.data[0].id +'</li>'+
-                            '  <li>key: '+ retorno.data[0].key +'</li>'+
-                            '  <li>linhas_id: '+ retorno.data[0].linhas_id +'</li>'+
-                            '  <li>linhas_descricao: '+ retorno.data[0].linhas_descricao +'</li>'+
-                            '  <li>origem_id: '+ retorno.data[0].origem_id +'</li>'+
-                            '  <li>origem_key: '+ retorno.data[0].origem_key +'</li>'+
-                            '  <li>origem_cidade: '+ retorno.data[0].origem_cidade +'</li>'+
-                            '  <li>origem_sigla: '+ retorno.data[0].origem_sigla +'</li>'+
-                            '  <li>origem_uf: '+ retorno.data[0].origem_uf +'</li>'+
-                            '  <li>origem_endereco: '+ retorno.data[0].origem_endereco +'</li>'+
-                            '  <li>destino_id: '+ retorno.data[0].destino_id +'</li>'+
-                            '  <li>destino_key: '+ retorno.data[0].destino_key +'</li>'+
-                            '  <li>destino_cidade: '+ retorno.data[0].destino_cidade +'</li>'+
-                            '  <li>destino_sigla: '+ retorno.data[0].destino_sigla +'</li>'+
-                            '  <li>destino_uf: '+ retorno.data[0].destino_uf +'</li>'+
-                            '  <li>destino_endereco: '+ retorno.data[0].destino_endereco +'</li>'+
-                            '  <li>hora: '+ retorno.data[0].hora +'</li>'+
-                            '  <li>dia: '+ retorno.data[0].dia +'</li>'+
-                            '  <li>valor: '+ retorno.data[0].valor +'</li>'+
-                            '  <li>excluido: '+ retorno.data[0].excluido +'</li>'+
-                            '</ul>'
+                            '<div class="layout-grid gap grid-3col layout-dados">'+
+                            '  <div>id: '+ viagem.id +'</div>'+
+                            '  <div>key: '+ viagem.codigo +'</div>'+
+                            '  <div>linhas_id: '+ viagem.linhas_id +'</div>'+
+                            '  <div>descricao: '+ viagem.descricao +'</div>'+
+                            '  <div>detalhes: '+ viagem.detalhes +'</div>'+
+                            '  <div>data_saida: '+ viagem.data_saida +'</div>'+
+                            '  <div>assentos: '+ viagem.assentos +'</div>'+
+                            '  <div>assentos_tipo: '+ viagem.assentos_tipo +'</div>'+
+                            '</div>'+
+                            '<h5>Informações do trecho </h5>'+
+                            '<div class="layout-grid gap grid-2col layout-dados">'+
+                            '  <div>Linha: '+ trecho.linhas_descricao +'</div>'+
+                            '  <div>Origem: '+ trecho.origem_cidade +' ('+ trecho.origem_sigla +') - ' + trecho.origem_uf +' '+ trecho.origem_endereco +'</div>'+
+                            '  <div>Destino: '+ trecho.destino_cidade +' ('+ trecho.destino_sigla +') - '+ trecho.destino_uf +' '+ trecho.destino_endereco +'</div>'+
+                            '  <div>Horário: '+ trecho.hora +'</div>'+
+                            '  <div>Dias: '+ trecho.dias +'</div>'+
+                            '  <div class="valores">Valor: '+ trecho.valor +'</div>'+
+                            '</div>'
                         );
-                    } else {
-                        $("#trechos_id").val('');
-                        $("#trecho_info").html('<h5>'+retorno.msg+'</h5>')
                     }
                 } else {
+                    $("#trechos_id").val('');
+                    $("#trecho_info").html('<h5>'+retorno.msg+'</h5>')
                 }
             },
             error: function (st){
                 show_message( st.status +' '+ st.statusText, 'danger');
             },
-            complete: function(){}
+            complete: function(){
+                $('.valores').mask("Valor: #.##0,00", {reverse: true});
+            }
         });    
     });
 

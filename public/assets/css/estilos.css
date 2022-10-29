@@ -68,10 +68,14 @@
     display: flex;
 }
 
-
 .flex-row {
     flex-direction: row;
 }
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
 
 .flex-between {
     justify-content: space-between;
@@ -203,40 +207,41 @@ ul.ui-autocomplete {
     row-gap: 12px;
 }
 
-.layout-grid.bordered,
-.layout-grid.bordered>div {
+.layout-bordered,
+.layout-bordered>div {
     border: 1px solid silver;
+    padding: 3px;
 }
 
-.layout-grid-auto {
+.grid-auto {
     grid-template-columns: repeat(auto-fill, minmax(650px, 1fr));
 }
 
-.layout-grid-fit {
+.grid-fit {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 }
 
-.layout-grid-1col {
+.grid-1col {
     grid-template-columns: 1fr;
 }
 
-.layout-grid-2col {
+.grid-2col {
     grid-template-columns: repeat(2, 1fr);
 }
 
-.layout-grid-3col {
+.grid-3col {
     grid-template-columns: repeat(3, 1fr);
 }
 
-.layout-grid-4col {
+.grid-4col {
     grid-template-columns: repeat(4, 1fr);
 }
 
-.layout-grid-5col {
+.grid-5col {
     grid-template-columns: repeat(5, 1fr);
 }
 
-.layout-grid-6col {
+.grid-6col {
     grid-template-columns: repeat(6, 1fr);
 }
 

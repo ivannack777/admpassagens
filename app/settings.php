@@ -15,7 +15,7 @@ return function (ContainerBuilder $containerBuilder) {
     // Global Settings Object
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
-            
+            // var_dump($_ENV['DB_HOST']);exit;
             return new Settings([
                 'displayErrorDetails' => $_ENV['DISPLAYERRORDETAILS'], // Should be set to false in production
                 'logError'            => $_ENV['LOGERROR'],

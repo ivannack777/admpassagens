@@ -14,7 +14,7 @@
                         <div class="form-group">
                             <label>Identifique-se</label>
                             <span class="text-danger error-label"><?= $field['identificador']['msg'] ?? '' ?></span>
-                            <input type="identificador" class="form-elements" id="identificador" name="identificador" value="<?= $field['identificador']['value'] ?? '' ?>" placeholder="E-mail ou celular ou usuário">
+                            <input type="identificador" class="form-elements" id="identificador" name="identificador" value="<?= $field['identificador']['value'] ?? '' ?>" placeholder="E-mail ou celular ou usuário" autofocus="autofocus">
                         </div>
                         <div class="form-group">
                             <label>Senha</label>

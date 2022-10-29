@@ -79,6 +79,7 @@ class ApiCall
         }else{
             curl_close($ch); 
             if(!empty($result)) $retorno = json_decode($result);
+            // var_dump($retorno);exit;
             if( ($_ENV['DEBUG']??false) && !$retorno ){
                 
                 echo "<pre>";
