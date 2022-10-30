@@ -40,6 +40,6 @@ class ExcluirController
         $api = new ApiCall();
         $apiResult = $api->post($uriPath);
 
-        return $response->withJson($apiResult->data, true, ($apiResult->msg) );
+        return $response->withJson($apiResult->data, $apiResult->status, ($apiResult->msg) );
     }
 }
