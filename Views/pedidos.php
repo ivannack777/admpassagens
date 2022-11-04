@@ -213,26 +213,26 @@
                         <div class="form-group">
                             <label class="control-label mb-1" for="nome">Nome</label>
                             <span class="error-label"></span>
-                            <input type="text" class="form-elements" id="nome" name="cliente[nome]" value="" placeholder="Nome" />
+                            <input type="text" class="form-elements" id="nome" name="cliente_nome" value="" placeholder="Nome" />
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="cpf">CPF</label>
-                            <input type="text" class="form-elements" id="cpf" name="cliente[cpf]" value="" placeholder="CPF" />
+                            <input type="text" class="form-elements" id="cpf" name="cliente_cpf" value="" placeholder="CPF" />
                             <span class="error-label"></span>
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="rg">RG</label>
                             <span class="error-label"></span>
-                            <input type="text" class="form-elements" id="rg" name="cliente[rg]" value="" placeholder="RG" />
+                            <input type="text" class="form-elements" id="rg" name="cliente_rg" value="" placeholder="RG" />
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="celular">Celular</label>
                             <span class="error-label"></span>
-                            <input type="text" class="form-elements" id="celular" name="cliente[celular]" value="" placeholder="Celular" />
+                            <input type="text" class="form-elements" id="celular" name="cliente_celular" value="" placeholder="Celular" />
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="email">E-mail</label>
-                            <input type="text" class="form-elements" id="email" name="cliente[email]" value="" placeholder="E-mail" />
+                            <input type="text" class="form-elements" id="email" name="cliente_email" value="" placeholder="E-mail" />
                             <span class="error-label"></span>
                         </div>
                     </div>
