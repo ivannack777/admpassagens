@@ -87,7 +87,7 @@ return function (App $app, Request $request) {
     $app->group('/linhas', function (Group $group) {
         $group->map(['GET', 'POST'], '', [Linhas::class, 'list']);
         $group->map(['GET', 'POST'], '/pontos[/]', [Linhas::class, 'listPoints']);
-        $group->map(['GET', 'POST'], '/trechos[/]', [Linhas::class, 'listTrechos']);
+        // $group->map(['GET', 'POST'], '/trechos[/]', [Linhas::class, 'listTrechos']);
         $group->post('/salvar[/[{id}]]', [Linhas::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
@@ -104,6 +104,7 @@ return function (App $app, Request $request) {
         $group->map(['GET', 'POST'],'', [Viagens::class, 'home']);
         $group->map(['GET', 'POST'],'/listar', [Viagens::class, 'list']);
         $group->map(['GET', 'POST'],'/procurar', [Viagens::class, 'find']);
+        $group->map(['GET', 'POST'],'/ocupacao', [Viagens::class, 'occupation']);
         
         $group->map(['GET', 'POST'], '/pontos[/]', [Viagens::class, 'listPoints']);
         $group->post('/salvar[/[{id}]]', [Viagens::class, 'save']);

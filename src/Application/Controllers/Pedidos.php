@@ -35,6 +35,7 @@ class Pedidos extends BaseController
     public function list(Request $request, Response $response)
     {
         $pedidosArr = [];
+        $viagensArr = [];
         $requests = $this->getRequests($request);//postt
 
         $apiResult = $this->api->post('pedidos/listar', $requests);
@@ -45,7 +46,12 @@ class Pedidos extends BaseController
         $dados['clientes'] = $apiResult;
 
         $apiResult = $this->api->post('viagens/listar');
-        $dados['viagens'] = $apiResult;
+        $viagens = $apiResult;
+        # indexar viagens pelo id
+        foreach($viagens->data as $viagem){
+            $viagensArr[$viagem->id] = $viagem;
+        }
+        $dados['viagens'] = $viagensArr;
 
         # agrupar pedidos por viagem
         foreach($pedidos->data as $pedido){

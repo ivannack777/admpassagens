@@ -154,7 +154,7 @@
     </div>
 </div> <!-- .content -->
 
-<div class="modal" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true" tabindex="-1" data-width="760">
+<div class="modal" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true" tabindex="-1" data-width="960">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -171,7 +171,6 @@
                         <label class="control-label mb-1" for="descricao">Descrição</label>
                         <span class="error-label"></span>
                         <input type="text" class="form-elements" id="descricao" name="descricao" value="" />
-                        <small class="form-text text-muted">São Paulo x Rio de janeiro</small>
                     </div>
                     <div class="form-group">
                         <label class="control-label mb-1" for="trechos">Trechos</label>
@@ -180,7 +179,7 @@
 
                         </div>
 
-                        <button class="btn btn-outline-secondary" id="addtrechos">+</button>
+                        <!-- <button class="btn btn-outline-secondary" id="addtrechos">+</button> -->
                     </div>
 
                     <div class="form-group">
@@ -220,56 +219,41 @@
         allowClear: true
     });
 
-    jQuery("#addtrechos").click(function(evt) {
-        evt.preventDefault();
-        createTrecho()
-        jQuery(".horas").datetimepicker({
-            format: "HH:mm",
-            stepping: 10
-        });
+    // jQuery("#addtrechos").click(function(evt) {
+    //     evt.preventDefault();
+    //     createTrecho()
+    //     jQuery(".horas").datetimepicker({
+    //         format: "HH:mm",
+    //         stepping: 10
+    //     });
 
-        jQuery(".valores").mask('#.##0,00', {
-            reverse: true
-        });
-        jQuery(".horas").mask('00:00', {
-            reverse: true
-        });
+    //     jQuery(".valores").mask('#.##0,00', {
+    //         reverse: true
+    //     });
+    //     jQuery(".horas").mask('00:00', {
+    //         reverse: true
+    //     });
 
-    });
+    // });
 
     function createTrecho(dado=false){
+        console.log(dado);
 
         var qtd = jQuery('.trechoDiv').length +1
             
         jQuery("#trechosDiv").append(
-            ' <div class="trechoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 5fr 4fr 2fr;">' +
+            ' <div class="trechoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 8fr 4fr 2fr 2fr;">' +
             '  <div><div class="circle font-20 bold6"> ' + qtd + '</div></div>' +
-            '  <input type="hidden" id="id'+ qtd +'" name="trechos[' + qtd + '][id]" value="' + (dado?dado.id:'') + '" />' +
-            '  <input type="hidden" id="trechos_id'+ qtd +'" name="trechos[' + qtd + '][trechos_id]" value="' + (dado?dado.trechos_id:'') + '" />' +
-            '  <div><label>Local</label><input type="text" class="form-elements trechoAutocomplete" id="cidade'+ qtd +'" data-index="'+ qtd +'" value="' + (dado ? dado.origem_cidade +' ('+ dado.origem_sigla + ') - '+ dado.origem_uf +' -> '+ dado.destino_cidade + ' (' + dado.destino_sigla +') - '+ dado.destino_uf:'') + '" /></div>' +
-            '  <div><label>Dias da semana:</label><span><select class="form-elements dias" name="trechos[' + qtd + '][dias][]" id="dias'+ qtd +'" multiple="" style="width: 150px;"> <option value="">Selecione...</option></select></div>' +
-            '  <div><label>Horário:</label><span> <input type="text" class="form-elements horas" name="trechos[' + qtd + '][hora]" id="hora'+ qtd +'" value="' + (dado?dado.hora:'') + '" /></span></div>' +
+            //'  <input type="hidden" id="id'+ qtd +'" name="trechos[' + qtd + '][id]" value="' + (dado?dado.id:'') + '" />' +
+            //'  <input type="hidden" id="trechos_id'+ qtd +'" name="trechos[' + qtd + '][trechos_id]" value="' + (dado?dado.trechos_id:'') + '" />' +
+            '  <div class="form-group"><label>Local</label>' + (dado ? dado.origem_cidade +' ('+ dado.origem_sigla + ') - '+ dado.origem_uf +' -> '+ dado.destino_cidade + ' (' + dado.destino_sigla +') - '+ dado.destino_uf:'') + '</div>' +
+            '  <div class="form-group"><label>Dias da semana</label>'+ (dado.diasSemanaTextBrev?(dado.diasSemanaTextBrev).join(', '):'') +'</div>' +
+            '  <div class="form-group"><label>Horário</label><span> ' + (dado?dado.hora:'') + '</span></div>' +
+            '  <div class="form-group"><label>Valor</label><span class="valores" style="text-align: right;"> ' + (dado?dado.valor:'') + '</span></div>' +
             '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
             '</div>'
         );
-        $('.dias').select2({
-            dropdownParent: jQuery('#formMediumModal'),
-            class: 'form-elements',
-            closeOnSelect: false,
-            placeholder:'Selecione...',
-            allowClear: true,
-            maximumSelectionLength:6,
-            maximumInputLength:2
-        });
-        let diasSemana = <?= json_encode($this->diasSemana(false,true)) ?>;
-        for(let w in diasSemana){
-            if(w == dado?.dias){
-                newOption = new Option(diasSemana[w], w, true, true);
-            } else {
-                newOption = new Option(diasSemana[w], w, false, false);
-            }
-            $("#dias" + qtd).append(newOption);
-        }
+
 
         jQuery(".trechoAutocomplete").autocomplete({
             minLength: 2,
@@ -320,7 +304,7 @@
         if(id){
             $.ajax({
                 type: 'POST',
-                url: '<?= $this->siteUrl('linhas/trechos') ?>',
+                url: '<?= $this->siteUrl('trechos/listar') ?>',
                 data: {
                     linhas_id: id
                 },

@@ -62,7 +62,6 @@
                         </div>
                     </div>
                 </div>
-                <?php $viagens = (array)$viagens->data; ?>
 
                 <table id="bootstrap-data-table" class="table table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                     <thead>
@@ -82,7 +81,7 @@
                                 <td><button class="btn btn-sm fas fa-chevron-right expandir" data-trtarget="pedidos<?= $viagemId ?>tr"><i class=""></i></button> (<?= count($pedidosViagem) ?>)</td>
                                 <td><a href="<?= $this->siteUrl('viagens?key=' . $viagens[$viagemId]->key) ?>" title="Ver pedidos dessa viagem"><?= $viagens[$viagemId]->codigo ?></a></td>
                                 <td><?= $viagens[$viagemId]->descricao ?></td>
-                                <td><?= $this->dateFormat($viagens[$viagemId]->data_saida, 'd/m/Y H:i')?></td>
+                                <td><?= $this->dateFormat($viagens[$viagemId]->data_saida, 'd/m/Y H:i') ?></td>
                                 <td></td>
                             </tr>
                             <!-- informações do pedido -->
@@ -100,7 +99,7 @@
                                                 <th><i class="fas fa-cog"></i></th>
                                             </tr>
                                         </thead>
-                                        <?php 
+                                        <?php
                                         $statusClasses = [
                                             'R' => 'reservado',
                                             'P' => 'pago',
@@ -113,14 +112,14 @@
                                                     <td><span id="label_cliente_nome<?= $pedido->id ?>"><?= $pedido->cliente_nome ?></span></td>
                                                     <td><span id="label_assento<?= $pedido->id ?>" class="label_assento"><?= $pedido->assento ?></span></td>
                                                     <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor ?? '') ?></span></td>
-                                                    <td><span id="label_status<?= $pedido->id ?>"><span class="<?= $statusClasses[$pedido->status]??'' ?>"><?= ucfirst($statusClasses[$pedido->status]??'') ?></span></span></td>
+                                                    <td><span id="label_status<?= $pedido->id ?>"><span class="<?= $statusClasses[$pedido->status] ?? '' ?>"><?= ucfirst($statusClasses[$pedido->status] ?? '') ?></span></span></td>
                                                     <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
                                                     <td>
                                                         <?php $session = $this->getAttributes();
                                                         $usersession = $session['userSession'] ?? false;
                                                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                                                             <!-- Editar -->
-                                                            <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>"  data-cliente_nome="<?= $pedido->cliente_nome ?>" data-cliente_cpf="<?= $pedido->cliente_cpf ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-assento="<?= $pedido->assento ?>" data-valor="<?= str_replace('.', ',', $pedido->valor ?? '') ?>" data-status="<?= $pedido->status ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
+                                                            <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-cliente_nome="<?= $pedido->cliente_nome ?>" data-cliente_cpf="<?= $pedido->cliente_cpf ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-assento="<?= $pedido->assento ?>" data-valor="<?= str_replace('.', ',', $pedido->valor ?? '') ?>" data-status="<?= $pedido->status ?>" data-trechos_id="<?= $pedido->trechos_id ?>" data-linhas_id="<?= $pedido->linhas_id ?? 0 ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
                                                                 <i class="far fa-edit"></i> Editar</button>
                                                         <?php endif ?>
                                                         <!-- Favoritar -->
@@ -187,7 +186,7 @@
     </div>
 </div> <!-- .content -->
 
-<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+<div class="modal fade" id="formPedidoModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -238,43 +237,47 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="origem">Origem</label>
-                        <input type="hidden" id="origem_id">
-                        <span class="error-label"></span>
-                        <!-- deixar sem name para não fazer submit -->
-                        <input class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id">
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="destino">Destino</label>
-                        <input type="hidden" id="destino_id">
-                        <span class="error-label"></span>
-                        <!-- deixar sem name para não fazer submit -->
-                        <input class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id">
+                    <div class="" id="buscarViagensDiv" style="margin: 3px; padding:6px; border: 1px solid silver;">
+                        <label>Buscar viagem</label>
+                        <div class="form-group">
+                            <label class="control-label mb-1" for="origem">Origem</label>
+                            <input type="hidden" id="origem_id">
+                            <span class="error-label"></span>
+                            <!-- deixar sem name para não fazer submit -->
+                            <input class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label mb-1" for="destino">Destino</label>
+                            <input type="hidden" id="destino_id">
+                            <span class="error-label"></span>
+                            <!-- deixar sem name para não fazer submit -->
+                            <input class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id">
+                        </div>
+
+                        <div class="form-group" style="display: flex;  align-items: end;  align-content: baseline;  justify-content: space-between;  width: max-content;">
+                            <div style="width:45%;">
+
+                                <label class="control-label mb-1" for="data">Data</label>
+                                <input type="text" class="form-control datas" id="data_saida_ini" />
+                                <span class="error-label"></span>
+                            </div>
+                            <div style="width:10%; text-align: center;">a</div>
+                            <div style="width:45%;">
+                                <label class="control-label mb-1" for="data">Data</label>
+                                <input type="text" class="form-control datas" id="data_saida_fim" />
+                                <span class="error-label"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-outline-secondary" id="btnLocalizarViagem" title="Localizar trecho"><i class="fas fa-search"></i></button>
+
+                            <input type="hidden" id="trechos_id" name="trechos_id" />
+                            <input type="hidden" id="viagens_id" name="viagens_id" />
+                            <input type="hidden" id="linhas_id" name="linhas_id" />
+                        </div>
                     </div>
 
-                    <div class="form-group" style="display: flex;  align-items: end;  align-content: baseline;  justify-content: space-between;  width: max-content;">
-                        <div style="width:45%;">
-
-                            <label class="control-label mb-1" for="data">Data</label>
-                            <input type="text" class="form-control datas" id="data_saida_ini" />
-                            <span class="error-label"></span>
-                        </div>
-                        <div style="width:10%; text-align: center;">a</div>
-                        <div style="width:45%;">
-                            <label class="control-label mb-1" for="data">Data</label>
-                            <input type="text" class="form-control datas" id="data_saida_fim" />
-                            <span class="error-label"></span>
-                        </div>
-                    </div>
-                        
-                    <div class="form-group">
-                        <button class="btn btn-outline-secondary" id="btnLocalizarViagem" title="Localizar trecho"><i class="fas fa-search" ></i></button>
-                        
-                        <input type="hidden" id="trechos_id" name="trechos_id" />
-                        <input type="hidden" id="viagens_id" name="viagens_id" />
-                    </div>
-                        
                     <div id="trecho_info" style="border:0; padding: 8px;"></div>
 
 
@@ -310,7 +313,9 @@
 </div>
 
 <script>
-    jQuery('#valor').mask("#.##0,00", {reverse: true});
+    jQuery('#valor').mask("#.##0,00", {
+        reverse: true
+    });
 
     jQuery(".datas").mask('00/00/0000 00:00');
     jQuery("#cpf").mask('000.000.000-00');
@@ -321,14 +326,18 @@
     });
 
     jQuery('#veiculos_id').select2({
-        dropdownParent: jQuery('#formMediumModal'),
+        dropdownParent: jQuery('#formPedidoModal'),
         class: 'form-elements'
     });
 
     jQuery(".editar").click(function() {
         var este = jQuery(this);
+        $("#buscarViagensDiv").css("display", "none");
 
         var id = jQuery("#pedidos_id").val(este.data('id'));
+        var trechos_id = este.data('trechos_id');
+        var linhas_id = este.data('linhas_id');
+        var viagens_id = este.data('viagens_id');
 
         if (este.data('clientes_id')) {
             jQuery('#clientes_id option[value="' + este.data('clientes_id') + '"]').prop('selected', true);
@@ -347,9 +356,85 @@
             jQuery('#status option[value="0"]').prop('selected', true);
         }
 
+        var trechosViagensEL = $('<div class="layout-dados" id="viagens-trechos_card' + 1 + '"></div>');
+        if(linhas_id>1){
+            jQuery.ajax({
+                type: 'POST',
+                url: '<?= $this->siteUrl('viagens/listar') ?>',
+                data: {
+                    id: viagens_id
+                },
+                dataType: 'json',
+                beforeSend: function() {},
+                success: function(retorno) {
+                    if (retorno.status == true) {
+                        var viagem = retorno.data[0];
+                        console.log(retorno);
+                
+                        trechosViagensEL.append(
+                            '  <h5>Informações da viagem</h5>' +
+                            '  <div class="layout-grid gap grid-3col">' +
+                            '    <div>Descrição: ' + viagem.descricao + '</div>' +
+                            '    <div>Detalhes: ' + viagem.detalhes + '</div>' +
+                            '    <div>Data saída: ' + viagem.data_saidaFmt + '</div>' +
+                            '    <div>Assentos: ' + viagem.assentos + '</div>' +
+                            '    <div>Tipo de assento: ' + viagem.assentos_tipo + '</div>' +
+                            '    <div>Código da viagem: ' + viagem.codigo + '</div>' +
+                            '  </div>'
+                        )
+
+                    } else {}
+                },
+                error: function(st) {
+                    show_message(st.status + ' ' + st.statusText, 'danger');
+                },
+                complete: function() {}
+            });
+
+            jQuery.ajax({
+                type: 'POST',
+                url: '<?= $this->siteUrl('trechos/listar') ?>',
+                data: {
+                    trechos_id: trechos_id,
+                    linhas_id: linhas_id
+                },
+                dataType: 'json',
+                beforeSend: function() {},
+                success: function(retorno) {
+                    if (retorno.status == true) {
+                        var trecho = retorno.data[0];
+                        trechosViagensEL.append(
+                            '  <div>' +
+                            '    <h5>Informações do trecho </h5>' +
+                            '    <div class="layout-grid gap grid-2col">' +
+                            '    <div>Linha: ' + trecho.linhas_descricao + '</div>' +
+                            '    <div>Origem: ' + trecho.origem_cidade + ' (' + trecho.origem_sigla + ') - ' + trecho.origem_uf + ' ' + trecho.origem_endereco + '</div>' +
+                            '    <div>Dias: ' + (trecho.diasSemanaTextBrev).join('; ') + '</div>' +
+                            '    <div>Destino: ' + trecho.destino_cidade + ' (' + trecho.destino_sigla + ') - ' + trecho.destino_uf + ' ' + trecho.destino_endereco + '</div>' +
+                            '    <div>Horário: ' + trecho.hora + '</div>' +
+                            '    <div class="valores">Valor: ' + trecho.valor + '</div>' +
+                            '  </div>'
+                        );
+
+                        console.log(retorno);
+                    } else {}
+                },
+                error: function(st) {
+                    show_message(st.status + ' ' + st.statusText, 'danger');
+                },
+                complete: function() {}
+            });
+        }
+
+        $("#trecho_info").append(trechosViagensEL);
+        $("#trecho_info").prepend('<span class="btn btn-outline-primary" id="btnAlterarViagem" >Alterar viagem</span>')
+
+        $("#btnAlterarViagem").click(function(){
+            $('#buscarViagensDiv').toggle('slow');
+        })
 
         jQuery("#clientes_id").val(este.data('clientes_id'));
-        jQuery("#clientes").val((este.data('cliente_nome')?este.data('cliente_nome')+' - '+(este.data('cliente_cpf')??''): ''));
+        jQuery("#clientes").val((este.data('cliente_nome') ? este.data('cliente_nome') + ' - ' + (este.data('cliente_cpf') ?? '') : ''));
         jQuery("#viagens_id").val(este.data('viagens_id'));
         jQuery("#assento").val(este.data('assento'));
         jQuery("#valor").val(este.data('valor')?.replace('.', ',')).mask("#.##0,00", {
@@ -358,15 +443,15 @@
         jQuery("#status").val(este.data('status'));
         jQuery("#mediumModalLabel").html('Pedido ' + (este.data('codigo') ? este.data('codigo') : ''));
 
-        jQuery("#formMediumModal").modal("show");
-        jQuery(".cidadeAutocomplete").keyup(function(){
+        jQuery("#formPedidoModal").modal("show");
+        jQuery(".cidadeAutocomplete").keyup(function() {
             autocompleteLocais($(this), "/locais/listar");
         });
 
     });
 
-    
-    $("#btnLocalizarViagem").click(function(evt){
+
+    $("#btnLocalizarViagem").click(function(evt) {
         evt.preventDefault();
         var origem_id = $("#origem_id").val();
         var destino_id = $("#destino_id").val();
@@ -375,7 +460,7 @@
 
         jQuery.ajax({
             type: 'POST',
-            url: '<?= $this->siteUrl('viagens/procurar')?>',
+            url: '<?= $this->siteUrl('viagens/procurar') ?>',
             data: {
                 origem_id: origem_id,
                 destino_id: destino_id,
@@ -383,71 +468,77 @@
                 data_saida_fim: data_saida_fim
             },
             dataType: 'json',
-            beforeSend: function (){},
-            success: function (retorno) {
+            beforeSend: function() {},
+            success: function(retorno) {
                 console.log('btnLocalizarTrecho -> retorno', retorno);
                 if (retorno.status == true) {
                     // $("#trechos_id").val(retorno.data[0].id);
-                    $("#trecho_info").html('<h5>'+retorno.msg+'</h5>')
-                    let viagem,trecho;
-                    for(let key in retorno.data){
-                        console.log(key +' => '+ retorno.data[key])
+                    $("#trecho_info").html('<h5>' + retorno.msg + '</h5>')
+                    let viagem, trecho;
+                    for (let key in retorno.data) {
+                        console.log(key + ' => ' + retorno.data[key])
                         viagem = retorno.data[key].viagem;
                         trecho = retorno.data[key].trecho;
                         $("#trecho_info").append(
-                            '<div class="layout-dados" id="viagens-trechos_card'+key+'">'+
-                            '  <input type="radio" class="viagens-trechos_radios" id="radio_id'+key+'" name="viagens-trechos_id" data-id="'+key+'" data-viagens_id="'+viagem.id+'" data-trechos_id="'+trecho.trechos_id+'" />'+
-                            '  <label for="radio_id'+key+'" style="display: inline-block;">Selecionar esta viagem</label>'+
-                            '  <h5>Informações da viagem</h5>'+
-                            '  <div class="layout-grid gap grid-3col">'+
-                            '    <div>Descrição: '+ viagem.descricao +'</div>'+
-                            '    <div>Detalhes: '+ viagem.detalhes +'</div>'+
-                            '    <div>Data saída: '+ viagem.data_saidaFmt +'</div>'+
-                            '    <div>Assentos: '+ viagem.assentos +'</div>'+
-                            '    <div>Tipo de assento: '+ viagem.assentos_tipo +'</div>'+
-                            '  </div>'+
-                            '    <h5>Informações do trecho </h5>'+
-                            '    <div class="layout-grid gap grid-2col">'+
-                            '    <div>Linha: '+ trecho.linhas_descricao +'</div>'+
-                            '    <div>Origem: '+ trecho.origem_cidade +' ('+ trecho.origem_sigla +') - ' + trecho.origem_uf +' '+ trecho.origem_endereco +'</div>'+
-                            '    <div>Dias: '+ (trecho.diasSemanaTextBrev).join('; ') +'</div>'+
-                            '    <div>Destino: '+ trecho.destino_cidade +' ('+ trecho.destino_sigla +') - '+ trecho.destino_uf +' '+ trecho.destino_endereco +'</div>'+
-                            '    <div>Horário: '+ trecho.hora +'</div>'+
-                            '    <div class="valores">Valor: '+ trecho.valor +'</div>'+
-                            '  </div>'+
+                            '<div class="layout-dados" id="viagens-trechos_card' + key + '">' +
+                            '  <input type="radio" class="viagens-trechos_radios" id="radio_id' + key + '" name="viagens-trechos_id" data-id="' + key + '" data-viagens_id="' + viagem.id + '" data-trechos_id="' + trecho.trechos_id + '" data-linhas_id="' + trecho.linhas_id + '" />' +
+                            '  <label for="radio_id' + key + '" style="display: inline-block;">Selecionar esta viagem</label>' +
+                            '  <h5>Informações da viagem</h5>' +
+                            '  <div class="layout-grid gap grid-3col">' +
+                            '    <div>Descrição: ' + viagem.descricao + '</div>' +
+                            '    <div>Detalhes: ' + viagem.detalhes + '</div>' +
+                            '    <div>Data saída: ' + viagem.data_saidaFmt + '</div>' +
+                            '    <div>Assentos: ' + viagem.assentos + '</div>' +
+                            '    <div>Tipo de assento: ' + viagem.assentos_tipo + '</div>' +
+                            '    <div>Código da viagem: ' + viagem.codigo + '</div>' +
+                            '  </div>' +
+                            '  <div>' +
+                            '    <h5>Informações do trecho </h5>' +
+                            '    <div class="layout-grid gap grid-2col">' +
+                            '    <div>Linha: ' + trecho.linhas_descricao + '</div>' +
+                            '    <div>Origem: ' + trecho.origem_cidade + ' (' + trecho.origem_sigla + ') - ' + trecho.origem_uf + ' ' + trecho.origem_endereco + '</div>' +
+                            '    <div>Dias: ' + (trecho.diasSemanaTextBrev).join('; ') + '</div>' +
+                            '    <div>Destino: ' + trecho.destino_cidade + ' (' + trecho.destino_sigla + ') - ' + trecho.destino_uf + ' ' + trecho.destino_endereco + '</div>' +
+                            '    <div>Horário: ' + trecho.hora + '</div>' +
+                            '    <div class="valores">Valor: ' + trecho.valor + '</div>' +
+                            '  </div>' +
                             '</div>'
                         );
                     }
-                    $(".viagens-trechos_radios").change(function(){
-                        
+                    $(".viagens-trechos_radios").change(function() {
+
                         var viagens_id = $(this).data('viagens_id');
                         var trechos_id = $(this).data('trechos_id');
+                        var linhas_id = $(this).data('linhas_id');
                         $("#viagens_id").val(viagens_id);
                         $("#trechos_id").val(trechos_id);
-                        $(".viagens-trechos_radios").each(function(c, v){
+                        $("#linhas_id").val(linhas_id);
+                        $(".viagens-trechos_radios").each(function(c, v) {
                             var $id = $(this).data('id');
                             console.log($(this));
-                            if($(this).is(":checked")){
-                                $("#viagens-trechos_card"+$id).css('outline','2px solid #2ec8f7');
+                            if ($(this).is(":checked")) {
+                                $("#viagens-trechos_card" + $id).css('outline', '2px solid #2ec8f7');
                             } else {
-                                $("#viagens-trechos_card"+$id).css('outline', '1px solid silver');
+                                $("#viagens-trechos_card" + $id).css('outline', '1px solid silver');
                             }
 
                         })
-                        
+
                     });
                 } else {
                     $("#trechos_id").val('');
-                    $("#trecho_info").html('<h5>'+retorno.msg+'</h5>')
+                    $("#trecho_info").html('<h5>' + retorno.msg + '</h5>')
                 }
             },
-            error: function (st){
-                show_message( st.status +' '+ st.statusText, 'danger');
+            error: function(st) {
+                show_message(st.status + ' ' + st.statusText, 'danger');
             },
-            complete: function(){
-                $('.valores').mask("Valor: #.##0,00", {reverse: true});
+            complete: function() {
+                $('.valores').mask("Valor: #.##0,00", {
+                    reverse: true
+                });
             }
-        });    
+        });
     });
 
     $("#btnAddCliente").click(function(evt) {

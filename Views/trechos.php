@@ -84,13 +84,18 @@
                                 <td><span id="label_origem_id<?= $trecho->trechos_id ?>"><a href="<?= $this->siteUrl('trechos?origem_key=' . $trecho->origem_key) ?>"> <?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?></a></span></td>
                                 <td><span id="label_destino_id<?= $trecho->trechos_id ?>"><a href="<?= $this->siteUrl('trechos?destino_key=' . $trecho->destino_key) ?>"> <?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?></a></span></td>
                                 <td><span id="label_hora_id<?= $trecho->trechos_id ?>" class="horas"><?= $trecho->hora ?></span></td>
-                                <td><span id="label_valor_id<?= $trecho->trechos_id ?>" class="valores"><?= $trecho->valor ?></span></td>
+                                <td><span id="label_valor_id<?= $trecho->trechos_id ?>" class="valores"><?= number_format($trecho->valor, 2, ',', '') ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $trecho->trechos_id ?>" data-linhas_id="<?= $trecho->linhas_id ?>" data-linhas_descricao="<?= $trecho->linhas_descricao ?>" data-origem_id="<?= $trecho->origem_id ?>" data-origem="<?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?>/ <?= $trecho->origem_endereco ?>" data-destino_id="<?= $trecho->destino_id ?>" data-destino="<?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?>/ <?= $trecho->destino_endereco ?>" data-hora="<?= $trecho->hora ?>" data-valor="<?= $trecho->valor ?>" data-dia="<?= $trecho->dia ?>">
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $trecho->trechos_id ?>" data-linhas_id="<?= $trecho->linhas_id ?>" 
+                                        data-linhas_descricao="<?= $trecho->linhas_descricao ?>" data-origem_id="<?= $trecho->origem_id ?>" 
+                                        data-origem="<?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?>/ <?= $trecho->origem_endereco ?>" 
+                                        data-destino_id="<?= $trecho->destino_id ?>" data-destino="<?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?>/ <?= $trecho->destino_endereco ?>" 
+                                        data-hora="<?= $trecho->hora ?>" 
+                                        data-valor="<?= number_format($trecho->valor, 2, ',', '') ?>" data-dias="<?= $trecho->dias ?>">
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                     <!-- Favoritar -->
@@ -156,7 +161,7 @@
     </div>
 </div> <!-- .content -->
 
-<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true" data-width="960">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -204,33 +209,7 @@
                         <input type="text" class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id" />
                     </div>
 
-                    <div class="layout-flex">
-                        <div class="form-group" style="margin-right: 18px;">
-                            <label class="control-label mb-1" for="hora">Horário</label>
-                            <span class="error-label"></span>
-                            <input type="text" class="form-elements horas" id="hora" name="hora" style="width: 150px;" />
-                        </div>
 
-                        <div class="form-group">
-                            <label class="control-label mb-1" for="valor">Valor</label>
-                            <span class="error-label"></span>
-                            <input type="text" class="form-elements valores" id="valor" name="valor" style="width: 150px;" />
-                        </div>
-                    </div>
-
-
-                    <div class="form-group">
-                        <label class="control-label mb-1" for="dia">Dias da semana</label>
-                        <span class="error-label"></span>
-                        <select type="text" class="form-elements" id="dia" name="dia" style="width: 150px;">
-                            <option value="">Selecione...</option>
-                            <?php
-                            $diasSemana = $this->diasSemana();
-                            foreach ($diasSemana as $d => $diasSemana) : ?>
-                                <option value="<?= $d ?>"><?= $diasSemana ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
                 </form>
                 <div id="retornomsg"></div>
             </div>
@@ -256,10 +235,16 @@
 
     var qtdPontos = 0;
 
-    $('#dia').select2({
+    $('#dias').select2({
         dropdownParent: $('#formMediumModal'),
         class: 'form-elements',
         closeOnSelect: false
+    });
+
+    $('#linhas_id').select2({
+        dropdownParent: $('#formMediumModal'),
+        class: 'form-elements',
+        closeOnSelect: true
     });
 
     $("input.horas").datetimepicker({
@@ -271,18 +256,18 @@
         evt.preventDefault();
         var c = $('.pontoDiv').length + 1;
         $("#pontosDiv").append(
-            ' <div class="pontoDiv layout-flex flex-row layout-dados layout-margin" style="position: relative;">' +
+            ' <div class="pontoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 8fr 4fr 2fr 2fr;">' +
             '  <div><i class="fas fa-level-up-alt fa-2x fa-fw fa-rotate-90" style="color: #408ba9"></i></div>' +
             '  <input type="hidden" class="pontos" id="destino_id' + c + '" name="pontos[' + c + '][destino_id]" value="" />' +
-            '  <div><label>Destino</label><input type="text" class="form-elements cidadeAutocomplete" id="destino' + c + '" value="" data-id="' + c + '" data-target="destino_id' + c + '" style="width:270px;" /></div>' + //deixar sem name pra não fazer submit
-            '  <div><label>Dia:</label>' +
-            '    <select class="form-elements" name="pontos[' + c + '][dia]" id="dia' + c + '"> <option value="">Selecione...</option>' +
-            '<?php $diasSemana = $this->diasSemana();
+            '  <div class="form-group"><label>Destino</label><input type="text" class="form-elements cidadeAutocomplete" id="destino' + c + '" value="" data-id="' + c + '" data-target="destino_id' + c + '" /></div>' + //deixar sem name pra não fazer submit
+            '  <div class="form-group"><label>Dias:</label>' +
+            '    <select class="form-elements dias" name="pontos[' + c + '][dias]" id="dias' + c + '" multiple="" style="width: 100px;">' +
+            '<?php $diasSemana = $this->diasSemana(false, true);
                 foreach ($diasSemana as $d => $diasSemana) : ?> <option value="<?= $d ?>"><?= $diasSemana ?></option><?php endforeach ?>' +
             '    </select>' +
             '  </div>' +
-            '  <div><label>Horário:</label><input type="text" class="form-elements horas" name="pontos[' + c + '][hora]" id="hora' + c + '" value="" /></div>' +
-            '  <div><label>Valor:</label><input type="text" class="form-elements valores" name="pontos[' + c + '][valor]" id="valor' + c + '" value="" /></div>' +
+            '  <div class="form-group"><label>Horário:</label><input type="text" class="form-elements horas" name="pontos[' + c + '][hora]" id="hora' + c + '" value="" /></div>' +
+            '  <div class="form-group"><label>Valor:</label><input type="text" class="form-elements valores" name="pontos[' + c + '][valor]" id="valor' + c + '" value="" /></div>' +
             '</div>'
         );
 
@@ -298,6 +283,10 @@
             reverse: true
         });
 
+        $(".dias").select2({
+            placeholder:'',
+            closeOnSelect: false
+        });
         $('#destino' + c ).focus();
 
 
@@ -322,18 +311,20 @@
         // qtdPontos = qtdPontos.length;
         var este = $(this);
         var id = este.data('id');
+        var dias = String(este.data('dias')).split(',');
+        console.log(dias);
 
 
-        // if (este.data('dia')) {
-        //     console.log(este.data('dia').split(','))
-        //     $('#dia option[value="' + este.data('dia').split(',') + '"]').prop('selected', true);
+        // if (este.data('dias')) {
+        //     console.log(este.data('dias').split(','))
+        //     $('#dias option[value="' + este.data('dias').split(',') + '"]').prop('selected', true);
         // } else {
-        //     $('#dia option[value="0"]').prop('selected', true);
+        //     $('#dias option[value="0"]').prop('selected', true);
         // }
 
         $("#trechos_id").val(este.data('id'));
         $("#linha").val(este.data('linha'));
-        $("#linhas_id").select2().val(este.data('linhas_id')).trigger('change').focus();
+        $("#linhas_id").val(este.data('linhas_id')).trigger('change').focus();
         $("#linha").val(este.data('linha'));
         $("#origem_id").val(este.data('origem_id'));
         $("#origem").val(este.data('origem'));
@@ -341,13 +332,15 @@
         $("#destino").val(este.data('destino'));
         $("#hora").val(este.data('hora'));
         $("#valor").val(este.data('valor'));
-        $("#dia").select2().val(este.data('dia')).trigger('change');
+        $("#dias").select2().val(dias).trigger('change');
 
         if(este.data('linhas_id') !=''){
             $("#destinoDiv").show('slow');
             $("#pontosDivGroup").hide('slow');
         }
-
+        $(".valores").mask('#.##0,00', {
+            reverse: true
+        });
         // $("#pontosDiv").html('');
         // $.ajax({
         //     type: 'POST',
@@ -372,7 +365,7 @@
         //                         '  <input type="text" class="pontos" id="destino_id' + n + '" name="pontos[' + n + '][destino_id]" value="'+ ponto.destino_id +'" />' +
         //                         '  <div><label>Destino</label><input type="text" class="form-elements cidadeAutocomplete" id="destino' + n + '" value="'+ ponto.destino_cidade +' - '+ ponto.destino_uf +'/'+ ponto.destino_endereco +'" data-id="'+ c +'" data-target="destino_id' + n + '" style="width:270px;" /></div>' + //deixar sem name pra não fazer submit
         //                         '  <div><label>Dia:</label>'+
-        //                         '    <select class="form-elements" name="pontos[' + n + '][dia]" id="dia' + n + '"> <option value="">Selecione...</option>' +
+        //                         '    <select class="form-elements" name="pontos[' + n + '][dias]" id="dias' + n + '"> <option value="">Selecione...</option>' +
         //                         '    </select>'+
         //                         '  </div>' +
         //                         '  <div><label>Horário:</label><input type="text" class="form-elements horas" name="pontos[' + n + '][hora]" id="hora' + c + '" value="'+ ponto.hora +'" /></div>' +
@@ -380,12 +373,12 @@
         //                         '</div>'
         //                     );
         //                     for(let w in diasSemana){
-        //                         if(w == ponto.dia){
+        //                         if(w == ponto.dias){
         //                             newOption = new Option(diasSemana[w], w, true, true);
         //                         } else {
         //                             newOption = new Option(diasSemana[w], w, false, false);
         //                         }
-        //                         $("#dia" + (c + 1)).append(newOption);
+        //                         $("#dias" + (c + 1)).append(newOption);
         //                     }
 
         //                 });

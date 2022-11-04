@@ -350,6 +350,14 @@
          });
      }
 
+     $('.modal').on('show.bs.modal', function (e) {
+        var width = $(this).data('width');
+        $(".modal-dialog").css({
+            width: width+'px',
+            maxWidth: width+'px',
+        });
+    })
+
  </script>
 
 

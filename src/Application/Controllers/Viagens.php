@@ -120,7 +120,24 @@ class Viagens extends BaseController
         return $response->withJson($dados['viagens']->data, $dados['viagens']->status, $dados['viagens']->msg);
     }
 
-        /**
+
+
+    /**
+     * Verificar a ocupação de uma viagem
+     *
+     * @return string json
+     */
+    public function occupation(Request $request, Response $response, $args)
+    {
+        
+        $requests = $this->getRequests($request);//post
+
+        $apiResult = $this->api->post('viagens/ocupacao', $requests);
+        
+        return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
+    }
+    
+    /**
      * Localiza e retorna um viagenss passando 'viagens' por json request.
      *
      * @return string json

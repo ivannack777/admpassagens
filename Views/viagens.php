@@ -589,7 +589,7 @@
         }
         jQuery.ajax({
             type: 'POST',
-            url: '<?= $this->siteUrl('/linhas/trechos')?>',
+            url: '<?= $this->siteUrl('/trechos/listar')?>',
             data: {
                 linhas_id: $("#linhas_id").val()
             },
