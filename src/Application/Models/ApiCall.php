@@ -67,7 +67,7 @@ class ApiCall
 
         $info = curl_getinfo($ch);
 
-        // var_export($_SESSION);
+        // var_dump($_ENV['DEBUG']);
         // var_export($this->header);
         // var_export($info);
         // var_export($result);exit;

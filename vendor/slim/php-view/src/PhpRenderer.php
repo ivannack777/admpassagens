@@ -322,9 +322,13 @@ class PhpRenderer
 
         try{
             $date = new \DateTime($idx??'');
-        } catch(Exception $e){
+        } catch(\Exception $e){
             //
         }
+        catch (\Throwable $e) {
+            //do something when Throwable is thrown
+        }
+
         if($date instanceof \DateTime){
             $idx = $date->format('w'); // w	Numeric representation of the day of the week	0 (for Sunday) through 6 (for Saturday)
         } 
