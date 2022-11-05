@@ -96,6 +96,7 @@
                                                 <th>Valor</th>
                                                 <th>Status</th>
                                                 <th>Data/Hora</th>
+                                                <th>Dados para pagamento</th>
                                                 <th><i class="fas fa-cog"></i></th>
                                             </tr>
                                         </thead>
@@ -105,7 +106,9 @@
                                             'P' => 'pago',
                                             'C' => 'cancelado',
                                         ];
-                                        foreach ($pedidosViagem as $pedido) : ?>
+                                        foreach ($pedidosViagem as $pedido):
+                                            $dadosPgto = !empty($pedido->dados_pagamento) ? json_decode($pedido->dados_pagamento):null;
+                                        ?>
                                             <tbody>
                                                 <tr id="linha<?= $pedido->id ?>" class="list-label">
                                                     <td><span id="label_codigo<?= $pedido->id ?>"><?= $pedido->codigo ?></span></td>
@@ -114,6 +117,12 @@
                                                     <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor ?? '') ?></span></td>
                                                     <td><span id="label_status<?= $pedido->id ?>"><span class="<?= $statusClasses[$pedido->status] ?? '' ?>"><?= ucfirst($statusClasses[$pedido->status] ?? '') ?></span></span></td>
                                                     <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
+                                                    <td>
+                                                        <?php if($dadosPgto): ?>
+                                                            id: <?= $dadosPgto->id ?>
+                                                            Link <a href="<?= $dadosPgto->link ?>" title="Link de pagamento" target="_BLANK"><?= $dadosPgto->link ?></a>
+                                                        <?php endif ?>
+                                                    </td>
                                                     <td>
                                                         <?php $session = $this->getAttributes();
                                                         $usersession = $session['userSession'] ?? false;

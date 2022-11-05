@@ -48,24 +48,28 @@
  </div>
 
 
- <script type="text/javascript">
+    <script src="vendors/chart.js/dist/Chart.bundle.min.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <!-- <script src="assets/js/widgets.js"></script> -->
+    
+    <script type="text/javascript">
      var timerMensagem;
-     // (function($) {
-     //     "use strict";
+     (function($) {
+         "use strict";
 
-     //     jQuery('#vmap').vectorMap({
-     //         map: 'world_en',
-     //         backgroundColor: null,
-     //         color: '#ffffff',
-     //         hoverOpacity: 0.7,
-     //         selectedColor: '#1de9b6',
-     //         enableZoom: true,
-     //         showTooltip: true,
-     //         values: sample_data,
-     //         scaleColors: ['#1de9b6', '#03a9f5'],
-     //         normalizeFunction: 'polynomial'
-     //     });
-     // })(jQuery);
+         jQuery('#vmap').vectorMap({
+             map: 'world_en',
+             backgroundColor: null,
+             color: '#ffffff',
+             hoverOpacity: 0.7,
+             selectedColor: '#1de9b6',
+             enableZoom: true,
+             showTooltip: true,
+             values: sample_data,
+             scaleColors: ['#1de9b6', '#03a9f5'],
+             normalizeFunction: 'polynomial'
+         });
+     })(jQuery);
 
      function show_message(texto, classe = 'info', interval = null, redirect = null) {
 

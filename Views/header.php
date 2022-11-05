@@ -41,7 +41,7 @@
     <script src="<?= $this->siteUrl('assets/js/select2.full.min.js') ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/jquery.mask.min.js') ?>"></script>
     <script src="<?= $this->siteUrl('assets/js/jquery-ui.min.js') ?>"></script>
-    <script src="<?= $this->siteUrl('assets/js/fontawesome.js') ?>" crossorigin="anonymous"></script>
+    <script src="<?= $this->siteUrl('assets/js/fontawesome.js') ?>"></script>
     <script>
         
         jQuery.fn.addClassTemp = function(className, timeOut=2000) {
@@ -55,7 +55,6 @@
         };
     </script>
 
-    <!-- <script src="<?= $this->siteUrl('assets/js/jQuery-provider.js') ?>"></script> -->
 
 </head>
 

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Slim\Views;
 
+use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Views\Exception\PhpTemplateNotFoundException;
@@ -257,8 +258,76 @@ class PhpRenderer
         return $dt;
     }
 
+    /**
+     * Retorna meses por extenso
+     * Retorna um mes se idx for passado como representação numérica de um mes (1 a 12)
+     * Retorna um array com os meses se idx não for passada ou for false
+     * Retorna um array com os meses se idx for um array de meses ex: [1,3,8]
+     * @param mixed int|string|bool|array $idx
+     * @param bool $brev para retornar mes abreviado
+     * @return mixed string|array
+     */
+    public function meses($idx=false, $brev=false, $includeYear=false){
 
+        try{
+            $date = new \DateTime($idx??'');
+        } catch(Exception $e){
+            //
+        }
+        if($date instanceof \DateTime){
+            $idx = $date->format('n'); // n 	Numeric representation of a month, without leading zeros 	1 through 12
+        } else {
+            //se primeiro paramentro não for uma data ISO, força $includeYear para false
+            $includeYear = false;
+        }
+        $meses = [
+            1=> "Janeiro",
+            "Fevereiro",
+            "Março",
+            "Abril",
+            "Maio",
+            "Junho",
+            "Julho",
+            "Agosto",
+            "Setembro",
+            "Outubro",
+            "Novembro",
+            "Dezembro",
+        ];
+        
+        if($brev){
+            foreach($meses as $k=>$v){
+                $meses[$k] = mb_substr($v, 0, 3) . ($includeYear ? '/'.$date->format('Y'):'' );
+            }
+        }
+        if(is_array($idx )){
+            foreach($idx as $i){
+                $meses2[] = $meses[$i];
+            }
+            return $meses2;
+        }
+        return $idx !== false ? $meses[$idx] : $meses;
+    }
+
+     /**
+     * Retorna semana por extenso
+     * Retorna um dia da semana se idx for passado como representação numérica de dia da semana (0 a 6)
+     * Retorna um array com os dia da semana se idx não for passada ou for false
+     * Retorna um array com os dia da semana se idx for um array de meses ex: [1,3,8]
+     * @param mixed int|string|bool|array $idx
+     * @param bool $brev para retornar dia da semana abreviado
+     * @return mixed string|array
+     */
     public function diasSemana($idx=false, $brev=false){
+
+        try{
+            $date = new \DateTime($idx??'');
+        } catch(Exception $e){
+            //
+        }
+        if($date instanceof \DateTime){
+            $idx = $date->format('w'); // w	Numeric representation of the day of the week	0 (for Sunday) through 6 (for Saturday)
+        } 
 
         $dias = [
             "Domingo",

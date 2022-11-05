@@ -18,7 +18,7 @@
     padding: 8px;
   }
 </style>
-# API Ticketbooking <a name="topo"></a>
+# API Passagens <a name="topo"></a>
 - [Autenticação](#login_auth) 
 - [Adicionar ou editar usuários](#usuarios_salvar) 
 - [Listar ou pesquisar usuários](#usuarios_listar) 
