@@ -175,7 +175,7 @@
                     <div class="form-group">
                         <label class="control-label mb-1" for="trechos">Trechos</label>
                         <span class="error-label"></span>
-                        <div id="trechosDiv" class="hide-last-last">
+                        <div id="pontosEmbarqueDiv" class="hide-last-last">
 
                         </div>
 
@@ -221,7 +221,7 @@
 
     // jQuery("#addtrechos").click(function(evt) {
     //     evt.preventDefault();
-    //     createTrecho()
+    //     createPontoEmbarque()
     //     jQuery(".horas").datetimepicker({
     //         format: "HH:mm",
     //         stepping: 10
@@ -236,17 +236,17 @@
 
     // });
 
-    function createTrecho(dado=false){
+    function createPontoEmbarque(dado=false){
         console.log(dado);
 
         var qtd = jQuery('.trechoDiv').length +1
             
-        jQuery("#trechosDiv").append(
+        jQuery("#pontosEmbarqueDiv").append(
             ' <div class="trechoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 8fr 4fr 2fr 2fr;">' +
             '  <div><div class="circle font-20 bold6"> ' + qtd + '</div></div>' +
             //'  <input type="hidden" id="id'+ qtd +'" name="trechos[' + qtd + '][id]" value="' + (dado?dado.id:'') + '" />' +
             //'  <input type="hidden" id="trechos_id'+ qtd +'" name="trechos[' + qtd + '][trechos_id]" value="' + (dado?dado.trechos_id:'') + '" />' +
-            '  <div class="form-group"><label>Local</label>' + (dado ? dado.origem_cidade +' ('+ dado.origem_sigla + ') - '+ dado.origem_uf +' -> '+ dado.destino_cidade + ' (' + dado.destino_sigla +') - '+ dado.destino_uf:'') + '</div>' +
+            '  <div class="form-group"><label>Local</label>' + (dado ? dado.cidade +' ('+ dado.sigla + ') - '+ dado.uf :'') + '</div>' +
             '  <div class="form-group"><label>Dias da semana</label>'+ (dado.diasSemanaTextBrev?(dado.diasSemanaTextBrev).join(', '):'') +'</div>' +
             '  <div class="form-group"><label>Horário</label><span> ' + (dado?dado.hora:'') + '</span></div>' +
             '  <div class="form-group"><label>Valor</label><span class="valores" style="text-align: right;"> ' + (dado?dado.valor:'') + '</span></div>' +
@@ -261,7 +261,7 @@
             source: function(request, response) {
 
                 jQuery.ajax({
-                    url: "/trechos/listar",
+                    url: "/linhas/pontos",
                     type: "post",
                     data: {
                         cidade: request.term
@@ -289,8 +289,8 @@
     }
 
     jQuery(".editar").click(function() {
-        qtdtrechos = jQuery("#trechosDiv").find('.trechos');
-        qtdtrechos = qtdtrechos.length;
+        // qtdPontos = jQuery("#pontosEmbarqueDiv").find('.trechos');
+        // qtdPontos = qtdPontos.length;
         var este = jQuery(this);
         var id = este.data('id');
 
@@ -300,34 +300,34 @@
         jQuery("#assentos").val(este.data('assentos'));
         jQuery("#dias").val(este.data('dias')?.toString().split(',')).trigger('change');
 
-        jQuery("#trechosDiv").html('');
+        jQuery("#pontosEmbarqueDiv").html('');
         if(id){
             $.ajax({
                 type: 'POST',
-                url: '<?= $this->siteUrl('trechos/listar') ?>',
+                url: '<?= $this->siteUrl('linhas/pontos') ?>',
                 data: {
                     linhas_id: id
                 },
                 dataType: 'json',
                 beforeSend: function() {
-                    jQuery("#trechosDiv").html('Aguarde...');
+                    jQuery("#pontosEmbarqueDiv").html('Aguarde...');
                 },
                 success: function(retorno) {
                     if (retorno.status == true) {
-                        jQuery("#trechosDiv").html('');
+                        jQuery("#pontosEmbarqueDiv").html('');
                         if (retorno.data.length) {
                             
-                            jQuery.each(retorno.data, function(c, trecho) {
-                                qtdtrechos = c +1;
-                                createTrecho(trecho);
-                                // jQuery("#trechosDiv").append(
-                                //     createTrecho(qtdtrechos, trecho)
+                            jQuery.each(retorno.data, function(c, ponto) {
+                                // qtdPontos = c +1;
+                                createPontoEmbarque(ponto);
+                                // jQuery("#pontosEmbarqueDiv").append(
+                                //     createPontoEmbarque(qtdPontos, trecho)
                                 // );
 
                                 
                             });
                         } else {
-                            jQuery("#trechosDiv").append(retorno.msg);
+                            jQuery("#pontosEmbarqueDiv").append(retorno.msg);
                         }
 
                     } else {

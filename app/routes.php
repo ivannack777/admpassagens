@@ -27,7 +27,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
-use Slim\Views\PhpRenderer;
+// use Slim\Views\PhpRenderer;
 
 return function (App $app, Request $request) {
     //salvar log da rota
