@@ -4,3 +4,4 @@ app/.env
 composer.lock
 logs/
 composer.lock
+public/tmpCoockie

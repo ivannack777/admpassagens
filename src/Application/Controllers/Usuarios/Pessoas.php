@@ -20,10 +20,34 @@ class Pessoas extends BaseController
     // constructor receives container instance
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct();
         $this->container = $container;
     }
 
+    /**
+     * Localiza e retorna um clientes passando 'clientes' por json request.
+     *
+     * @return string json
+     */
+    public function home(Request $request, Response $response)
+    {
+        $requests = $this->getRequests($request);
+        $apiResult = $this->api->post('pessoas/listar', $requests);
+        $dados['pessoas'] = $apiResult;
 
+        //usando $this->view setado em BaseController
+        if ($args['modo']??false == 'lista') {
+            return $this->views->render($response, 'pessoas.php', $dados);
+        } else {
+            $this->views->render($response, 'header.php', $dados);
+            $this->views->render($response, 'left.php', $dados);
+            $this->views->render($response, 'right_top.php', $dados);
+            $this->views->render($response, 'pessoas.php', $dados);
+            return $this->views->render($response, 'footer.php', $dados);
+        }
+        
+
+    }
 
     /**
      * Localiza e retorna um pessoas passando 'pessoa' por json request
@@ -35,32 +59,13 @@ class Pessoas extends BaseController
     {
 
         $requests = $this->getRequests($request);
-
-        $endereco_id = $requests['endereco_id'] ?? null;
-        $nome = $requests['nome'] ?? null;
-        $cpf_cnpj = $requests['cpf_cnpj'] ?? null;
-        $documento = $requests['documento'] ?? null;
-
-        if (!empty($endereco_id)) {
-            $params['endereco_id'] = $endereco_id;
+        
+        $apiResult = $this->api->post('pessoas/listar', $requests);
+        // var_dump($apiResult);exit;
+        if(property_exists($apiResult, 'data')){
+            return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
         }
-        if (!empty($nome)) {
-            $params['nome'] = $nome;
-        }
-        if (!empty($cpf_cnpj)) {
-            $params['cpf_cnpj'] = $cpf_cnpj;
-        }
-        if (!empty($documento)) {
-            $params['documento'] = $documento;
-        }
-
-        if (!empty($params)) {
-            $pessoas = PessoaModel::list($params);
-        } else {
-            $pessoas = PessoaModel::list();
-        }
-
-        return $response->withJson($pessoas, true, $pessoas->count() . ($pessoas->count()>1?' pessoas encontradas':' pessoa encontrada'));
+        return $response->withJson([$apiResult], false, 'Erro na consulta', 500);
     }
 
 

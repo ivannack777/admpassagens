@@ -127,16 +127,17 @@ return function (App $app, Request $request) {
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(new CheckTokenMiddleware());
 
-    $app->group('/clientes', function (Group $group) {
-        $group->map(['GET', 'POST'], '', [Clientes::class, 'home']);
-        $group->map(['GET', 'POST'], '/listar', [Clientes::class, 'list']);
-        $group->post('/salvar[/[{id}]]', [Clientes::class, 'save']);
+    $app->group('/pessoas', function (Group $group) {
+        $group->map(['GET', 'POST'], '', [Pessoas::class, 'home']);
+        $group->map(['GET', 'POST'], '/listar', [Pessoas::class, 'list']);
+        $group->post('/salvar[/[{id}]]', [Pessoas::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
-    // $app->post('/clientes/salvar[/[{id}]]', [Clientes::class, 'save']);
+    // $app->post('/pessoas/salvar[/[{id}]]', [Pessoas::class, 'save']);
 
     $app->group('/pedidos', function (Group $group) {
         $group->map(['GET', 'POST'], '', [Pedidos::class, 'list']);
+        $group->map(['GET', 'POST'], '/download', [Pedidos::class, 'download']);
         $group->post('/salvar[/[{id}]]', [Pedidos::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);

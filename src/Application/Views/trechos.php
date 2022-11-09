@@ -43,7 +43,7 @@
                         <?php $session = $this->getAttributes();
                         $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
-                            <button id="adicionar" type="button" class="btn btn-primary bg-flat-color-1"><i class="fas fa-plus"></i> Adicionar trecho</button>
+                            <button id="btnAdicionar" type="button" class="btn btn-primary bg-flat-color-1"><i class="fas fa-plus"></i> Adicionar trecho</button>
                         <?php endif ?>
                     </div>
                     <div class="">
@@ -72,7 +72,7 @@
                             <th>Linha</th>
                             <th>Local origem</th>
                             <th>Local destino</th>
-                            <th>Horário</th>
+                            <!-- <th>Horário</th> -->
                             <th>Valor</th>
                             <th><i class="fas fa-cog"></i></th>
                         </tr>
@@ -83,7 +83,7 @@
                                 <td><span id="label_linha<?= $trecho->trechos_id ?>"><?= $trecho->linhas_descricao ?></span></td>
                                 <td><span id="label_origem_id<?= $trecho->trechos_id ?>"><a href="<?= $this->siteUrl('trechos?origem_key=' . $trecho->origem_key) ?>"> <?= $trecho->origem_cidade ?> - <?= $trecho->origem_uf ?></a></span></td>
                                 <td><span id="label_destino_id<?= $trecho->trechos_id ?>"><a href="<?= $this->siteUrl('trechos?destino_key=' . $trecho->destino_key) ?>"> <?= $trecho->destino_cidade ?> - <?= $trecho->destino_uf ?></a></span></td>
-                                <td><span id="label_hora_id<?= $trecho->trechos_id ?>" class="horas"><?= $trecho->hora ?></span></td>
+                                <!-- <td><span id="label_hora_id<?= $trecho->trechos_id ?>" class="horas"><?= $trecho->hora ?></span></td> -->
                                 <td><span id="label_valor_id<?= $trecho->trechos_id ?>" class="valores"><?= number_format($trecho->valor, 2, ',', '') ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
@@ -118,50 +118,11 @@
                 </table>
 
             </div>
-            <div class="card-footer">
-                <ul>
-                    <li>
-                        <div class="text-muted">Visits</div>
-                        <strong>29.703 Users (40%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li class="hidden-sm-down">
-                        <div class="text-muted">Unique</div>
-                        <strong>24.093 Users (20%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="text-muted">Pageviews</div>
-                        <strong>78.706 Views (60%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li class="hidden-sm-down">
-                        <div class="text-muted">New Users</div>
-                        <strong>22.123 Users (80%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-danger" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li class="hidden-sm-down">
-                        <div class="text-muted">Bounce Rate</div>
-                        <strong>40.15%</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
 </div> <!-- .content -->
 
-<div class="modal fade" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true" data-width="960">
+<div class="modal fade" id="formTrechoModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true" data-width="960">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -193,11 +154,13 @@
                         <!--deixar sem name pra não fazer submit -->
                         <input type="text" class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id" />
                     </div>
-                    <div class="form-group" id="pontosDivGroup">
-                        <label class="control-label mb-1" for="destino_id">Locais de destino</label>
-                        <div id="pontosDiv"></div>
-                        
-                        <!--deixar sem name pra não fazer submit -->
+                    <div id="pontosDivGroup">
+                        <div class="form-group">
+                            <label class="control-label mb-1" for="destino_id">Locais de destino</label>
+                            <div id="pontosDiv"></div>
+                            
+                            <!--deixar sem name pra não fazer submit -->
+                        </div>
                         <button type="text" class="btn btn-outline-info" id="addPontos"><i class="fas fa-plus"></i> Adicionar ponto</button>
                     </div>
 
@@ -236,13 +199,13 @@
     var qtdPontos = 0;
 
     $('#dias').select2({
-        dropdownParent: $('#formMediumModal'),
+        dropdownParent: $('#formTrechoModal'),
         class: 'form-elements',
         closeOnSelect: false
     });
 
     $('#linhas_id').select2({
-        dropdownParent: $('#formMediumModal'),
+        dropdownParent: $('#formTrechoModal'),
         class: 'form-elements',
         closeOnSelect: true
     });
@@ -256,7 +219,7 @@
         evt.preventDefault();
         var c = $('.pontoDiv').length + 1;
         $("#pontosDiv").append(
-            ' <div class="pontoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 8fr 4fr 2fr 2fr;">' +
+            ' <div class="pontoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 8fr 4fr 2fr;">' +
             '  <div><i class="fas fa-level-up-alt fa-2x fa-fw fa-rotate-90" style="color: #408ba9"></i></div>' +
             '  <input type="hidden" class="pontos" id="destino_id' + c + '" name="pontos[' + c + '][destino_id]" value="" />' +
             '  <div class="form-group"><label>Destino</label><input type="text" class="form-elements cidadeAutocomplete" id="destino' + c + '" value="" data-id="' + c + '" data-target="destino_id' + c + '" /></div>' + //deixar sem name pra não fazer submit
@@ -266,7 +229,7 @@
                 foreach ($diasSemana as $d => $diasSemana) : ?> <option value="<?= $d ?>"><?= $diasSemana ?></option><?php endforeach ?>' +
             '    </select>' +
             '  </div>' +
-            '  <div class="form-group"><label>Horário:</label><input type="text" class="form-elements horas" name="pontos[' + c + '][hora]" id="hora' + c + '" value="" /></div>' +
+            //'  <div class="form-group"><label>Horário:</label><input type="text" class="form-elements horas" name="pontos[' + c + '][hora]" id="hora' + c + '" value="" /></div>' +
             '  <div class="form-group"><label>Valor:</label><input type="text" class="form-elements valores" name="pontos[' + c + '][valor]" id="valor' + c + '" value="" /></div>' +
             '</div>'
         );
@@ -300,10 +263,12 @@
         }
     })
 
-    $("#adicionar").click(function() {
+    $("#btnAdicionar").click(function() {
         $("#mediumModalLabel").html("Adicionar um novo trecho");
         $("#formTrecho")[0].reset();
-        $("#formMediumModal").modal("show")
+        $("#destinoDiv").hide();
+        $("#pontosDivGroup").show();
+        $("#formTrechoModal").modal("show")
     });
 
     $(".editar").click(function() {
@@ -460,7 +425,7 @@
 
         $("#mediumModalLabel").html('Trechos da linha ' + (este.data('linhas_descricao') ? este.data('linhas_descricao') : ''));
 
-        $("#formMediumModal").modal("show")
+        $("#formTrechoModal").modal("show")
     });
 
 

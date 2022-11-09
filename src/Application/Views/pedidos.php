@@ -43,22 +43,21 @@
                         <?php $session = $this->getAttributes();
                         $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
-                            <button type="button" class="btn btn-primary bg-flat-color-1 editar"><i class="fas fa-plus"></i> Adicionar pedido</button>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar" title="Adicionar pedido"><i class="fas fa-plus"></i> Adicionar pedido</button>
                         <?php endif ?>
                     </div>
-                    <div class="">
-                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                            <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
-                                <label class="btn btn-outline-secondary">
-                                    <input type="radio" name="options" id="option1"> Day
-                                </label>
-                                <label class="btn btn-outline-secondary active">
-                                    <input type="radio" name="options" id="option2" checked=""> Month
-                                </label>
-                                <label class="btn btn-outline-secondary">
-                                    <input type="radio" name="options" id="option3"> Year
-                                </label>
-                            </div>
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
+                            <form action="<?= $this->siteUrl('pedidos') ?>" method="GET">
+
+                                <div class="form-elements-group">
+                                    <input type="text" class="busca" name="busca" id="busca" value="<?= $_GET['busca'] ?? '' ?>" title="Termos para a busca" placeholder="" style="width: 8em;" />
+                                    <input type="text" class="datas" name="data_ini" id="data_ini" value="<?= $_GET['data_ini'] ?? '' ?>" title="Data inicial" placeholder="Data inicial" style="width: 6em;" />
+                                    <input type="text" class="datas" name="data_fim" id="data_fim" value="<?= $_GET['data_ini'] ?? '' ?>" title="Data final" placeholder="Data final" style="width: 6em;" />
+                                    <button type="submit" class="btn btn-info" id="btnBuscar" title="Pesquisar"><i class="fa fa-search"></i></button>
+                                </div>
+
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -82,7 +81,7 @@
                                 <td><a href="<?= $this->siteUrl('viagens?key=' . $viagens[$viagemId]->key) ?>" title="Ver pedidos dessa viagem"><?= $viagens[$viagemId]->codigo ?></a></td>
                                 <td><?= $viagens[$viagemId]->descricao ?></td>
                                 <td><?= $this->dateFormat($viagens[$viagemId]->data_saida, 'd/m/Y H:i') ?></td>
-                                <td></td>
+                                <td><a href="<?= $this->siteUrl('pedidos/download?viagens_codigo=' . $viagens[$viagemId]->codigo) ?>"><i class="far fa-file-excel"></i> Baixar</span></td>
                             </tr>
                             <!-- informações do pedido -->
                             <tr id="pedidos<?= $viagemId ?>tr" style="display: none;">
@@ -92,7 +91,7 @@
                                             <tr>
                                                 <th>Código</th>
                                                 <th>Cliente</th>
-                                                <th>Assento</th>
+                                                <!-- <th>Assento</th> -->
                                                 <th>Valor</th>
                                                 <th>Status</th>
                                                 <th>Data/Hora</th>
@@ -106,29 +105,28 @@
                                             'P' => 'pago',
                                             'C' => 'cancelado',
                                         ];
-                                        foreach ($pedidosViagem as $pedido):
-                                            $dadosPgto = !empty($pedido->dados_pagamento) ? json_decode($pedido->dados_pagamento):null;
+                                        foreach ($pedidosViagem as $pedido) :
+
                                         ?>
                                             <tbody>
                                                 <tr id="linha<?= $pedido->id ?>" class="list-label">
                                                     <td><span id="label_codigo<?= $pedido->id ?>"><?= $pedido->codigo ?></span></td>
-                                                    <td><span id="label_cliente_nome<?= $pedido->id ?>"><?= $pedido->cliente_nome ?></span></td>
-                                                    <td><span id="label_assento<?= $pedido->id ?>" class="label_assento"><?= $pedido->assento ?></span></td>
+                                                    <td><span id="label_pessoa_nome<?= $pedido->id ?>"><?= $pedido->pessoas_nome ?></span></td>
+                                                    <!-- <td><span id="label_assento<?= $pedido->id ?>" class="label_assento"><?= $pedido->assento ?></span></td> -->
                                                     <td><span id="label_valor<?= $pedido->id ?>"><?= str_replace('.', ',', $pedido->valor ?? '') ?></span></td>
                                                     <td><span id="label_status<?= $pedido->id ?>"><span class="<?= $statusClasses[$pedido->status] ?? '' ?>"><?= ucfirst($statusClasses[$pedido->status] ?? '') ?></span></span></td>
                                                     <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
                                                     <td>
-                                                        <?php if($dadosPgto): ?>
-                                                            id: <?= $dadosPgto->id ?>
-                                                            Link <a href="<?= $dadosPgto->link ?>" title="Link de pagamento" target="_BLANK"><?= $dadosPgto->link ?></a>
-                                                        <?php endif ?>
+                                                        ID: <?= $pedido->pagamento_preference_id ?>
+                                                        Link: <a href="<?= $pedido->pagamento_link ?>" title="Link de pagamento" target="_BLANK"><?= $pedido->pagamento_link ?></a>
+                                                        Status: <?= $pedido->pagamento_status ?>
                                                     </td>
                                                     <td>
                                                         <?php $session = $this->getAttributes();
                                                         $usersession = $session['userSession'] ?? false;
                                                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                                                             <!-- Editar -->
-                                                            <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-clientes_id="<?= $pedido->clientes_id ?>" data-cliente_nome="<?= $pedido->cliente_nome ?>" data-cliente_cpf="<?= $pedido->cliente_cpf ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-assento="<?= $pedido->assento ?>" data-valor="<?= str_replace('.', ',', $pedido->valor ?? '') ?>" data-status="<?= $pedido->status ?>" data-trechos_id="<?= $pedido->trechos_id ?>" data-linhas_id="<?= $pedido->linhas_id ?? 0 ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
+                                                            <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-pessoas_id="<?= $pedido->pessoas_id ?>" data-pessoas_nome="<?= $pedido->pessoas_nome ?>" data-pessoas_cpf="<?= $pedido->pessoas_cpf ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-assento="<?= $pedido->assento ?>" data-valor="<?= str_replace('.', ',', $pedido->valor ?? '') ?>" data-status="<?= $pedido->status ?>" data-trechos_id="<?= $pedido->trechos_id ?>" data-linhas_id="<?= $pedido->linhas_id ?? 0 ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
                                                                 <i class="far fa-edit"></i> Editar</button>
                                                         <?php endif ?>
                                                         <!-- Favoritar -->
@@ -152,45 +150,6 @@
                 </table>
 
             </div>
-            <div class="card-footer">
-                <ul>
-                    <li>
-                        <div class="text-muted">Visits</div>
-                        <strong>29.703 Users (40%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li class="hidden-sm-down">
-                        <div class="text-muted">Unique</div>
-                        <strong>24.093 Users (20%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="text-muted">Pageviews</div>
-                        <strong>78.706 Views (60%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li class="hidden-sm-down">
-                        <div class="text-muted">New Users</div>
-                        <strong>22.123 Users (80%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-danger" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li class="hidden-sm-down">
-                        <div class="text-muted">Bounce Rate</div>
-                        <strong>40.15%</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
 </div> <!-- .content -->
@@ -209,39 +168,39 @@
                     <input type="hidden" id="pedidos_id" name="pedidos_id" value="0" />
 
                     <div class="form-group">
-                        <label class="control-label mb-1" for="clientes_id">Cliente</label>
-                        <input type="hidden" id="clientes_id" name="clientes_id">
+                        <label class="control-label mb-1" for="pessoas_id">Cliente</label>
+                        <input type="hidden" id="pessoas_id" name="pessoas_id">
                         <span class="error-label"></span>
                         <!-- deixar sem name para não fazer submit -->
-                        <input class="form-elements" id="clientes" data-target="clientes_id">
-                        <button class="btn btn-outline-secondary" id="btnAddCliente"><i class="fas fa-plus"></i> Adicionar cliente</button>
+                        <input class="form-elements" id="pessoas" data-target="pessoas_id">
                     </div>
 
+                    <button class="btn btn-outline-secondary" id="btnAddCliente"><i class="fas fa-plus"></i> Adicionar passageiro</button>
                     <div class="" id="addClienteDiv" style="display: none; margin: 3px; padding:6px; border: 1px solid silver;">
-                        <label>Dados do novo cliente</label>
+                        <label>Dados do passageiro</label>
                         <div class="form-group">
                             <label class="control-label mb-1" for="nome">Nome</label>
                             <span class="error-label"></span>
-                            <input type="text" class="form-elements" id="nome" name="cliente_nome" value="" placeholder="Nome" />
+                            <input type="text" class="form-elements" id="nome" name="passageiro_nome" value="" placeholder="Nome" />
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="cpf">CPF</label>
-                            <input type="text" class="form-elements" id="cpf" name="cliente_cpf" value="" placeholder="CPF" />
+                            <input type="text" class="form-elements" id="cpf" name="passageiro_cpf" value="" placeholder="CPF" />
                             <span class="error-label"></span>
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="rg">RG</label>
                             <span class="error-label"></span>
-                            <input type="text" class="form-elements" id="rg" name="cliente_rg" value="" placeholder="RG" />
+                            <input type="text" class="form-elements" id="rg" name="passageiro_rg" value="" placeholder="RG" />
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="celular">Celular</label>
                             <span class="error-label"></span>
-                            <input type="text" class="form-elements" id="celular" name="cliente_celular" value="" placeholder="Celular" />
+                            <input type="text" class="form-elements" id="celular" name="passageiro_celular" value="" placeholder="Celular" />
                         </div>
                         <div class="form-group">
                             <label class="control-label mb-1" for="email">E-mail</label>
-                            <input type="text" class="form-elements" id="email" name="cliente_email" value="" placeholder="E-mail" />
+                            <input type="text" class="form-elements" id="email" name="passageiro_email" value="" placeholder="E-mail" />
                             <span class="error-label"></span>
                         </div>
                     </div>
@@ -286,15 +245,16 @@
                             <input type="hidden" id="linhas_id" name="linhas_id" />
                         </div>
                     </div>
+                    <span class="btn btn-outline-primary" id="btnAlterarViagem">Alterar viagem</span>
 
                     <div id="trecho_info" style="border:0; padding: 8px;"></div>
 
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label class="control-label mb-1" for="assento">Assento</label>
                         <span class="error-label"></span>
                         <input type="text" class="form-elements" id="assento" name="assento" value="" placeholder="Assento" />
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                         <label class="control-label mb-1" for="status">Status</label>
@@ -338,20 +298,36 @@
         dropdownParent: jQuery('#formPedidoModal'),
         class: 'form-elements'
     });
+    jQuery('#status').select2({
+        dropdownParent: jQuery('#formPedidoModal'),
+        class: 'form-elements'
+    });
+
+    $("#btnAlterarViagem").click(function() {
+        $('#buscarViagensDiv').toggle('slow');
+    })
 
     jQuery(".editar").click(function() {
         var este = jQuery(this);
-        $("#buscarViagensDiv").css("display", "none");
+
 
         var id = jQuery("#pedidos_id").val(este.data('id'));
         var trechos_id = este.data('trechos_id');
         var linhas_id = este.data('linhas_id');
         var viagens_id = este.data('viagens_id');
-
-        if (este.data('clientes_id')) {
-            jQuery('#clientes_id option[value="' + este.data('clientes_id') + '"]').prop('selected', true);
+        console.log('linhas', linhas_id)
+        if (linhas_id == '' || !linhas_id) {
+            $("#buscarViagensDiv").show();
+            $("#btnAlterarViagem").hide();
         } else {
-            jQuery('#clientes_id option[value="0"]').prop('selected', true);
+            $("#buscarViagensDiv").hide();
+            $("#btnAlterarViagem").show();
+        }
+
+        if (este.data('pessoas_id')) {
+            jQuery('#pessoas_id option[value="' + este.data('pessoas_id') + '"]').prop('selected', true);
+        } else {
+            jQuery('#pessoas_id option[value="0"]').prop('selected', true);
         }
         if (este.data('viagens_id')) {
             jQuery('#viagens_id option[value="' + este.data('viagens_id') + '"]').prop('selected', true);
@@ -366,7 +342,7 @@
         }
 
         var trechosViagensEL = $('<div class="layout-dados" id="viagens-trechos_card' + 1 + '"></div>');
-        if(linhas_id>1){
+        if (linhas_id > 1) {
             jQuery.ajax({
                 type: 'POST',
                 url: '<?= $this->siteUrl('viagens/listar') ?>',
@@ -379,7 +355,7 @@
                     if (retorno.status == true) {
                         var viagem = retorno.data[0];
                         console.log(retorno);
-                
+
                         trechosViagensEL.append(
                             '  <h5>Informações da viagem</h5>' +
                             '  <div class="layout-grid gap grid-3col">' +
@@ -435,15 +411,13 @@
             });
         }
 
-        $("#trecho_info").append(trechosViagensEL);
-        $("#trecho_info").prepend('<span class="btn btn-outline-primary" id="btnAlterarViagem" >Alterar viagem</span>')
+        $("#trecho_info").html(trechosViagensEL);
 
-        $("#btnAlterarViagem").click(function(){
-            $('#buscarViagensDiv').toggle('slow');
-        })
 
-        jQuery("#clientes_id").val(este.data('clientes_id'));
-        jQuery("#clientes").val((este.data('cliente_nome') ? este.data('cliente_nome') + ' - ' + (este.data('cliente_cpf') ?? '') : ''));
+
+
+        jQuery("#pessoas_id").val(este.data('pessoas_id'));
+        jQuery("#passageiros").val((este.data('pessoas_nome') ? este.data('pessoas_nome') + ' - ' + (este.data('pessoas_cpf') ?? '') : ''));
         jQuery("#viagens_id").val(este.data('viagens_id'));
         jQuery("#assento").val(este.data('assento'));
         jQuery("#valor").val(este.data('valor')?.replace('.', ',')).mask("#.##0,00", {
@@ -555,9 +529,9 @@
         $("#addClienteDiv").toggle('slow');
     });
 
-    $("#clientes").change(function(evt) {
+    $("#passageiros").change(function(evt) {
         if ($(this).val() == '') {
-            $("#clientes_id").val('')
+            $("#pessoas_id").val('')
         }
     });
     jQuery("#btnSalvar").click(function() {
@@ -581,7 +555,7 @@
                     let data = new moment(retorno.data[0].dataInsret);
 
                     jQuery("#label_codigo" + id).html(retorno.data[0].descricao);
-                    jQuery("#label_cliente_nome" + id).html(retorno.data[0].cliente_nome);
+                    jQuery("#label_pessoas_nome" + id).html(retorno.data[0].pessoas_nome);
                     jQuery("#label_viagens_descricao" + id).html(retorno.data[0].viagens_descricao);
                     jQuery("#label_assento" + id).html(data.assento);
                     jQuery("#label_valor" + id).html((retorno.data[0].valor).replace('.', ','));
@@ -626,11 +600,11 @@
         }
     })
 
-    $("body").on('keyup', '#clientes', function(evt) {
+    $("body").on('keyup', '#pessoas', function(evt) {
 
         if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 65 && event.keyCode <= 90)) {
 
-            autocompleteClientes($(this));
+            autocompletePessoas($(this));
         }
     })
 </script>

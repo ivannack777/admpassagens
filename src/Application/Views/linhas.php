@@ -70,6 +70,7 @@
                         <tr>
                             <th>Descrição</th>
                             <th>Dias</th>
+                            <th>Horário</th>
                             <th><i class="fas fa-cog"></i></th>
                         </tr>
                     </thead>
@@ -84,12 +85,16 @@
                             <tr id="linha<?= $linha->linhas_id ?>" class="list-label">
                                 <td><span id="label_descricao<?= $linha->linhas_id ?>"><?= $linha->descricao ?></span></td>
                                 <td><span id="label_dias<?= $linha->linhas_id ?>"><?= implode(', ', $diasExt) ?></span></td>
+                                <td><span id="label_hora<?= $linha->linhas_id ?>"><?= $linha->hora ?></span></td>
                                 <td>
                                     <?php $session = $this->getAttributes();
                                     $usersession = $session['userSession'] ?? false;
                                     if ($usersession && $usersession['nivel'] >= 3) : ?>
                                         <!-- Editar -->
-                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $linha->linhas_id ?>" data-descricao="<?= $linha->descricao ?>" data-dias="<?= $linha->dias ?>">
+                                        <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $linha->linhas_id ?>" data-descricao="<?= $linha->descricao ?>" 
+                                        data-dias="<?= $linha->dias ?>"
+                                        data-hora="<?= $linha->hora ?>"
+                                        >
                                             <i class="far fa-edit"></i> Editar</button>
                                     <?php endif ?>
                                     <!-- Favoritar -->
@@ -111,45 +116,7 @@
                 </table>
 
             </div>
-            <div class="card-footer">
-                <ul>
-                    <li>
-                        <div class="text-muted">Visits</div>
-                        <strong>29.703 Users (40%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li class="hidden-sm-down">
-                        <div class="text-muted">Unique</div>
-                        <strong>24.093 Users (20%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="text-muted">Pageviews</div>
-                        <strong>78.706 Views (60%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li class="hidden-sm-down">
-                        <div class="text-muted">New Users</div>
-                        <strong>22.123 Users (80%)</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar bg-danger" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                    <li class="hidden-sm-down">
-                        <div class="text-muted">Bounce Rate</div>
-                        <strong>40.15%</strong>
-                        <div class="progress progress-xs mt-2" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+
         </div>
     </div>
 </div> <!-- .content -->
@@ -179,7 +146,7 @@
 
                         </div>
 
-                        <!-- <button class="btn btn-outline-secondary" id="addtrechos">+</button> -->
+                        <button class="btn btn-outline-secondary" id="addtrechos">+</button>
                     </div>
 
                     <div class="form-group">
@@ -192,6 +159,12 @@
                                 <option value="<?= $d ?>"><?= $diasSemana ?></option>
                             <?php endforeach ?>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="hora">Horário saída</label>
+                        <span class="error-label"></span>
+                        <input type="text" class="form-control horas" id="hora" name="hora">
+                            
                     </div>
                 </form>
                 <div id="retornomsg"></div>
@@ -299,6 +272,12 @@
         jQuery("#valor").val(este.data('valor'));
         jQuery("#assentos").val(este.data('assentos'));
         jQuery("#dias").val(este.data('dias')?.toString().split(',')).trigger('change');
+        jQuery("#hora").val(este.data('hora'));
+
+        $("input.horas").datetimepicker({
+            format: "HH:mm",
+            stepping: 10
+        });
 
         jQuery("#pontosEmbarqueDiv").html('');
         if(id){

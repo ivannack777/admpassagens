@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Slim\Views;
 
-use Exception;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Views\Exception\PhpTemplateNotFoundException;
@@ -175,7 +174,7 @@ class PhpRenderer
 
         if (!$this->templateExists($template)) {
             throw new PhpTemplateNotFoundException('View cannot render "' . $template
-                . '" because the template does not exist');
+                                                   . '" because the template does not exist');
         }
 
         $data = array_merge($this->attributes, $data);
@@ -215,7 +214,6 @@ class PhpRenderer
         extract($data);
         include func_get_arg(0);
     }
-
 
     /**
      * parse a url contenando SITE_URL do .env com uri 
@@ -319,7 +317,7 @@ class PhpRenderer
      * @return mixed string|array
      */
     public function diasSemana($idx=false, $brev=false){
-
+        $date = null;
         try{
             $date = new \DateTime($idx??'');
         } catch(\Exception $e){

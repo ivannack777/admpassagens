@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Slim\Http;
 
 use InvalidArgumentException;
+use Slim\Http\Interfaces\ResponseInterface as DecoratedResponseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
@@ -36,15 +37,9 @@ use const JSON_ERROR_NONE;
 
 class Response implements ResponseInterface
 {
-    /**
-     * @var ResponseInterface
-     */
-    protected $response;
+    protected ResponseInterface $response;
 
-    /**
-     * @var StreamFactoryInterface
-     */
-    protected $streamFactory;
+    protected StreamFactoryInterface $streamFactory;
 
     /**
      * EOL characters used for HTTP response.
@@ -71,7 +66,6 @@ class Response implements ResponseInterface
      */
     public function __set($name, $value)
     {
-        return;
     }
 
     /**
@@ -200,12 +194,12 @@ class Response implements ResponseInterface
      * This method prepares the response object to return an HTTP Json
      * response to the client.
      *
-     * @param  array|object $data   The data
-     * @param bool          $status o status para o retorno
-     * @param  int|null     $msg a mensagem do retorno
-     * @param  int|null     $statusCode The HTTP status code
-     * @param  int       $options Json encoding options
-     * @param  int       $depth Json encoding max depth
+     * @param array|object $data   The data
+     * @param bool         $status o status para o retorno
+     * @param string       $msg a mensagem do retorno
+     * @param int|null     $statusCode The HTTP status code
+     * @param int          $options Json encoding options
+     * @param int          $depth Json encoding max depth
      * @return static
      */
     public function withJson($data, bool $status, string $msg=null,  ?int $statusCode = null, int $options = 0, int $depth = 512): ResponseInterface
@@ -514,7 +508,7 @@ class Response implements ResponseInterface
         }
 
         $output .= self::EOL;
-        $output .= (string) $this->response->getBody();
+        $output .= $this->response->getBody();
 
         return $output;
     }

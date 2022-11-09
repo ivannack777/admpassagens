@@ -49,19 +49,18 @@
                             <button type="button" class="btn btn-primary bg-flat-color-1 editar2"><i class="fas fa-plus"></i> Adicionar viagem de linha</button>
                         <?php endif ?>
                     </div>
-                    <div class="">
-                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                            <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
-                                <label class="btn btn-outline-secondary">
-                                    <input type="radio" name="options" id="option1"> Day
-                                </label>
-                                <label class="btn btn-outline-secondary active">
-                                    <input type="radio" name="options" id="option2" checked=""> Month
-                                </label>
-                                <label class="btn btn-outline-secondary">
-                                    <input type="radio" name="options" id="option3"> Year
-                                </label>
-                            </div>
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
+                            <form action="<?= $this->siteUrl('viagens') ?>" method="GET">
+
+                                <div class="form-elements-group">
+                                    <input type="text" class="busca" name="busca" id="busca" value="<?= $_GET['busca'] ?? '' ?>" title="Termos para a busca" placeholder="" style="width: 8em;" />
+                                    <input type="text" class="datas" name="data_ini" id="data_ini" value="<?= $_GET['data_ini'] ?? '' ?>" title="Data inicial" placeholder="Data inicial" style="width: 6em;" />
+                                    <input type="text" class="datas" name="data_fim" id="data_fim" value="<?= $_GET['data_ini'] ?? '' ?>" title="Data final" placeholder="Data final" style="width: 6em;" />
+                                    <button type="submit" class="btn btn-info" id="btnBuscar" title="Pesquisar"><i class="fa fa-search"></i></button>
+                                </div>
+
+                            </form>
                         </div>
                     </div>
                 </div>

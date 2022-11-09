@@ -83,6 +83,7 @@ class ApiCall
             if( ($_ENV['DEBUG']??false) && !$retorno || isset($retorno->error)){
                 
                 echo "<pre>";
+                var_export($info['url']);
                 var_export($result);
                 echo "</pre>";
                 exit;

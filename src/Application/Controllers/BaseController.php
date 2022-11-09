@@ -20,7 +20,7 @@ class BaseController
     public function __construct(ContainerInterface $container=null)
     {
         $this->container = $container;
-        $this->views = new PhpRenderer('../Views');
+        $this->views = new PhpRenderer('../src/Application/Views');
         $userSession = $_SESSION['user'] ?? false;
         $this->views->setAttributes(['userSession'=> $userSession] );
         $this->usersession = $userSession;

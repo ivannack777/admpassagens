@@ -27,18 +27,21 @@ class Usuarios extends \Illuminate\Database\Eloquent\Model
             'usuarios.token',
             'usuarios.email',
             'usuarios.celular',
+            'usuarios.cpf',
             'usuarios.nivel',
             'pessoas.nome',
-            'pessoas.cpf_cnpj',
-            'pessoas.documento',
+            'pessoas.rg',
         ];
 
         $usuarios->join('pessoas', 'pessoas.id', '=', 'usuarios.pessoas_id', 'left');
         foreach($params as $campo => $param){
             if ($campo == 'identificador') {
-                $usuarios->where('usuarios.usuario', $param);
-                $usuarios->orWhere('usuarios.email', $param);
-                $usuarios->orWhere('usuarios.celular', $param);
+                $usuarios->where(function($where) use ($param){
+                    $where->where('usuarios.usuario', $param)
+                    ->orWhere('usuarios.email', $param)
+                    ->orWhere('usuarios.celular', $param)
+                    ->orWhere('usuarios.cpf', $param);
+                });
             } else {
                 $usuarios->where('usuarios.'.$campo, $param);    
             }

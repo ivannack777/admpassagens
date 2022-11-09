@@ -115,7 +115,7 @@ class Login extends BaseController
     public function loginForm(Request $request, Response $response): Response
     {
         $dados = [];
-        $views = new PhpRenderer('../Views');
+        $views = new PhpRenderer('../src/Application/Views');
         $this->views->render($response, 'header.php', $dados);
         $views->render($response, 'login.php', $dados);
         return $this->views->render($response, 'footer.php', $dados);
@@ -124,7 +124,7 @@ class Login extends BaseController
     public function registrarForm(Request $request, Response $response): Response
     {
         $dados = [];
-        $views = new PhpRenderer('../Views');
+        $views = new PhpRenderer('../src/Application/Views');
         $this->views->render($response, 'header.php', $dados);
         $this->views->render($response, 'registro.php', $dados);
         return $this->views->render($response, 'footer.php', $dados);

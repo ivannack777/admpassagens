@@ -317,7 +317,7 @@
          });
      }
 
-     function autocompleteClientes($el) {
+     function autocompletePessoas($el) {
 
          $($el).autocomplete({
              minLength: 2,
@@ -325,7 +325,7 @@
              source: function(request, response) {
 
                  jQuery.ajax({
-                     url: '/clientes/listar',
+                     url: '/pessoas/listar',
                      type: "post",
                      data: {
                          nome: request.term,
@@ -340,7 +340,7 @@
                              return {
                                  label: label,
                                  value: label,
-                                 id: val.id
+                                 id: val.pessoas_id
                              };
                          }));
                      }

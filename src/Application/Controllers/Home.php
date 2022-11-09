@@ -50,12 +50,13 @@ class Home extends BaseController
 
             // exit;
 
-            $apiResult = $this->api->post('clientes/listar', $requests);
-            $dados['clientes'] = $apiResult;
+            $apiResult = $this->api->post('pessoas/listar', $requests);
+            $dados['pessoas'] = $apiResult;
 
             $apiResult = $this->api->post('trechos/listar', $requests);
             $dados['trechos'] = $apiResult;
         }
+
 
         if ($this->getUserSession()) {
             $this->views->render($response, 'header.php', $dados);

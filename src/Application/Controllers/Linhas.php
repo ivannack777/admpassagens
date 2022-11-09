@@ -67,6 +67,7 @@ class Linhas extends BaseController
         $requests = $this->getRequests($request);
         
         $apiResult = $this->api->post('linhas_pontos/listar', $requests);
+        // var_dump($apiResult);exit;
         if(property_exists($apiResult, 'data')){
             return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
         }
