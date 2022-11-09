@@ -29,6 +29,7 @@
         "mercadopago/dx-php": "2.5.1",
         "monolog/monolog": "^2.6",
         "php-di/php-di": "^6.4",
+        "phpoffice/phpspreadsheet": "^1.25",
         "slim/http": "^1.2",
         "slim/php-view": "^3.2",
         "slim/psr7": "^1.5",
