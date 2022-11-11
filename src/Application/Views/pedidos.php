@@ -43,7 +43,7 @@
                         <?php $session = $this->getAttributes();
                         $usersession = $session['userSession'] ?? false;
                         if ($usersession && $usersession['nivel'] >= 3) : ?>
-                            <button type="button" class="btn btn-primary bg-flat-color-1 editar" title="Adicionar pedido"><i class="fas fa-plus"></i> Adicionar pedido</button>
+                            <button type="button" class="btn btn-primary bg-flat-color-1 editar" id="btnAdicionarPedido" title="Adicionar pedido"><i class="fas fa-plus"></i> Adicionar pedido</button>
                         <?php endif ?>
                     </div>
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -126,7 +126,7 @@
                                                         $usersession = $session['userSession'] ?? false;
                                                         if ($usersession && $usersession['nivel'] >= 3) : ?>
                                                             <!-- Editar -->
-                                                            <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-pessoas_id="<?= $pedido->pessoas_id ?>" data-pessoas_nome="<?= $pedido->pessoas_nome ?>" data-pessoas_cpf="<?= $pedido->pessoas_cpf ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-assento="<?= $pedido->assento ?>" data-valor="<?= str_replace('.', ',', $pedido->valor ?? '') ?>" data-status="<?= $pedido->status ?>" data-trechos_id="<?= $pedido->trechos_id ?>" data-linhas_id="<?= $pedido->linhas_id ?? 0 ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
+                                                            <button class="btn btn-outline-primary btn-sm editar" title="Editar" style="margin-right: 8px;" data-id="<?= $pedido->id ?>" data-codigo="<?= $pedido->codigo ?>" data-pessoas_id="<?= $pedido->pessoas_id ?>" data-pessoas_nome="<?= $pedido->pessoas_nome ?>" data-quantidade="<?= $pedido->quantidade ?>" data-pessoas_cpf="<?= $pedido->pessoas_cpf ?>" data-viagens_id="<?= $pedido->viagens_id ?>" data-assento="<?= $pedido->assento ?>" data-valor="<?= str_replace('.', ',', $pedido->valor ?? '') ?>" data-status="<?= $pedido->status ?>" data-trechos_id="<?= $pedido->trechos_id ?>" data-linhas_id="<?= $pedido->linhas_id ?? 0 ?>" data-data_insert="<?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?>">
                                                                 <i class="far fa-edit"></i> Editar</button>
                                                         <?php endif ?>
                                                         <!-- Favoritar -->
@@ -154,11 +154,11 @@
     </div>
 </div> <!-- .content -->
 
-<div class="modal fade" id="formPedidoModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+<div class="modal fade" id="formPedidoModal" tabindex="-1" role="dialog" aria-labelledby="formPedidoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mediumModalLabel">Pedido</h5>
+                <h5 class="modal-title" id="formPedidoModalLabel">Pedido</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -175,79 +175,68 @@
                         <input class="form-elements" id="pessoas" data-target="pessoas_id">
                     </div>
 
-                    <button class="btn btn-outline-secondary" id="btnAddCliente"><i class="fas fa-plus"></i> Adicionar passageiro</button>
-                    <div class="" id="addClienteDiv" style="display: none; margin: 3px; padding:6px; border: 1px solid silver;">
-                        <label>Dados do passageiro</label>
-                        <div class="form-group">
-                            <label class="control-label mb-1" for="nome">Nome</label>
-                            <span class="error-label"></span>
-                            <input type="text" class="form-elements" id="nome" name="passageiro_nome" value="" placeholder="Nome" />
+                    <div class="form-group">
+                        <label class="control-label mb-1" for="quantidade">Quantidade</label>
+                        <span class="error-label"></span>
+                        <!-- deixar sem name para não fazer submit -->
+                        <input class="form-elements" id="quantidade" data-target="quantidade">
+                    </div>
+
+
+                    <div class="" id="addPassageirosDiv" style="margin: 3px; padding:6px; border: 1px solid silver; ">
+                        
+                        <button class="btn btn-outline-secondary" id="copiarParaPassageiro" disabled="" style="display: none;">Copiar dados do cliente</button>
+                        
+                        <div class="" id="addPassageiroDiv">
                         </div>
-                        <div class="form-group">
-                            <label class="control-label mb-1" for="cpf">CPF</label>
-                            <input type="text" class="form-elements" id="cpf" name="passageiro_cpf" value="" placeholder="CPF" />
-                            <span class="error-label"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label mb-1" for="rg">RG</label>
-                            <span class="error-label"></span>
-                            <input type="text" class="form-elements" id="rg" name="passageiro_rg" value="" placeholder="RG" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label mb-1" for="celular">Celular</label>
-                            <span class="error-label"></span>
-                            <input type="text" class="form-elements" id="celular" name="passageiro_celular" value="" placeholder="Celular" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label mb-1" for="email">E-mail</label>
-                            <input type="text" class="form-elements" id="email" name="passageiro_email" value="" placeholder="E-mail" />
-                            <span class="error-label"></span>
-                        </div>
+                        <button class="btn btn-outline-secondary" id="btdAddPassageiro"><i class="fas fa-plus"></i> Adicionar passageiro</button>
                     </div>
 
                     <div class="" id="buscarViagensDiv" style="margin: 3px; padding:6px; border: 1px solid silver;">
                         <label>Buscar viagem</label>
-                        <div class="form-group">
-                            <label class="control-label mb-1" for="origem">Origem</label>
-                            <input type="hidden" id="origem_id">
-                            <span class="error-label"></span>
-                            <!-- deixar sem name para não fazer submit -->
-                            <input class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id">
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label mb-1" for="destino">Destino</label>
-                            <input type="hidden" id="destino_id">
-                            <span class="error-label"></span>
-                            <!-- deixar sem name para não fazer submit -->
-                            <input class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id">
-                        </div>
-
-                        <div class="form-group" style="display: flex;  align-items: end;  align-content: baseline;  justify-content: space-between;  width: max-content;">
-                            <div style="width:45%;">
-
-                                <label class="control-label mb-1" for="data">Data</label>
-                                <input type="text" class="form-control datas" id="data_saida_ini" />
+                        <div class="conteudo">
+                            <div class="form-group">
+                                <label class="control-label mb-1" for="origem">Origem</label>
+                                <input type="hidden" id="origem_id">
                                 <span class="error-label"></span>
+                                <!-- deixar sem name para não fazer submit -->
+                                <input class="form-elements cidadeAutocomplete" id="origem" data-target="origem_id">
                             </div>
-                            <div style="width:10%; text-align: center;">a</div>
-                            <div style="width:45%;">
-                                <label class="control-label mb-1" for="data">Data</label>
-                                <input type="text" class="form-control datas" id="data_saida_fim" />
+                            <div class="form-group">
+                                <label class="control-label mb-1" for="destino">Destino</label>
+                                <input type="hidden" id="destino_id">
                                 <span class="error-label"></span>
+                                <!-- deixar sem name para não fazer submit -->
+                                <input class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id">
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <button class="btn btn-outline-secondary" id="btnLocalizarViagem" title="Localizar trecho"><i class="fas fa-search"></i></button>
+                            <div class="form-group" style="display: flex;  align-items: end;  align-content: baseline;  justify-content: space-between;  width: max-content;">
+                                <div style="width:45%;">
 
-                            <input type="hidden" id="trechos_id" name="trechos_id" />
-                            <input type="hidden" id="viagens_id" name="viagens_id" />
-                            <input type="hidden" id="linhas_id" name="linhas_id" />
+                                    <label class="control-label mb-1" for="data">Data</label>
+                                    <input type="text" class="form-control datas" id="data_saida_ini" />
+                                    <span class="error-label"></span>
+                                </div>
+                                <div style="width:10%; text-align: center;">a</div>
+                                <div style="width:45%;">
+                                    <label class="control-label mb-1" for="data">Data</label>
+                                    <input type="text" class="form-control datas" id="data_saida_fim" />
+                                    <span class="error-label"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button class="btn btn-outline-secondary" id="btnLocalizarViagem" title="Localizar trecho"><i class="fas fa-search"></i> Buscar viagens</button>
+
+                                <input type="hidden" id="trechos_id" name="trechos_id" />
+                                <input type="hidden" id="viagens_id" name="viagens_id" />
+                                <input type="hidden" id="linhas_id" name="linhas_id" />
+                            </div>
+                            <div id="trecho_info" style="border:0; padding: 8px;"></div>
                         </div>
                     </div>
                     <span class="btn btn-outline-primary" id="btnAlterarViagem">Alterar viagem</span>
 
-                    <div id="trecho_info" style="border:0; padding: 8px;"></div>
 
 
                     <!-- <div class="form-group">
@@ -261,9 +250,9 @@
                         <span class="error-label"></span>
                         <select type="text" class="form-elements" id="status" name="status">
                             <option value="0">Selecione...</option>
-                            <option value="R">Reservado</option>
-                            <option value="P">Pago</option>
-                            <option value="C">Cancelado</option>
+                            <?php foreach ($listStatus->data as $st) : ?>
+                                <option value="<?= $st->status ?>"><?= $st->descricao ?></option>
+                            <?php endforeach ?>
                         </select>
                     </div>
                 </form>
@@ -296,22 +285,100 @@
 
     jQuery('#veiculos_id').select2({
         dropdownParent: jQuery('#formPedidoModal'),
-        class: 'form-elements'
     });
     jQuery('#status').select2({
         dropdownParent: jQuery('#formPedidoModal'),
-        class: 'form-elements'
     });
 
     $("#btnAlterarViagem").click(function() {
         $('#buscarViagensDiv').toggle('slow');
     })
 
+    
+    $("#copiarParaPassageiro").click(function(e) {
+        e.preventDefault();
+        var pessoas_id = $("#pessoas_id").val();
+        if (pessoas_id > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '<?= $this->siteUrl('pessoas/listar') ?>',
+                data: {
+                    pessoas_id: pessoas_id
+                },
+                dataType: 'json',
+                beforeSend: function() {},
+                success: function(retorno) {
+                    var dadosPreenchidos = false;
+                    if (retorno.status == true) {
+                        if (retorno.data.length) {
+                            index = $(".addPassageirosGroup").length;
+
+                            $("#addPassageirosDiv").show('slow');
+
+                            var pessoas = retorno.data[0];
+                                console.log('pessoas', pessoas);
+                                $("#addPassageiroDiv").prepend(
+                                    '<div class="conteudo addPassageirosGroup" data-index="' + index + '">' +
+                                    '    <div><label>Dados do passageiro</label> <i class="far fa-trash-alt excluirPassageiro pointer" title="Excluir passageiros" style="margin-left:24px;"></i></div>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="nome">Nome</label>' +
+                                    '        <span class="error-label"></span>' +
+                                    '        <input type="text" class="form-elements" id="nome' + index + '" name="passageiros[' + index + '][nome]" value="' + (pessoas.nome ?? '') + '" placeholder="Nome" />' +
+                                    '    </div>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="cpf">CPF</label>' +
+                                    '        <input type="text" class="form-elements" id="cpf' + index + '" name="passageiros[' + index + '][cpf]" value="' + (pessoas.cpf ?? '') + '" placeholder="CPF" />' +
+                                    '        <span class="error-label"></span>' +
+                                    '    </div>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="rg">RG</label>' +
+                                    '        <span class="error-label"></span>' +
+                                    '        <input type="text" class="form-elements" id="rg' + index + '" name="passageiros[' + index + '][rg]" value="' + (pessoas.rg ?? '') + '" placeholder="RG" />' +
+                                    '    </div>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="celular">Celular</label>' +
+                                    '        <span class="error-label"></span>' +
+                                    '        <input type="text" class="form-elements" id="celular' + index + '" name="passageiros[' + index + '][celular]" value="' + (pessoas.celular ?? '') + '" placeholder="Celular" />' +
+                                    '    </div>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="email">E-mail</label>' +
+                                    '        <input type="text" class="form-elements" id="emai' + index + 'l" name="passageiros[' + index + '][email]" value="' + (pessoas.email ?? '') + '" placeholder="E-mail" />' +
+                                    '        <span class="error-label"></span>' +
+                                    '    </div>' +
+                                    '</div>'
+                                );
+                            
+                            jQuery("#cpf").mask('000.000.000-00');
+                            jQuery("#celular").mask('00 00000-0000');
+
+                            $(".excluirPassageiro").click(function(e){
+                                $(this).parents('.addPassageirosGroup').remove();
+                            })
+                        }
+                    } else {
+
+                    }
+                },
+                error: function(st) {
+                    show_message(st.status + ' ' + st.statusText, 'danger');
+                },
+                complete: function() {}
+            });
+        } else {
+            show_message("Por favor, informe o cliente para pode copiar os dados", 'warning')
+        }
+    });
+
     jQuery(".editar").click(function() {
         var este = jQuery(this);
 
+        if($(this).attr('id') == 'btnAdicionarPedido'){
+            $("#copiarParaPassageiro").prop('disabled', false).show();
+        } else{
+            $("#copiarParaPassageiro").prop('disabled', true).hide();
+        }
+        $("#addPassageiroDiv").html('');
 
-        var id = jQuery("#pedidos_id").val(este.data('id'));
         var trechos_id = este.data('trechos_id');
         var linhas_id = este.data('linhas_id');
         var viagens_id = este.data('viagens_id');
@@ -324,33 +391,19 @@
             $("#btnAlterarViagem").show();
         }
 
-        if (este.data('pessoas_id')) {
-            jQuery('#pessoas_id option[value="' + este.data('pessoas_id') + '"]').prop('selected', true);
-        } else {
-            jQuery('#pessoas_id option[value="0"]').prop('selected', true);
-        }
-        if (este.data('viagens_id')) {
-            jQuery('#viagens_id option[value="' + este.data('viagens_id') + '"]').prop('selected', true);
-        } else {
-            jQuery('#viagens_id option[value="0"]').prop('selected', true);
-        }
-
-        if (este.data('status')) {
-            jQuery('#status option[value="' + este.data('status') + '"]').prop('selected', true);
-        } else {
-            jQuery('#status option[value="0"]').prop('selected', true);
-        }
 
         var trechosViagensEL = $('<div class="layout-dados" id="viagens-trechos_card' + 1 + '"></div>');
         if (linhas_id > 1) {
-            jQuery.ajax({
+            $.ajax({
                 type: 'POST',
                 url: '<?= $this->siteUrl('viagens/listar') ?>',
                 data: {
                     id: viagens_id
                 },
                 dataType: 'json',
-                beforeSend: function() {},
+                beforeSend: function() {
+                    $("#trecho_info").html('<i class="fas fa-spinner fa-spin"></i> Aguarde...');
+                },
                 success: function(retorno) {
                     if (retorno.status == true) {
                         var viagem = retorno.data[0];
@@ -376,7 +429,7 @@
                 complete: function() {}
             });
 
-            jQuery.ajax({
+            $.ajax({
                 type: 'POST',
                 url: '<?= $this->siteUrl('trechos/listar') ?>',
                 data: {
@@ -409,22 +462,86 @@
                 },
                 complete: function() {}
             });
+            $("#trecho_info").html(trechosViagensEL);
+
+            $.ajax({
+                type: 'POST',
+                url: '<?= $this->siteUrl('passageiros/listar') ?>',
+                data: {
+                    pedidos_id: este.data('id')
+                },
+                dataType: 'json',
+                beforeSend: function() {},
+                success: function(retorno) {
+                    if (retorno.status == true) {
+                        if (retorno.data.length) {
+                            index = 0;
+                            $("#addPassageirosDiv").show('slow');
+                            for (passageiro of retorno.data) {
+                                console.log('passageiro', passageiro);
+                                
+                                $("#addPassageiroDiv").append(
+                                    '<div class="conteudo addPassageirosGroup" data-index="' + index + '">' +
+                                    '    <label>Dados do passageiro </label> <i class="far fa-trash-alt excluirPassageiro pointer" title="Excluir passageiros" style="margin-left:24px;"></i>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="nome">Nome</label>' +
+                                    '        <span class="error-label"></span>' +
+                                    '        <input type="text" class="form-elements" id="nome" name="passageiros[' + index + '][nome]" value="' + (passageiro.nome ?? '') + '" placeholder="Nome" />' +
+                                    '    </div>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="cpf">CPF</label>' +
+                                    '        <input type="text" class="form-elements" id="cpf" name="passageiros[' + index + '][cpf]" value="' + (passageiro.cpf ?? '') + '" placeholder="CPF" />' +
+                                    '        <span class="error-label"></span>' +
+                                    '    </div>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="rg">RG</label>' +
+                                    '        <span class="error-label"></span>' +
+                                    '        <input type="text" class="form-elements" id="rg" name="passageiros[' + index + '][rg]" value="' + (passageiro.rg ?? '') + '" placeholder="RG" />' +
+                                    '    </div>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="celular">Celular</label>' +
+                                    '        <span class="error-label"></span>' +
+                                    '        <input type="text" class="form-elements" id="celular" name="passageiros[' + index + '][celular]" value="' + (passageiro.celular ?? '') + '" placeholder="Celular" />' +
+                                    '    </div>' +
+                                    '    <div class="form-group">' +
+                                    '        <label class="control-label mb-1" for="email">E-mail</label>' +
+                                    '        <input type="text" class="form-elements" id="email" name="passageiros[' + index + '][email]" value="' + (passageiro.email ?? '') + '" placeholder="E-mail" />' +
+                                    '        <span class="error-label"></span>' +
+                                    '    </div>' +
+                                    '</div>'
+                                );
+                                index++;
+                            }
+                            jQuery("#cpf").mask('000.000.000-00');
+                            jQuery("#celular").mask('00 00000-0000');
+
+                            $(".excluirPassageiro").click(function(e){
+                                $(this).parents('.addPassageirosGroup').remove();
+                            })
+                        }
+                    } else {
+
+                    }
+                },
+                error: function(st) {
+                    show_message(st.status + ' ' + st.statusText, 'danger');
+                },
+                complete: function() {}
+            });
         }
 
-        $("#trecho_info").html(trechosViagensEL);
-
-
-
-
+        jQuery("#pedidos_id").val(este.data('id'));
         jQuery("#pessoas_id").val(este.data('pessoas_id'));
-        jQuery("#passageiros").val((este.data('pessoas_nome') ? este.data('pessoas_nome') + ' - ' + (este.data('pessoas_cpf') ?? '') : ''));
+        jQuery("#pessoas").val((este.data('pessoas_nome') ? este.data('pessoas_nome') + ' - ' + (este.data('pessoas_cpf') ?? '') : ''));
         jQuery("#viagens_id").val(este.data('viagens_id'));
-        jQuery("#assento").val(este.data('assento'));
+        jQuery("#status").val(este.data('status')).trigger('change')
+        //jQuery("#assento").val(este.data('assento'));
         jQuery("#valor").val(este.data('valor')?.replace('.', ',')).mask("#.##0,00", {
             reverse: true
         });
-        jQuery("#status").val(este.data('status'));
-        jQuery("#mediumModalLabel").html('Pedido ' + (este.data('codigo') ? este.data('codigo') : ''));
+
+
+        jQuery("#formPedidoModalLabel").html('Pedido ' + (este.data('codigo') ? este.data('codigo') : ''));
 
         jQuery("#formPedidoModal").modal("show");
         jQuery(".cidadeAutocomplete").keyup(function() {
@@ -451,7 +568,9 @@
                 data_saida_fim: data_saida_fim
             },
             dataType: 'json',
-            beforeSend: function() {},
+            beforeSend: function() {
+                $("#trecho_info").html('<i class="fas fa-spinner fa-spin"></i> Aguarde...');
+            },
             success: function(retorno) {
                 console.log('btnLocalizarTrecho -> retorno', retorno);
                 if (retorno.status == true) {
@@ -524,9 +643,53 @@
         });
     });
 
-    $("#btnAddCliente").click(function(evt) {
+    $("#outro").change(function() {
+        if ($(this).is(":checked")) {
+            $("#addPassageirosDiv").show('slow');
+        } else {
+            $("#addPassageirosDiv").hide('slow');
+        }
+    });
+
+    $("#btdAddPassageiro").click(function(evt) {
         evt.preventDefault()
-        $("#addClienteDiv").toggle('slow');
+        var index = 0;
+        var lastGroup = $('.addPassageirosGroup').slice(-1);
+        if (lastGroup.length) {
+            index = $(lastGroup).data('index');
+            index++;
+        }
+
+        $("#addPassageiroDiv").append(
+            '<div class="conteudo addPassageirosGroup" data-index="' + index + '">' +
+            '    <div><label>Dados do passageiro ' + (index + 1) + '</label> </div>' +
+            '    <div class="form-group">' +
+            '        <label class="control-label mb-1" for="nome">Nome</label>' +
+            '        <span class="error-label"></span>' +
+            '        <input type="text" class="form-elements" id="nome' + index + '" name="passageiros[' + index + '][nome]" value="" placeholder="Nome" />' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '        <label class="control-label mb-1" for="cpf">CPF</label>' +
+            '        <input type="text" class="form-elements" id="cpf' + index + '" name="passageiros[' + index + '][cpf]" value="" placeholder="CPF" />' +
+            '        <span class="error-label"></span>' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '        <label class="control-label mb-1" for="rg">RG</label>' +
+            '        <span class="error-label"></span>' +
+            '        <input type="text" class="form-elements" id="rg' + index + '" name="passageiros[' + index + '][rg]" value="" placeholder="RG" />' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '        <label class="control-label mb-1" for="celular">Celular</label>' +
+            '        <span class="error-label"></span>' +
+            '        <input type="text" class="form-elements" id="celular' + index + '" name="passageiros[' + index + '][celular]" value="" placeholder="Celular" />' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '        <label class="control-label mb-1" for="email">E-mail</label>' +
+            '        <input type="text" class="form-elements" id="email' + index + '" name="passageiros[' + index + '][email]" value="" placeholder="E-mail" />' +
+            '        <span class="error-label"></span>' +
+            '    </div>' +
+            '</div>'
+        );
     });
 
     $("#passageiros").change(function(evt) {

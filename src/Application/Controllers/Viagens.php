@@ -107,7 +107,6 @@ class Viagens extends BaseController
         $pedidosCount = [];
         $requests = $this->getRequests($request);//post
 
-
         $apiResult = $this->api->post('viagens/procurar', $requests);
         $dados['viagens'] = $apiResult;
         

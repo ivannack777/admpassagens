@@ -10,6 +10,7 @@ use App\Application\Controllers\Localidades;
 use App\Application\Controllers\Locais;
 use App\Application\Controllers\Usuarios\Login;
 use App\Application\Controllers\Usuarios\Pessoas;
+use App\Application\Controllers\Passageiros;
 use App\Application\Controllers\Usuarios\Usuarios;
 use App\Application\Controllers\Usuarios\Favoritos;
 use App\Application\Controllers\Usuarios\Comentarios;
@@ -138,10 +139,19 @@ return function (App $app, Request $request) {
     $app->group('/pedidos', function (Group $group) {
         $group->map(['GET', 'POST'], '', [Pedidos::class, 'list']);
         $group->map(['GET', 'POST'], '/download', [Pedidos::class, 'download']);
+        $group->map(['GET', 'POST'], '/listStatus', [Pedidos::class, 'listStatus']);
         $group->post('/salvar[/[{id}]]', [Pedidos::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
     // $app->post('/pedidos/salvar[/[{id}]]', [Pedidos::class, 'save']);
+
+    $app->group('/passageiros', function (Group $group) {
+        $group->map(['GET', 'POST'], '', [Passageiros::class, 'home']);
+        $group->map(['GET', 'POST'], '/listar', [Passageiros::class, 'list']);
+        $group->post('/salvar[/[{id}]]', [Passageiros::class, 'save']);
+        $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
+    })->add(CheckTokenMiddleware::class);
+    // $app->post('/pessoas/salvar[/[{id}]]', [Passageiros::class, 'save']);
 
     
     $app->group('/enderecos', function (Group $group) {
