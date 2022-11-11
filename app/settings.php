@@ -22,7 +22,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'logErrorDetails'     => $_ENV['LOGERRORDETAILS'],
                 'logger' => [
                     'name' => 'slim-app',
-                    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
+                    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../log/app.log',
                     'level' => Logger::DEBUG,
                 ],
                 "db" => [
