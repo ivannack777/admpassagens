@@ -47,6 +47,10 @@ class Pedidos extends BaseController
         $pedidos = $apiResult;
         // var_dump($pedidos);exit;
 
+        $apiResult = $this->api->post('pedidos/listStatus', $requests);
+        $dados['listStatus'] = $apiResult;
+
+
         $apiResult = $this->api->post('pessoas/listar', $requests);
         $dados['pessoas'] = $apiResult;
 
@@ -223,6 +227,21 @@ class Pedidos extends BaseController
             return  $response->withJson($requests, false, 'Parâmetros incorretos.', 401);
         }
         $apiResult = $this->api->post('pedidos/salvar/'.$id, $requests);
+        return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
+
+    }
+
+    /**
+     * Lista os status de pedidos.
+     *
+     * @return string json
+     */
+    public function listStatus(Request $request, Response $response, array $args)
+    {
+        $id = $args['id'] ?? null;
+        $requests = $this->getRequests($request);
+        
+        $apiResult = $this->api->post('pedidos/listStatus', $requests);
         return $response->withJson($apiResult->data, $apiResult->status, $apiResult->msg);
 
     }

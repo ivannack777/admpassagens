@@ -157,7 +157,7 @@ input.form-elements {
 
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: start;
 }
 .form-elements-group >span {
     margin-left: 8px;
@@ -167,16 +167,18 @@ input.form-elements {
     display: inline-block;
     border-radius: 0;
     /* width: auto; */
-    border: 0;
+    padding: 6px;
     border: 1px solid #9ec0e1;
 }
 .form-elements-group >*:first-child{
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
+    border-right: 0;
 }
 .form-elements-group >*:last-child{
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
+    border-left: 0;
 }
 
 .form-elements-error{
