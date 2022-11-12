@@ -12,7 +12,7 @@
         <div class="page-header float-right">
             <div class="page-title">
                 <ol class="breadcrumb text-right">
-                    <li class="active">Dashboard</li>
+                    <li class="active"><a href="<?= $this->siteUrl('pedidos/status') ?>" title="Configurar status de pedidos"><i class="fas fa-cog"></i> Status</a></li>
                 </ol>
             </div>
         </div>
@@ -20,15 +20,6 @@
 </div>
 
 <div class="content mt-3">
-
-    <div class="col-sm-12">
-        <div class="alert  alert-success alert-dismissible fade show" role="alert">
-            <span class="badge badge-pill badge-success">Success</span> You successfully read this important alert message.
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
 
 
     <div class="col-xl-12">

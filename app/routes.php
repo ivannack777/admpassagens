@@ -139,7 +139,9 @@ return function (App $app, Request $request) {
     $app->group('/pedidos', function (Group $group) {
         $group->map(['GET', 'POST'], '', [Pedidos::class, 'list']);
         $group->map(['GET', 'POST'], '/download', [Pedidos::class, 'download']);
+        $group->map(['GET', 'POST'], '/status', [Pedidos::class, 'status']);
         $group->map(['GET', 'POST'], '/listStatus', [Pedidos::class, 'listStatus']);
+        $group->post('/status/salvar[/[{id}]]', [Pedidos::class, 'statusSave']);
         $group->post('/salvar[/[{id}]]', [Pedidos::class, 'save']);
         $group->post('/excluir/{id}', [ExcluirController::class, 'exclude']);
     })->add(CheckTokenMiddleware::class);
