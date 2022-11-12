@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Slim\Http;
 
 use InvalidArgumentException;
-use Slim\Http\Interfaces\ResponseInterface as DecoratedResponseInterface;
+// use Slim\Http\Interfaces\ResponseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
@@ -35,7 +35,7 @@ use function substr;
 
 use const JSON_ERROR_NONE;
 
-class Response implements DecoratedResponseInterface
+class Response implements ResponseInterface
 {
     protected ResponseInterface $response;
 
@@ -185,8 +185,7 @@ class Response implements DecoratedResponseInterface
         $response = $this->response->withStatus($code, $reasonPhrase);
         return new static($response, $this->streamFactory);
     }
-
-    /**
+/**
      * Write JSON to Response Body.
      *
      * Note: This method is not part of the PSR-7 standard.
@@ -194,15 +193,24 @@ class Response implements DecoratedResponseInterface
      * This method prepares the response object to return an HTTP Json
      * response to the client.
      *
-     * @param  mixed     $data   The data
-     * @param  int|null  $status The HTTP status code
+     * @param  array|object $data   The data
+     * @param bool          $status o status para o retorno
+     * @param  int|null     $msg a mensagem do retorno
+     * @param  int|null     $statusCode The HTTP status code
      * @param  int       $options Json encoding options
      * @param  int       $depth Json encoding max depth
      * @return static
      */
-    public function withJson($data, ?int $status = null, int $options = 0, int $depth = 512): ResponseInterface
+    public function withJson($data, bool $status, string $msg=null,  ?int $statusCode = null, int $options = 0, int $depth = 512): ResponseInterface
     {
-        $json = (string) json_encode($data, $options, $depth > 0 ? $depth : 512);
+        $padrao = [
+            'status' => $status,
+            'msg' => $msg,
+            'count' => count($data),
+            'data' => $data,
+        ];
+    
+        $json = (string) json_encode($padrao, $options, $depth);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new RuntimeException(json_last_error_msg(), json_last_error());
@@ -212,9 +220,11 @@ class Response implements DecoratedResponseInterface
             ->withHeader('Content-Type', 'application/json')
             ->withBody($this->streamFactory->createStream($json));
 
-        if ($status !== null) {
-            $response = $response->withStatus($status);
-        }
+            
+            if ($statusCode !== null) {
+                $response = $response->withStatus($statusCode);
+            }
+            
 
         return new static($response, $this->streamFactory);
     }
