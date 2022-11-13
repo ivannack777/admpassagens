@@ -203,7 +203,6 @@
 
                             <div class="form-group" style="display: flex;  align-items: end;  align-content: baseline;  justify-content: space-between;  width: max-content;">
                                 <div style="width:45%;">
-
                                     <label class="control-label mb-1" for="data">Data</label>
                                     <input type="text" class="form-control datas" id="data_saida_ini" />
                                     <span class="error-label"></span>
@@ -438,7 +437,7 @@
                             '    <div class="layout-grid gap grid-2col">' +
                             '    <div>Linha: ' + trecho.linhas_descricao + '</div>' +
                             '    <div>Origem: ' + trecho.origem_cidade + ' (' + trecho.origem_sigla + ') - ' + trecho.origem_uf + ' ' + trecho.origem_endereco + '</div>' +
-                            '    <div>Dias: ' + (trecho.diasSemanaTextBrev).join('; ') + '</div>' +
+                            '    <div>Dias: ' + (trecho.diasSemanaTextBrev)?.join('; ') + '</div>' +
                             '    <div>Destino: ' + trecho.destino_cidade + ' (' + trecho.destino_sigla + ') - ' + trecho.destino_uf + ' ' + trecho.destino_endereco + '</div>' +
                             '    <div>Horário: ' + trecho.hora + '</div>' +
                             '    <div class="valores">Valor: ' + trecho.valor + '</div>' +
@@ -564,39 +563,59 @@
             },
             success: function(retorno) {
                 console.log('btnLocalizarTrecho -> retorno', retorno);
+                var cardDados;
                 if (retorno.status == true) {
-                    // $("#trechos_id").val(retorno.data[0].id);
+
                     $("#trecho_info").html('<h5>' + retorno.msg + '</h5>')
                     let viagem, trecho;
                     for (let key in retorno.data) {
                         console.log(key + ' => ' + retorno.data[key])
                         viagem = retorno.data[key].viagem;
                         trecho = retorno.data[key].trecho;
-                        $("#trecho_info").append(
-                            '<div class="layout-dados" id="viagens-trechos_card' + key + '">' +
+                        pontos = retorno.data[key].pontos;
+                        cardDados = $('<div class="layout-dados" id="viagens-trechos_card' + key + '">');
+                        cardDados.append(
                             '  <input type="radio" class="viagens-trechos_radios" id="radio_id' + key + '" name="viagens-trechos_id" data-id="' + key + '" data-viagens_id="' + viagem.id + '" data-trechos_id="' + trecho.trechos_id + '" data-linhas_id="' + trecho.linhas_id + '" />' +
                             '  <label for="radio_id' + key + '" style="display: inline-block;">Selecionar esta viagem</label>' +
-                            '  <h5>Informações da viagem</h5>' +
-                            '  <div class="layout-grid gap grid-3col">' +
-                            '    <div>Descrição: ' + viagem.descricao + '</div>' +
-                            '    <div>Detalhes: ' + viagem.detalhes + '</div>' +
-                            '    <div>Data saída: ' + viagem.data_saidaFmt + '</div>' +
-                            '    <div>Assentos: ' + viagem.assentos + '</div>' +
-                            '    <div>Tipo de assento: ' + viagem.assentos_tipo + '</div>' +
-                            '    <div>Código da viagem: ' + viagem.codigo + '</div>' +
+                            '  <div style="margin-bottom: 15px;">'+
+                            '    <h5>Informações da viagem</h5>' +
+                            '    <div class="layout-grid gap grid-3col">' +
+                            '      <div>Descrição: ' + viagem.descricao + '</div>' +
+                            '      <div>Detalhes: ' + viagem.detalhes + '</div>' +
+                            '      <div>Data saída: ' + viagem.data_saidaFmt + '</div>' +
+                            '      <div>Assentos: ' + viagem.assentos + '</div>' +
+                            '      <div>Tipo de assento: ' + viagem.assentos_tipo + '</div>' +
+                            '      <div>Código da viagem: ' + viagem.codigo + '</div>' +
+                            '    </div>' +
                             '  </div>' +
-                            '  <div>' +
-                            '    <h5>Informações do trecho </h5>' +
+                            '  <div style="margin-bottom: 15px;">' +
+                            '    <h5>Informações do trecho</h5>' +
                             '    <div class="layout-grid gap grid-2col">' +
                             '    <div>Linha: ' + trecho.linhas_descricao + '</div>' +
                             '    <div>Origem: ' + trecho.origem_cidade + ' (' + trecho.origem_sigla + ') - ' + trecho.origem_uf + ' ' + trecho.origem_endereco + '</div>' +
-                            '    <div>Dias: ' + (trecho.diasSemanaTextBrev).join('; ') + '</div>' +
+                            '    <div>Dias: ' + (trecho.diasSemanaTextBrev ? (trecho.diasSemanaTextBrev).join('; '):'') + '</div>' +
                             '    <div>Destino: ' + trecho.destino_cidade + ' (' + trecho.destino_sigla + ') - ' + trecho.destino_uf + ' ' + trecho.destino_endereco + '</div>' +
-                            '    <div>Horário: ' + trecho.hora + '</div>' +
-                            '    <div class="valores">Valor: ' + trecho.valor + '</div>' +
-                            '  </div>' +
-                            '</div>'
+                            '    <div>Horário: ' + (trecho.hora??'') + '</div>' +
+                            '    <div>Valor: <span class="valores">' + trecho.valor + '</span></div>' +
+                            '  </div>' 
                         );
+
+                        if(pontos.length){
+                            cardPontos = $(
+                                '    <div style="margin-bottom: 15px;">'
+                                );
+                                cardPontos.append('      <h5>Informações dos pontos</h5>');
+                            for(let ponto of pontos){
+                                cardPontos.append(
+                                '  <div style="margin-bottom: 6px;">' +
+                                    ponto.hora +' - '+ponto.cidade + ' (' + ponto.sigla + ') - ' + ponto.uf+
+                                '  </div>'
+                                );
+                                
+                            }
+                            cardDados.append(cardPontos);
+                        } 
+                        $("#trecho_info").append(cardDados);
                     }
                     $(".viagens-trechos_radios").change(function() {
 
@@ -620,13 +639,21 @@
                     });
                 } else {
                     $("#trechos_id").val('');
-                    $("#trecho_info").html('<h5>' + retorno.msg + '</h5>')
+                    $("#trecho_info").html('')
+                    show_message(retorno.msg, 'danger');
+                    if (retorno.data) {
+                        for (var key in retorno.data) {
+                            console.log('key', key)
+                            $("#" + key).addClassTemp('form-elements-error');
+                        }
+                    }
                 }
             },
             error: function(st) {
                 show_message(st.status + ' ' + st.statusText, 'danger');
             },
             complete: function() {
+                
                 $('.valores').mask("Valor: #.##0,00", {
                     reverse: true
                 });
@@ -653,7 +680,7 @@
 
         $("#addPassageiroDiv").append(
             '<div class="conteudo addPassageirosGroup" data-index="' + index + '">' +
-            '    <div><label>Dados do passageiro ' + (index + 1) + '</label> </div>' +
+            '    <div><label>Dados do passageiro</label> <i class="far fa-trash-alt excluirPassageiro pointer" title="Excluir passageiros" style="margin-left:24px;"></i></div>' +
             '    <div class="form-group">' +
             '        <label class="control-label mb-1" for="nome">Nome</label>' +
             '        <span class="error-label"></span>' +
@@ -681,6 +708,9 @@
             '    </div>' +
             '</div>'
         );
+        $(".excluirPassageiro").click(function(e){
+            $(this).parents('.addPassageirosGroup').remove();
+        })
     });
 
     $("#passageiros").change(function(evt) {

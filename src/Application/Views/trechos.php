@@ -122,11 +122,11 @@
     </div>
 </div> <!-- .content -->
 
-<div class="modal fade" id="formTrechoModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true" data-width="960">
+<div class="modal fade" id="formTrechoModal" tabindex="-1" role="dialog" aria-labelledby="formTrechoModalLabel" aria-hidden="true" data-width="960">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mediumModalLabel"></h5>
+                <h5 class="modal-title" id="formTrechoModalLabel"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -172,6 +172,11 @@
                         <input type="text" class="form-elements cidadeAutocomplete" id="destino" data-target="destino_id" />
                     </div>
 
+                    <div class="form-group" id="valorDiv" style="display: none;">
+                        <label class="control-label mb-1" for="destino_id">Valor</label>
+                        <span class="error-label"></span>
+                        <input type="text" class="form-elements valores" id="valor" name="valor" placeholder="Valor" />
+                    </div>
 
                 </form>
                 <div id="retornomsg"></div>
@@ -264,9 +269,10 @@
     })
 
     $("#btnAdicionar").click(function() {
-        $("#mediumModalLabel").html("Adicionar um novo trecho");
+        $("#formTrechoModalLabel").html("Adicionar um novo trecho");
         $("#formTrecho")[0].reset();
         $("#destinoDiv").hide();
+        $("#valorDiv").hide();
         $("#pontosDivGroup").show();
         $("#formTrechoModal").modal("show")
     });
@@ -277,8 +283,6 @@
         var este = $(this);
         var id = este.data('id');
         var dias = String(este.data('dias')).split(',');
-        console.log(dias);
-
 
         // if (este.data('dias')) {
         //     console.log(este.data('dias').split(','))
@@ -295,12 +299,13 @@
         $("#origem").val(este.data('origem'));
         $("#destino_id").val(este.data('destino_id'));
         $("#destino").val(este.data('destino'));
-        $("#hora").val(este.data('hora'));
         $("#valor").val(este.data('valor'));
+        $("#hora").val(este.data('hora'));
         $("#dias").select2().val(dias).trigger('change');
 
         if(este.data('linhas_id') !=''){
             $("#destinoDiv").show('slow');
+            $("#valorDiv").show('slow');
             $("#pontosDivGroup").hide('slow');
         }
         $(".valores").mask('#.##0,00', {
@@ -423,7 +428,7 @@
             reverse: true
         });
 
-        $("#mediumModalLabel").html('Trechos da linha ' + (este.data('linhas_descricao') ? este.data('linhas_descricao') : ''));
+        $("#formTrechoModalLabel").html('Trechos da linha ' + (este.data('linhas_descricao') ? este.data('linhas_descricao') : ''));
 
         $("#formTrechoModal").modal("show")
     });

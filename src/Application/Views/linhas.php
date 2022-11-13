@@ -140,16 +140,16 @@
                         <input type="text" class="form-elements" id="descricao" name="descricao" value="" />
                     </div>
                     <div class="form-group">
-                        <label class="control-label mb-1" for="trechos">Trechos</label>
+                        <label class="control-label mb-1" for="">Pontos</label>
                         <span class="error-label"></span>
                         <div id="pontosEmbarqueDiv" class="hide-last-last">
 
                         </div>
 
-                        <button class="btn btn-outline-secondary" id="addtrechos">+</button>
+                        <button class="btn btn-outline-secondary" id="addPontos">+</button>
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label class="control-label mb-1" for="dias">Dias da semana</label>
                         <span class="error-label"></span>
                         <select type="text" class="form-control" id="dias" name="dias[]" multiple>
@@ -159,13 +159,13 @@
                                 <option value="<?= $d ?>"><?= $diasSemana ?></option>
                             <?php endforeach ?>
                         </select>
-                    </div>
-                    <div class="form-group">
+                    </div> -->
+                    <!-- <div class="form-group">
                         <label class="control-label mb-1" for="hora">Horário saída</label>
                         <span class="error-label"></span>
                         <input type="text" class="form-control horas" id="hora" name="hora">
                             
-                    </div>
+                    </div> -->
                 </form>
                 <div id="retornomsg"></div>
             </div>
@@ -192,22 +192,22 @@
         allowClear: true
     });
 
-    // jQuery("#addtrechos").click(function(evt) {
-    //     evt.preventDefault();
-    //     createPontoEmbarque()
-    //     jQuery(".horas").datetimepicker({
-    //         format: "HH:mm",
-    //         stepping: 10
-    //     });
+    jQuery("#addPontos").click(function(evt) {
+        evt.preventDefault();
+        createPontoEmbarque()
+        jQuery(".horas").datetimepicker({
+            format: "HH:mm",
+            stepping: 10
+        });
 
-    //     jQuery(".valores").mask('#.##0,00', {
-    //         reverse: true
-    //     });
-    //     jQuery(".horas").mask('00:00', {
-    //         reverse: true
-    //     });
+        jQuery(".valores").mask('#.##0,00', {
+            reverse: true
+        });
+        jQuery(".horas").mask('00:00', {
+            reverse: true
+        });
 
-    // });
+    });
 
     function createPontoEmbarque(dado=false){
         console.log(dado);
@@ -219,10 +219,10 @@
             '  <div><div class="circle font-20 bold6"> ' + qtd + '</div></div>' +
             //'  <input type="hidden" id="id'+ qtd +'" name="trechos[' + qtd + '][id]" value="' + (dado?dado.id:'') + '" />' +
             //'  <input type="hidden" id="trechos_id'+ qtd +'" name="trechos[' + qtd + '][trechos_id]" value="' + (dado?dado.trechos_id:'') + '" />' +
-            '  <div class="form-group"><label>Local</label>' + (dado ? dado.cidade +' ('+ dado.sigla + ') - '+ dado.uf :'') + '</div>' +
+            '  <div class="form-group"><label>Local</label>' + (dado ? dado.cidade +' ('+ (dado.sigla??'') + ') - '+ dado.uf :'') + '</div>' +
             '  <div class="form-group"><label>Dias da semana</label>'+ (dado.diasSemanaTextBrev?(dado.diasSemanaTextBrev).join(', '):'') +'</div>' +
             '  <div class="form-group"><label>Horário</label><span> ' + (dado?dado.hora:'') + '</span></div>' +
-            '  <div class="form-group"><label>Valor</label><span class="valores" style="text-align: right;"> ' + (dado?dado.valor:'') + '</span></div>' +
+            // '  <div class="form-group"><label>Valor</label><span class="valores" style="text-align: right;"> ' + (dado?dado.valor:'') + '</span></div>' +
             '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
             '</div>'
         );

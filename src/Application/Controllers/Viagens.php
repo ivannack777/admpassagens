@@ -110,7 +110,6 @@ class Viagens extends BaseController
         $apiResult = $this->api->post('viagens/procurar', $requests);
         $dados['viagens'] = $apiResult;
         
-        
         if(($apiResult) && ($apiResult->status === true && $apiResult->count > 0)){
             $pedidosCount = (array)$apiResult->data;
         }

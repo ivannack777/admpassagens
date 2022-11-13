@@ -182,7 +182,6 @@ input.form-elements {
 }
 
 .form-elements-error{
-    
     animation:hihtlighttemp 2s ease-in;
 }
 @keyframes hihtlighttemp {
@@ -190,11 +189,11 @@ input.form-elements {
         border-color: rgb(206, 14, 190);
     }
     20%{
-        background:rgba(230, 30, 220, 0.2);
+        background:rgba(230, 30, 107, 0.2);
         border-color: rgb(223, 26, 26);
     }
     50%{
-        background:rgba(230, 30, 220, 0.7);
+        background:rgba(185, 37, 0, 0.7);
         border-color: rgb(223, 26, 26);
     }
     70%{
