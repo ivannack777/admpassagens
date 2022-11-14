@@ -108,9 +108,9 @@
                                                     <td><span id="label_status<?= $pedido->id ?>"><span class="<?= $statusClasses[$pedido->status] ?? '' ?>"><?= ucfirst($statusClasses[$pedido->status] ?? '') ?></span></span></td>
                                                     <td><span id="label_data<?= $pedido->id ?>"><?= $this->dateFormat($pedido->data_insert, 'd/m/Y H:i') ?></span></td>
                                                     <td>
-                                                        ID: <?= $pedido->pagamento_preference_id ?>
                                                         Link: <a href="<?= $pedido->pagamento_link ?>" title="Link de pagamento" target="_BLANK"><?= $pedido->pagamento_link ?></a>
-                                                        Status: <?= $pedido->pagamento_status ?>
+                                                        Status pagamento: <?= $pedido->pagamento_status ?>
+                                                        Detalhes do pagamento: <?= $pedido->pagamento_status_detalhe ?>
                                                     </td>
                                                     <td>
                                                         <?php $session = $this->getAttributes();
