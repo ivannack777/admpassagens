@@ -121,7 +121,7 @@
     </div>
 </div> <!-- .content -->
 
-<div class="modal" id="formMediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true" tabindex="-1" data-width="960">
+<div class="modal" id="formLinhasModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true" tabindex="-1" data-width="960">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -184,26 +184,26 @@
 <script>
     
 
-    jQuery('#dias').select2({
-        dropdownParent: jQuery('#formMediumModal'),
+    $('#dias').select2({
+        dropdownParent: $('#formLinhasModal'),
         class: 'form-elements',
         closeOnSelect: false,
         placeholder:'Selecione...',
         allowClear: true
     });
 
-    jQuery("#addPontos").click(function(evt) {
+    $("#addPontos").click(function(evt) {
         evt.preventDefault();
         createPontoEmbarque()
-        jQuery(".horas").datetimepicker({
+        $(".horas").datetimepicker({
             format: "HH:mm",
             stepping: 10
         });
 
-        jQuery(".valores").mask('#.##0,00', {
+        $(".valores").mask('#.##0,00', {
             reverse: true
         });
-        jQuery(".horas").mask('00:00', {
+        $(".horas").mask('00:00', {
             reverse: true
         });
 
@@ -212,74 +212,116 @@
     function createPontoEmbarque(dado=false){
         console.log(dado);
 
-        var qtd = jQuery('.trechoDiv').length +1
+        var qtd = $('.pontoDiv').length +1
             
-        jQuery("#pontosEmbarqueDiv").append(
-            ' <div class="trechoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 8fr 4fr 2fr 2fr;">' +
+        $("#pontosEmbarqueDiv").append(
+            ' <div class="pontoDiv layout-grid layout-dados layout-margin" style="position: relative; grid-template-columns: 1fr 8fr 4fr 2fr 1fr;">' +
             '  <div><div class="circle font-20 bold6"> ' + qtd + '</div></div>' +
-            //'  <input type="hidden" id="id'+ qtd +'" name="trechos[' + qtd + '][id]" value="' + (dado?dado.id:'') + '" />' +
-            //'  <input type="hidden" id="trechos_id'+ qtd +'" name="trechos[' + qtd + '][trechos_id]" value="' + (dado?dado.trechos_id:'') + '" />' +
-            '  <div class="form-group"><label>Local</label>' + (dado ? dado.cidade +' ('+ (dado.sigla??'') + ') - '+ dado.uf :'') + '</div>' +
-            '  <div class="form-group"><label>Dias da semana</label>'+ (dado.diasSemanaTextBrev?(dado.diasSemanaTextBrev).join(', '):'') +'</div>' +
-            '  <div class="form-group"><label>Horário</label><span> ' + (dado?dado.hora:'') + '</span></div>' +
-            // '  <div class="form-group"><label>Valor</label><span class="valores" style="text-align: right;"> ' + (dado?dado.valor:'') + '</span></div>' +
-            '  <div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></div>' +
+            '  <input type="hidden" id="id'+ qtd +'" name="pontos[' + qtd + '][id]" value="' + (dado?dado.id:'') + '" />' +
+            '  <input type="hidden" id="locais_id'+ qtd +'" name="pontos[' + qtd + '][locais_id]" value="' + (dado?dado.locais_id:'') + '" />' +
+            '  <input type="hidden" id="ordem'+ qtd +'" class="ordem" name="pontos[' + qtd + '][ordem]" value="' + (dado?dado.locais_id:'') + '" />' +
+            '  <div class="form-group"><label>Local</label><input type="text" class="form-elements pontoAutocomplete" value="' + (dado ? dado.cidade +' ('+ (dado.sigla??'') + ') - '+ dado.uf :'') + '" data-index="'+ qtd +'" /></div>' +
+            '  <div class="form-group"><label>Dias da semana</label>'+
+            '    <select type="text" class="form-elements dias" id="dias'+ qtd +'" name="pontos[' + qtd + '][dias][]" multiple>'+
+                    <?php
+                    $diasSemana = $this->diasSemana(false, true);
+                    foreach ($diasSemana as $d => $diasSemana) : ?>
+            '         <option value="<?= $d ?>"><?= $diasSemana ?></option>'+
+                    <?php endforeach ?>
+            '     </select></div>' +
+            '  <div class="form-group"><label>Horário</label><input type="text" class="form-elements horas" id="hora'+ qtd +'" name="pontos['+ qtd +'][hora]" value="' + (dado?dado.hora:'') + '" /></div>' +
+            '<div style="position: absolute; bottom: -30px; left: 18px;"><i class="fas fa-arrow-down fa-2x" style="color: #408ba9"></i></div>'+
             '</div>'
         );
 
+        $("#dias"+ qtd).select2({
+            dropdownParent: $('#formLinhasModal'),
+            class: 'form-elements',
+            closeOnSelect: false,
+            placeholder:'Selecione...',
+            allowClear: true
+        }).val(dado.diasSemana).trigger('change');
+        
+        $("input.horas").datetimepicker({
+            format: "HH:mm",
+            stepping: 10
+        });
 
-        jQuery(".trechoAutocomplete").autocomplete({
+        $(".horas").mask('00:00', {
+            reverse: true
+        });
+
+        
+        $( "#pontosEmbarqueDiv" ).sortable({
+            appendTo: $("#formLinhasModal"),
+            opacity: 0.5,
+            stop: function( event, ui ) {
+                //reordenar pontos
+                var pontos = $('#pontosEmbarqueDiv').find('.circle');
+                let ordem = 0;
+                for(let pt of pontos){
+                    ordem++;
+                    console.log('pt', pt,$(pt).parents('div.pontoDiv').find('input.ordem'))
+                    $(pt).text(ordem);
+                    $(pt).parents('div.pontoDiv').find('input.ordem').val(ordem)
+
+                }
+            }
+        });
+
+        $(".pontoAutocomplete").autocomplete({
             minLength: 2,
             delay: 100,
             source: function(request, response) {
 
-                jQuery.ajax({
-                    url: "/linhas/pontos",
+                $.ajax({
+                    url: "/locais/listar",
                     type: "post",
                     data: {
                         cidade: request.term
                     },
                     dataType: 'json',
                     success: function(retorno) {
-                        response(jQuery.map(retorno.data, function(val, key) {
+                        response($.map(retorno.data, function(val, key) {
                             
-                            var label = val.origem_cidade + ' (' + val.origem_sigla + ') - ' + val.origem_uf +' -> '+ val.destino_cidade + ' (' + val.destino_sigla + ') - ' + val.destino_uf;
+                            var label = val.cidade + ' (' + val.sigla + ') - ' + val.uf;
                             return {
                                 label: label,
                                 value: label,
-                                id: val.trechos_id
+                                id: val.id
                             };
                         }));
                     }
                 });
             },
             select: function(event, ui) {
-                let index = jQuery(event.target).data('index');
-                jQuery("#trechos_id" + index).val(ui.item.id)
+                let index = $(event.target).data('index');
+                $("#locais_id" + index).val(ui.item.id);
+                console.log( 'locais_id', $("#locais_id" + index))
             }
         });
 
     }
 
-    jQuery(".editar").click(function() {
-        // qtdPontos = jQuery("#pontosEmbarqueDiv").find('.trechos');
+    $(".editar").click(function() {
+        // qtdPontos = $("#pontosEmbarqueDiv").find('.pontos');
         // qtdPontos = qtdPontos.length;
-        var este = jQuery(this);
+        var este = $(this);
         var id = este.data('id');
 
-        jQuery("#linhas_id").val(este.data('id'));
-        jQuery("#descricao").val(este.data('descricao'));
-        jQuery("#valor").val(este.data('valor'));
-        jQuery("#assentos").val(este.data('assentos'));
-        jQuery("#dias").val(este.data('dias')?.toString().split(',')).trigger('change');
-        jQuery("#hora").val(este.data('hora'));
+        $("#linhas_id").val(este.data('id'));
+        $("#descricao").val(este.data('descricao'));
+        $("#valor").val(este.data('valor'));
+        $("#assentos").val(este.data('assentos'));
+        $("#dias").val(este.data('dias')?.toString().split(',')).trigger('change');
+        $("#hora").val(este.data('hora'));
 
         $("input.horas").datetimepicker({
             format: "HH:mm",
             stepping: 10
         });
 
-        jQuery("#pontosEmbarqueDiv").html('');
+        $("#pontosEmbarqueDiv").html('');
         if(id){
             $.ajax({
                 type: 'POST',
@@ -289,24 +331,24 @@
                 },
                 dataType: 'json',
                 beforeSend: function() {
-                    jQuery("#pontosEmbarqueDiv").html('Aguarde...');
+                    $("#pontosEmbarqueDiv").html('Aguarde...');
                 },
                 success: function(retorno) {
                     if (retorno.status == true) {
-                        jQuery("#pontosEmbarqueDiv").html('');
+                        $("#pontosEmbarqueDiv").html('');
                         if (retorno.data.length) {
                             
-                            jQuery.each(retorno.data, function(c, ponto) {
+                            $.each(retorno.data, function(c, ponto) {
                                 // qtdPontos = c +1;
                                 createPontoEmbarque(ponto);
-                                // jQuery("#pontosEmbarqueDiv").append(
-                                //     createPontoEmbarque(qtdPontos, trecho)
+                                // $("#pontosEmbarqueDiv").append(
+                                //     createPontoEmbarque(qtdPontos, ponto)
                                 // );
 
                                 
                             });
                         } else {
-                            jQuery("#pontosEmbarqueDiv").append(retorno.msg);
+                            $("#pontosEmbarqueDiv").append(retorno.msg);
                         }
 
                     } else {
@@ -317,16 +359,16 @@
                     show_message(st.status + ' ' + st.statusText, 'danger');
                 },
                 complete: function() {
-                    jQuery(".horas").datetimepicker({
+                    $(".horas").datetimepicker({
                         format: "HH:mm",
                         stepping: 10
                     });
 
-                    jQuery(".valores").mask('#.##0,00', {
+                    $(".valores").mask('#.##0,00', {
                         reverse: true
                     });
 
-                    jQuery(".horas").mask('00:00', {
+                    $(".horas").mask('00:00', {
                             reverse: true
                         });
 
@@ -337,24 +379,24 @@
 
 
 
-        jQuery("#mediumModalLabel").html('Linha ' + (este.data('descricao') ? este.data('descricao') : ''));
+        $("#mediumModalLabel").html('Linha ' + (este.data('descricao') ? este.data('descricao') : ''));
 
-        jQuery("#formMediumModal").modal("show")
+        $("#formLinhasModal").modal("show")
     });
 
 
-    jQuery("#btnSalvar").click(function() {
-        var este = jQuery(this);
-        var id = jQuery("#linhas_id").val();
-        var form = jQuery("#formLinha");
+    $("#btnSalvar").click(function() {
+        var este = $(this);
+        var id = $("#linhas_id").val();
+        var form = $("#formLinha");
 
-        jQuery.ajax({
+        $.ajax({
             type: 'POST',
             url: '<?= $this->siteUrl('linhas/salvar/') ?>' + id,
             data: form.serialize(),
             dataType: 'json',
             beforeSend: function() {
-                jQuery('.error-label').html('');
+                $('.error-label').html('');
             },
             success: function(retorno) {
                 if (retorno.status == true) {
@@ -363,20 +405,20 @@
 
                     let data_saida = new moment(retorno.data[0].data_saida);
                     let data_chegada = new moment(retorno.data[0].data_chegada);
-                    jQuery("#label_descricao" + id).html(retorno.data[0].descricao);
-                    jQuery("#label_origem_id" + id).html(retorno.data[0].origem_id);
-                    jQuery("#label_destino_id" + id).html(retorno.data[0].destino_id);
-                    jQuery("#label_data_saida" + id).html(data_saida.format('DD/MM/YYYY HH:mm'));
-                    jQuery("#label_data_chegada" + id).html(data_chegada.format('DD/MM/YYYY HH:mm'));
-                    jQuery("#label_veiculos_id" + id).html(retorno.data[0].marca + ' ' + retorno.data[0].modelo + ' ' + retorno.data[0].ano + ' ' + retorno.data[0].codigo + ' ' + retorno.data[0].placa);
-                    jQuery("#label_valor" + id).html((retorno.data[0].valor).replace('.', ','));
-                    jQuery("#linha" + id).addClass('success-transition');
+                    $("#label_descricao" + id).html(retorno.data[0].descricao);
+                    $("#label_origem_id" + id).html(retorno.data[0].origem_id);
+                    $("#label_destino_id" + id).html(retorno.data[0].destino_id);
+                    $("#label_data_saida" + id).html(data_saida.format('DD/MM/YYYY HH:mm'));
+                    $("#label_data_chegada" + id).html(data_chegada.format('DD/MM/YYYY HH:mm'));
+                    $("#label_veiculos_id" + id).html(retorno.data[0].marca + ' ' + retorno.data[0].modelo + ' ' + retorno.data[0].ano + ' ' + retorno.data[0].codigo + ' ' + retorno.data[0].placa);
+                    $("#label_valor" + id).html((retorno.data[0].valor).replace('.', ','));
+                    $("#linha" + id).addClass('success-transition');
                 } else {
-                    jQuery("#linha" + id).addClass('error-transition');
-                    // jQuery("#retornomsg").html(retorno.msg).removeClass().addClass('text-danger');
+                    $("#linha" + id).addClass('error-transition');
+                    // $("#retornomsg").html(retorno.msg).removeClass().addClass('text-danger');
                     if (retorno.data) {
                         for (var key in retorno.data) {
-                            jQuery("#" + key).parent('div').find('.error-label').html(retorno.data[key]);
+                            $("#" + key).parent('div').find('.error-label').html(retorno.data[key]);
                         }
 
                     }
@@ -388,8 +430,8 @@
         });
     });
 
-    jQuery("#btnExcluir").click(function() {
-        var id = jQuery("#linhas_id").val();
+    $("#btnExcluir").click(function() {
+        var id = $("#linhas_id").val();
         var rota = '<?= $this->siteUrl('linhas/excluir/') ?>' + id;
         var redirect = '<?= $this->siteUrl('linhas') ?>';
         excluir(rota, 'Você realmente quer excluir esta linha?', redirect);
