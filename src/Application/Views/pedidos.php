@@ -97,7 +97,7 @@
                                             'C' => 'cancelado',
                                         ];
                                         foreach ($pedidosViagem as $pedido) :
-
+                                            $pagamento_info = !empty($pedido->pagamento_info) ? json_decode($pedido->pagamento_info):'';
                                         ?>
                                             <tbody>
                                                 <tr id="linha<?= $pedido->id ?>" class="list-label">
@@ -111,6 +111,7 @@
                                                         Link: <a href="<?= $pedido->pagamento_link ?>" title="Link de pagamento" target="_BLANK"><?= $pedido->pagamento_link ?></a>
                                                         Status pagamento: <?= $pedido->pagamento_status ?>
                                                         Detalhes do pagamento: <?= $pedido->pagamento_status_detalhe ?>
+                                                        Data: <?= $pagamento_info->date_last_updated ?? '' ?>
                                                     </td>
                                                     <td>
                                                         <?php $session = $this->getAttributes();
